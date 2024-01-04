@@ -1,1 +1,107 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
+
+header{
+position: fixed;
+top: 0;
+background-image: linear-gradient(#17224d, transparent);
+}
+.hero{
+    background-image: url('assets/bd.png');
+    background-attachment: fixed;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+.herotext p{
+    color: white;
+}
+.herobody{
+    background-color: #17224db6;
+
+}
+.btn-bw{
+    color: #17224d;
+    background-color: white;
+}
+.btn-wb{
+    background-color: #17224db6;
+    border: 0.5px solid white;
+    color: white;
+}
+.btn{
+    font-weight: 500;
+    margin: 10px;
+}
+.btn:hover{
+    color: white !important;
+}
+.features .btn:hover{
+    color: #17224d !important;
+
+}
+.box-shadow-hover:hover{
+    transform: scale(1.03);
+    transition: 0.3s;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+.herotext h1{
+    font-size:4rem;
+    color: white;
+    font-family:Nunito Sans Normal Medium;
+  
+  }
+
+  .herodoctor img{
+    width: 100%;
+  }
+.middle a{
+margin:15px;
+text-decoration:none;
+color: white;
+}
+.middle a:hover{
+
+}
+.heroglass{
+    font-size: 0.6rem;
+    background-color: rgba(234, 234, 234, 0.29);
+    border-radius: 10px 10px 0px 0px;
+    border: 0.5px solid white;
+   
+}
+.heroglass h1{
+    font-size: 2rem;
+}
+.services span{
+    color: #0055AA;
+}
+.features span{
+    color: #0055AA;
+}
+.text-blue{
+    color: #0055AA;
+}
+.cardimg{
+    background-color: #daebfc;
+    width: 30%;
+   
+}
+.cardimg img{
+    width: 100%;
+}
+p{
+    font-family: Nunito Sans Normal Medium !important;
+}
+.featureset1 img{
+    width: 40%;
+}
+.featureset2 img{
+    width: 40%;
+}
+.set1context{
+    text-align: left;
+}

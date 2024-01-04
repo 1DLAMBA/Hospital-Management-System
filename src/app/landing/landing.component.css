@@ -1,0 +1,40 @@
+.testimonialbg{
+    background-image: url('../../assets/testimonialsbg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+ padding: 10%;
+    background-position: center; 
+    height: 100%;
+}
+
+.bghold{
+    height: 100%;
+}
+.bghold p{}
+.float-right{
+    float: right;
+}
+.testimonials .btn:hover{
+    color: #17224d !important;
+
+}
+.about .btn:hover{
+    color: #17224d !important;
+
+}
+.subscribe{
+    background-color: #ececec;
+    padding: 7%;
+    margin: 10%;
+}
+.subscribe .input{
+    border: 0.5px solid #17224d;
+}
+.subscribe input{
+    border: 0;
+    background-color: transparent;
+}
+.subscribe .btn:hover{
+    color: #17224d !important;
+
+}
