@@ -1,0 +1,13 @@
+
+@media (max-width:500px){
+    .servicecards .box-shadow-hover{
+        width: 100%;
+    
+    }
+    .team p{
+        font-size: x-small;
+    }
+}
+.team .card{
+    width: 30%;
+}

@@ -2,12 +2,17 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
-
+.wh1{
+    color: white;
+}
 header{
 position: fixed;
+z-index: 3;
 top: 0;
 background-image: linear-gradient(#17224d, transparent);
+backdrop-filter: blur(4px);
 }
+
 .hero{
     background-image: url('assets/bd.png');
     background-attachment: fixed;
@@ -48,15 +53,12 @@ background-image: linear-gradient(#17224d, transparent);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 
 }
-.herotext h1{
-    font-size:4rem;
-    color: white;
-    font-family:Nunito Sans Normal Medium;
-  
-  }
+
 
   .herodoctor img{
     width: 100%;
+    max-height: 100%;
+    align-self: flex-end;
   }
 .middle a{
 margin:15px;
@@ -79,6 +81,10 @@ color: white;
 .services span{
     color: #0055AA;
 }
+.servicecards .box-shadow-hover{
+    width: 25%;
+
+}
 .features span{
     color: #0055AA;
 }
@@ -93,9 +99,10 @@ color: white;
 .cardimg img{
     width: 100%;
 }
-p{
-    font-family: Nunito Sans Normal Medium !important;
+body{
+    font-family: 'Nunito Sans', sans-serif;
 }
+
 .featureset1 img{
     width: 40%;
 }
@@ -104,4 +111,69 @@ p{
 }
 .set1context{
     text-align: left;
+}
+.setcontext{
+    text-align: left;
+}
+.testimonialbg{
+    background-image: url('assets/testimonialsbg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+ padding: 10%;
+    background-position: center; 
+    height: 100%;
+}
+.heroglass div{
+    margin: 10px;
+}
+
+.bghold{
+    height: 100%;
+}
+.bghold p{}
+.float-right{
+    float: right;
+}
+.testimonials .btn:hover{
+    color: #17224d !important;
+
+}
+.sideA{
+    background-image: url('assets/doctorbg2.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    
+}
+
+.form{
+    width: 100%;
+}
+
+.form input{
+    width: 100%;
+}
+.form button:hover{
+    color: #17224d !important;
+}
+.innersideA {
+    color: #daebfc;
+    height: 500px;
+    background-image: linear-gradient(  transparent, #0F2E54);
+
+}
+.innersideA .text{
+    width: 100%;
+}
+.sideA img{
+    width: 40% !important;
+}
+.form .submit{
+width: 100%;
+color: white;
+background-color: #0055AA !important;
+}
+.form .submit:hover{
+    color: white !important;
+    background-color: #17224d !important;  
 }

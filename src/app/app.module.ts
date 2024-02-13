@@ -8,23 +8,33 @@ import { AppComponent } from "./app.component";
 import { Routes, RouterModule } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from "@angular/common";
+import { FormGroup, FormControl } from '@angular/forms';
 import { SharedModule } from "./shared.module";
 import { HttpClientModule } from "@angular/common/http";
 import { FooterComponent } from "./footer/footer.component";
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
+import { LoginComponent } from "./login/login.component";
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { UserService } from "./endpoints/user.service";
+import { RegisterComponent } from "./register/register.component";
+
+
 
 @NgModule({
 
     declarations: [
         LandingComponent,
         NavBarComponent,
-        FooterComponent
-        
+        FooterComponent,
+        LoginComponent,
+        RegisterComponent
 
          ],
     imports: [ 
-        AppComponent,
         NgbModule,
         CommonModule,
         RouterOutlet,
@@ -32,13 +42,22 @@ import { ButtonModule } from 'primeng/button';
         HttpClientModule,
         DialogModule,
         ButtonModule,
-        
-
-
-         ],
+        DividerModule,
+        InputTextModule,
+        ReactiveFormsModule,
+        FormsModule,
+              ],
          exports:[
             NavBarComponent,
-            FooterComponent
-         ]
+            FooterComponent,
+            LandingComponent,
+            LoginComponent,
+            RegisterComponent
+            
+         ],
+         providers:[
+            UserService
+         ],
+         bootstrap: [],
 })
 export class AppModule { }

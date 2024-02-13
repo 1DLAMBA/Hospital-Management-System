@@ -1,5 +1,50 @@
+@media (min-width: 500px){
+    .burger{
+        display: none;
+    }
+}
+@media (max-width: 499px){
+    .middle, .end {
+        display: none;
+    }
+}
+@media (max-width: 500px){
+    header{
+        height: 60px !important;
+        padding: 7px 2px 2px 5px !important;
+
+    }
+    header .burger{
+        justify-content: flex-start;
+    }
+
+}
+
+
 .middle a:hover{
     border-bottom: 2px solid white;
     transition: 0.4s;
+}
+
+.middle a {
+    margin: 30px;
+}
+
+.resnav a {
+    text-decoration: none;
+    color: #17224d;
+    margin: 20px;
+}
+
+.resnav{
+    justify-content:center ;
+    display: flex;
+    flex-direction: column;
+   
+
+}
+.active{
+    border-bottom: 2px solid white;
+
 }
 

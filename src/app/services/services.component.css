@@ -1,0 +1,9 @@
+
+@media (max-width:500px){
+    .herobody{
+    padding-left: 0px !important;
+    }
+    .herotext{
+        padding: 0px !important;
+    }
+}

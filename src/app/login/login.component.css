@@ -1,0 +1,15 @@
+@media (max-width: 699px){
+    .d-flex{
+        flex-direction: column !important;
+        margin-top: 0px;
+    }
+
+}
+@media (min-width: 700px){
+    
+    .d-flex{
+        margin-top: 100px;
+        margin-bottom: 50px;
+    }
+
+}
