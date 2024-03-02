@@ -21,6 +21,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { UserService } from "./endpoints/user.service";
 import { RegisterComponent } from "./register/register.component";
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 
 
@@ -46,6 +47,7 @@ import { RegisterComponent } from "./register/register.component";
         InputTextModule,
         ReactiveFormsModule,
         FormsModule,
+        RadioButtonModule
               ],
          exports:[
             NavBarComponent,

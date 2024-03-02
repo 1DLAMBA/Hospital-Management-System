@@ -1,0 +1,9 @@
+.user_type input{
+    width: 15px;
+    
+}
+.registerbody {
+    padding: 70px;
+}
+@media (min-width: 499px){
+}

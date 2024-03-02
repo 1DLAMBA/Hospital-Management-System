@@ -10,7 +10,9 @@ export class UserService{
   baseUrl = `${environment.apiUrl}/user`;  
 
   constructor(private httpClient: HttpClient) { }
-
+  register(){
+    
+  }
   login(data: UserRequest){
     return this.httpClient.post(`${this.baseUrl}/login`, data);
   }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,17 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   RegisterForm!: FormGroup;
+  
+  constructor(){
+    this.RegisterForm = new FormGroup({
+      
+    })
+  }
+
+ ngOnInit(): void {
+   
+ }
 
 }

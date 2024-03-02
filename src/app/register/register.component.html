@@ -1,4 +1,4 @@
-<div class="  d-flex ">
+<div class="  registerbody d-flex ">
     <div class="holder shadow-lg  m-auto d-flex justify-content-center">
         <div class="  sideA">
             <div class="innersideA  d-flex ">
@@ -18,14 +18,14 @@
             </div>
         </div>
         <div class="form d-flex flex-column m-auto p-5">
-            <h3>Welcome Back!</h3>
-            <p>Enhancing your health and Safety</p>
-            <button class="btn btn-lg  mx-auto border btn-hover"><img
-                    src="../../assets/flat-color-icons_google.png" alt="">&nbsp; Log in with Google </button>
-            <p-divider align="center" type="dotted">
-                <b>Or</b>
-            </p-divider>
-            <form [formGroup]="RegisterForm">
+            <h3>Welcome To Phoenix!</h3>
+            <p>Let's begin your renewed healthcare journey!</p>
+           
+            <form [formGroup]="RegisterForm" class="mt-2">
+                <div class="flex flex-column gap-2">
+                    <label for="name">Name</label><br>
+                    <input formControlName="name" name="name" type="name" pInputText id="name" aria-describedby="username-help" />
+                </div>
                 <div class="flex flex-column gap-2">
                     <label for="email">Email</label><br>
                     <input formControlName="email" name="email" type="email" pInputText id="email" aria-describedby="username-help" />
@@ -33,6 +33,30 @@
                 <div class="flex flex-column gap-2">
                     <label for="password">Password</label><br>
                     <input formControlName="password" name="password" type="password" pInputText id="password" aria-describedby="username-help" />
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="confirm_password">Confirm Password</label><br>
+                    <input formControlName="confirm_password" name="confirm_password" type="password" pInputText id="confirm_password" aria-describedby="username-help" />
+                </div>
+                <div class="user_type m-2 d-flex justify-content-between">
+                    <span class="m-3">
+                        <input id="Doctor" formControlName="user_type" type="radio"
+                        name="user_type" value="doctor" />
+                        <label for="Doctor"> Doctor</label>
+                      </span>
+        
+                      <span class="m-3">
+                          <input id="Nurse" formControlName="user_type" type="radio"
+                          name="user_type" value="nurse" />
+                          <label for="Nurse"> Nurse</label>
+                      </span>
+
+                      <span class="m-3">
+                          <input id="Client" formControlName="user_type" type="radio"
+                          name="user_type" value="client" />
+                          <label for="Client">Client</label>
+                      </span>
+            
                 </div>
                 <button class="btn btn-lg submit border text-center btn-hover">Submit </button>
 
