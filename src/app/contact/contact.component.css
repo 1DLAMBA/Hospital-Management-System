@@ -1,0 +1,40 @@
+@media (max-width:500px){
+    .servicecards .box-shadow-hover{
+        width: 100%;
+    
+    }
+    .innercard{
+        margin: 0px !important;
+        width: 100%;
+    }
+    .innercard .m-5{
+        margin: 10px !important;
+    }
+    .herobody{
+        padding-left: 10px !important;
+        padding-top: 10px !important;
+    }
+    .card{
+        padding: 5px !important;
+    }
+    .herodoctor {
+        width: 70% !important;
+        position: absolute;
+        opacity: 0.3;
+        right:0px;
+    }
+    .herotext p{
+        font-size: smaller !important;
+        z-index: 2;
+    }
+}
+.card{
+
+    background-color: antiquewhite !important;
+}
+.button button{
+    width: 100% !important;
+}
+.button button:hover{
+    color: rgb(0, 0, 0) !important;
+}

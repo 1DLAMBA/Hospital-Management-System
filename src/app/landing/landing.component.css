@@ -1,23 +1,105 @@
-.testimonialbg{
-    background-image: url('../../assets/testimonialsbg.png');
-    background-size: contain;
-    background-repeat: no-repeat;
- padding: 10%;
-    background-position: center; 
-    height: 100%;
+@media (min-width: 500px){
+    .herotext h1{
+        font-size: calc(1.9rem + 2.0vw);
+        color: white;
+        font-family: 'Nunito Sans', sans-serif;
+      
+      }
+}
+@media (max-width: 499px){
+    .herotext h1{
+        font-size: calc(1rem + 2.0vw);
+        color: white;
+        font-family: 'Nunito Sans', sans-serif;
+      
+      }
+      .herobtns .btn{
+        width: 100px !important;
+        font-size: 10px;
+      }
+      .heroglass h1{
+        font-size: calc(1rem + 1.0vw);
+
+      }
+      .herotext p{
+        font-size: 10px;
+      }
+      .heroglass p{
+        font-size: 8px;
+
+      }
+      .servicecards .box-shadow-hover{
+        width: 100%;
+    
+    }
+    .featureset1 img{
+        width: 100%;
+    }
+    .featureset2{
+        width: 100%;
+        margin-top: 260px;
+       
+    }
+    .featureset2 img{
+        width: 100%;
+    }
+    .set1context{
+        padding: 100px;
+        position: absolute;
+    }
+    .set1context h4{
+        color: white;
+        padding: 10px;
+        
+    }
+    .set1context h4 span{
+    color: #2690fa;
+
+    }
+    .set1context p{
+        margin-top: 220px;
+    }
+    
+
+    .setcontext{
+        padding: 20px;
+        position: absolute;
+    }
+    .setcontext h4{
+        color: white;
+        margin: 0px !important;
+        padding: 5px;
+    }
+    .setcontext h4 span{
+    color: #2690fa;
+
+    }
+    .setcontext p{
+        margin-top: 210px;
+    }
+
+    .testimonials{
+        margin:300px 10px 10px 10px;
+    }
+    .aboutbod img{
+        width: 50%;
+        height: 50%;
+    }
+    .abouttext h4{
+        font-size: 15px;
+    }
+    .abouttext p{
+        font-size: 12px;
+    }
+    .subscribe .input{
+        width: 50%;
+        border: 0px !important;
+    }
+    .subscribe h1{
+        font-size: 20px;
+    }
 }
 
-.bghold{
-    height: 100%;
-}
-.bghold p{}
-.float-right{
-    float: right;
-}
-.testimonials .btn:hover{
-    color: #17224d !important;
-
-}
 .about .btn:hover{
     color: #17224d !important;
 
@@ -38,3 +120,4 @@
     color: #17224d !important;
 
 }
+
