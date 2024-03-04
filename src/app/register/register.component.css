@@ -5,5 +5,26 @@
 .registerbody {
     padding: 70px;
 }
+.primary-background{
+    background-color: #dddddd  !important;
+    border: 0 !important; 
+    color: #17224d;
+
+}
+
+.datecard .date{
+    padding: 5%;
+    border-radius: 5px;
+    border: 2px solid #17224d;
+}
+
+ .photostep .primary-background{
+   width: 100%;
+
+}
+
+.photostep .rounded-circle{
+    border: 2px solid #17224d !important;
+}
 @media (min-width: 499px){
 }

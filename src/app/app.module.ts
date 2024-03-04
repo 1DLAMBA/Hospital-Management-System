@@ -18,10 +18,14 @@ import { DividerModule } from 'primeng/divider';
 import { LoginComponent } from "./login/login.component";
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from "@angular/platform-browser";
+import { CalendarModule } from 'primeng/calendar';
 import { UserService } from "./endpoints/user.service";
 import { RegisterComponent } from "./register/register.component";
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { DoctorsService } from "./endpoints/doctors.service";
+import { ClientsService } from "./endpoints/clients.service";
 
 
 
@@ -47,7 +51,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
         InputTextModule,
         ReactiveFormsModule,
         FormsModule,
-        RadioButtonModule
+        RadioButtonModule,
+        FileUploadModule,
+        ToastModule,
+        CalendarModule
               ],
          exports:[
             NavBarComponent,
@@ -58,7 +65,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
             
          ],
          providers:[
-            UserService
+            UserService,
+            DoctorsService,
+            ClientsService
          ],
          bootstrap: [],
 })

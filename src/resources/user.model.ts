@@ -1,5 +1,6 @@
 export interface UserResource{
     id: number;
+    name:string;
     email: string;
     password:string;
     phoneno: number;
@@ -10,6 +11,16 @@ export interface UserResource{
     updated_at: Date;
 
 };
+
+export interface UserDTO{
+    name:string;
+    email: string;
+    password:string;
+    phoneno: number;
+    gender: string;
+    user_type: string;
+    passport: string;
+}
 
 export interface UserRequest{
     
