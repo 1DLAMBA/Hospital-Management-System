@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { UserRequest } from '../../resources/user.model';
+import { UserDTO, UserRequest } from '../../resources/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService{
-  baseUrl = `${environment.apiUrl}/user`;  
+  baseUrl = `${environment.apiUrl}/user`;
 
   constructor(private httpClient: HttpClient) { }
-  register(){
+  register(data: UserDTO){
+    return this.httpClient.post(`${this.baseUrl}/register`, data);
+
     
   }
   login(data: UserRequest){

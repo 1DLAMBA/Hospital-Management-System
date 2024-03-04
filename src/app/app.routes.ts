@@ -6,6 +6,7 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { DashboardComponent } from './panel/dashboard/dashboard.component';
 
 export const routes: Routes = [
     {
@@ -31,6 +32,10 @@ export const routes: Routes = [
       {
         path: 'register',
         component: RegisterComponent,
+      },
+      {
+        path: 'panel',
+        component: DashboardComponent,
       },
 ];
 @NgModule({

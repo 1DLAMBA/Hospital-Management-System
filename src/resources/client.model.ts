@@ -15,3 +15,8 @@ export interface ClientResource {
     nurse: NurseResource,
     created_by: UserResource
 }
+
+export interface ClientsRequest{
+    user_id:number,
+    date_of_birth: string,
+}
