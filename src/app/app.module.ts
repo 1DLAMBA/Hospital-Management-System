@@ -26,6 +26,10 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { DoctorsService } from "./endpoints/doctors.service";
 import { ClientsService } from "./endpoints/clients.service";
+import { NursesService } from "./endpoints/nurses.service";
+import { AboutComponent } from "./about/about.component";
+import { ServicesComponent } from "./services/services.component";
+import { ContactComponent } from "./contact/contact.component";
 
 
 
@@ -36,7 +40,10 @@ import { ClientsService } from "./endpoints/clients.service";
         NavBarComponent,
         FooterComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        AboutComponent,
+        ServicesComponent,
+        ContactComponent
 
          ],
     imports: [ 
@@ -61,13 +68,17 @@ import { ClientsService } from "./endpoints/clients.service";
             FooterComponent,
             LandingComponent,
             LoginComponent,
-            RegisterComponent
+            RegisterComponent,
+            AboutComponent
             
          ],
          providers:[
             UserService,
             DoctorsService,
-            ClientsService
+            ClientsService,
+            NursesService,
+            ServicesComponent,
+            ContactComponent
          ],
          bootstrap: [],
 })

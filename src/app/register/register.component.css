@@ -26,5 +26,11 @@
 .photostep .rounded-circle{
     border: 2px solid #17224d !important;
 }
-@media (min-width: 499px){
+@media (max-width: 799px){
+    .holder{
+        flex-wrap: wrap;
+    }
+    .registerbody{
+        padding: 0;
+    }
 }

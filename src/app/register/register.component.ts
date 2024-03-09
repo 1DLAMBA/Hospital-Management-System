@@ -9,6 +9,7 @@ import { Router, ActivatedRoute,
   ActivatedRouteSnapshot,
   Route, } from '@angular/router';
 import { ClientsService } from '../endpoints/clients.service';
+import { NursesService } from '../endpoints/nurses.service';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -37,6 +38,7 @@ export class RegisterComponent implements OnInit {
     private _http: HttpClient,
     private readonly userEndpoint: UserService,
     private readonly doctorEndpoint: DoctorsService,
+    private readonly nurseEndpoint: NursesService,
     private readonly clientEndpoint: ClientsService,
      private readonly router: Router,
 
@@ -97,7 +99,7 @@ export class RegisterComponent implements OnInit {
     this.userEndpoint.register(formData).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.userId = response.id
+        this.userId = response.user.id
         this.adduser(this.userId, this.RegisterForm.value.user_type)
 
       },
@@ -125,7 +127,7 @@ export class RegisterComponent implements OnInit {
 
   adduser(userId: any, user_type: any) {
     switch (user_type) {
-      case 'doctor' || 'nurse':
+      case 'doctor':
         const user = {
           user_id: userId,
           license_number: this.RegisterForm.value.license_number,
@@ -142,6 +144,25 @@ export class RegisterComponent implements OnInit {
           },
           error(err) {
             console.log(err)
+          },
+        })
+        break;
+        case 'nurse':
+
+        const nurse ={
+          user_id: userId,
+          license_number: this.RegisterForm.value.license_number,
+          med_school: this.RegisterForm.value.med_school,
+          specialization: this.RegisterForm.value.specialization,
+          grad_year: this.RegisterForm.value.grad_year,
+          degree_file: this.degreeFile,
+        }
+        this.nurseEndpoint.create(nurse).subscribe({
+          next: (response)=>{
+            console.log(response);
+            this.router.navigate(['login'])
+          }, error(err) {
+            
           },
         })
         break;
