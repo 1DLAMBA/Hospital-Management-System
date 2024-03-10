@@ -1,3 +1,8 @@
-<app-nav-bar></app-nav-bar>
-<router-outlet></router-outlet>
-<app-footer></app-footer>
+<ng-container *ngIf="shouldShowNavbarAndFooter()">
+    <app-nav-bar></app-nav-bar>
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+  </ng-container>
+  <ng-container *ngIf="!shouldShowNavbarAndFooter()">
+    <router-outlet></router-outlet>
+  </ng-container>

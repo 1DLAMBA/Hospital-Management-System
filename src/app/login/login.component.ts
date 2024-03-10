@@ -3,7 +3,11 @@ import { AppModule } from '../app.module';
 import { UserResource } from '../../resources/user.model';
 import { UserService } from '../endpoints/user.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { response } from 'express';
+import {
+  Router, ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Route,
+} from '@angular/router';
 
 
 @Component({
@@ -18,7 +22,8 @@ export class LoginComponent {
 
   constructor(
     private loginEndpoint: UserService,
-    private fb:FormBuilder
+    private fb:FormBuilder,
+    private readonly router:Router
   ){
     this.LoginForm = this.fb.group({
       email: this.fb.control('', [Validators.required]),
@@ -29,7 +34,7 @@ export class LoginComponent {
 
   login(){
     if(this.LoginForm.invalid){
-            
+            window.alert('Failed!')
     }
     const formData = {
       email: this.LoginForm.value.email,
@@ -37,7 +42,9 @@ export class LoginComponent {
     }
     this.loginEndpoint.login(formData).subscribe({
       next: (response:any) => {
-        console.log('LOGGED IN')
+        console.log(response)
+        this.router.navigate(['panel']);
+
       }
     })
   }

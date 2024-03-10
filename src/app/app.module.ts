@@ -30,6 +30,7 @@ import { NursesService } from "./endpoints/nurses.service";
 import { AboutComponent } from "./about/about.component";
 import { ServicesComponent } from "./services/services.component";
 import { ContactComponent } from "./contact/contact.component";
+import { PanelModule } from "./panel/panel.module";
 
 
 
@@ -61,7 +62,7 @@ import { ContactComponent } from "./contact/contact.component";
         RadioButtonModule,
         FileUploadModule,
         ToastModule,
-        CalendarModule
+        CalendarModule,
               ],
          exports:[
             NavBarComponent,
@@ -78,7 +79,8 @@ import { ContactComponent } from "./contact/contact.component";
             ClientsService,
             NursesService,
             ServicesComponent,
-            ContactComponent
+            ContactComponent,
+            PanelModule
          ],
          bootstrap: [],
 })

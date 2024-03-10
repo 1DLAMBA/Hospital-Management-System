@@ -115,10 +115,22 @@ export class RegisterComponent implements OnInit {
   firstframe() {
     this.firststep = true;
     this.secondstep = false;
+    this.clientstep = false;
+    this.photostep = false;
   }
   secondstepback() {
     this.secondstep = true;
     this.photostep = false
+  }
+
+  stepcheck(){
+    if (this.RegisterForm.value.user_type == 'client'){
+    this.clientstep =true;
+    this.photostep = false;
+    return;
+    } else {
+      this.secondstepback();
+    }
   }
   clientToFinal(){
     this.clientstep =false;
