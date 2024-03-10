@@ -12,6 +12,22 @@
 
 }
 
+.stepper {
+    color: #17224d;
+    font-size: 2rem;
+    
+}
+ .line1, .line2{
+    
+    background-color: #17224d !important;
+}
+.stepper .mt-4{
+    height: 2px; 
+    width: 200px; 
+    background-color: #d3daf8;
+
+}
+
 .datecard .date{
     padding: 5%;
     border-radius: 5px;
@@ -26,5 +42,11 @@
 .photostep .rounded-circle{
     border: 2px solid #17224d !important;
 }
-@media (min-width: 499px){
+@media (max-width: 799px){
+    .holder{
+        flex-wrap: wrap;
+    }
+    .registerbody{
+        padding: 0;
+    }
 }

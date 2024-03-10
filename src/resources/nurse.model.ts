@@ -11,3 +11,12 @@ export interface NurseResource {
     availability: string,
     created_by: UserResource
 }
+
+export interface NurseRequest {
+    user_id:number,
+    license_number: string,
+    med_school: string,
+    specialization: string,
+    grad_year: string,
+    degree_file: string,
+}

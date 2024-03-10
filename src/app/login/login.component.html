@@ -1,3 +1,4 @@
+
 <div class="  d-flex ">
     <div class="holder shadow-lg  m-auto d-flex justify-content-center">
         <div class="  sideA">
@@ -34,7 +35,7 @@
                     <label for="password">Password</label><br>
                     <input formControlName="password" name="password" type="password" pInputText id="password" aria-describedby="username-help" />
                 </div>
-                <button class="btn btn-lg submit border text-center btn-hover">Submit </button>
+                <button class="btn btn-lg submit border text-center btn-hover" (click)="login()">Submit </button>
 
             </form>
             <p>Don't have an account? <a routerLink="../register">Register</a></p>

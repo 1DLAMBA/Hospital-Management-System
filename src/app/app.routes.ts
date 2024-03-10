@@ -7,6 +7,7 @@ import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './panel/dashboard/dashboard.component';
+import { PanelComponent } from './panel/dashboard/panel/panel.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +37,16 @@ export const routes: Routes = [
       {
         path: 'panel',
         component: DashboardComponent,
+        data: { hideNavbarAndFooter: true },
+        children: [{
+          path: '',
+          component: PanelComponent,
+        },
+        // {
+        //   path: '',
+        //   component: PanelComponent,
+        // },
+      ]
       },
 ];
 @NgModule({

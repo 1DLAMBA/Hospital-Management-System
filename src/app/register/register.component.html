@@ -1,5 +1,5 @@
 <div class="  registerbody d-flex ">
-    <div class="holder shadow-lg  m-auto d-flex justify-content-center">
+    <div class="holder shadow-lg  m-auto d-flex  justify-content-center">
         <div class="  sideA">
             <div class="innersideA  d-flex ">
                 <!-- <img src="../../assets/logdoctor.png" class="m-auto" alt=""> -->
@@ -17,7 +17,33 @@
                 </div>
             </div>
         </div>
-        <div class="form d-flex flex-column m-auto p-5">
+        <div class="form d-flex flex-column m-auto px-5 py-3">
+
+            <div *ngIf="firststep && !secondstep" class="stepper-1 stepper d-flex justify-content-between mb-4">
+                <span class="bi bi-1-circle-fill"></span>
+                    <span   class="mt-4 "></span>
+                    <span class="bi bi-2-circle"></span>
+                    <span   class="mt-4"></span>
+                <span class="bi bi-3-circle"></span>
+
+            </div>
+            <div *ngIf="secondstep || clientstep" class="stepper-2 stepper d-flex justify-content-between mb-4">
+                <span (click)="firstframe()" class="bi bi-1-circle-fill"></span>
+                <span   class="mt-4 line1"></span>
+                <span class="bi bi-2-circle-fill"></span>
+                <span   class="mt-4"></span>
+                <span class="bi bi-3-circle"></span>
+
+            </div>
+            <div *ngIf="photostep" class="stepper-3 stepper d-flex justify-content-between mb-4">
+                <span (click)="firstframe()" class="bi bi-1-circle-fill"></span>
+                <span   class="mt-4 line1"></span>
+                <span (click)="stepcheck()" class="bi bi-2-circle-fill"></span>
+                <span   class="mt-4 line1"></span>
+                <span class="bi bi-3-circle-fill"></span>
+
+            </div>
+
             <h3><b>Welcome To <span class="text-secondary">Phoe</span><span class="text-blue">nix</span></b></h3>
             <p>Let's begin your renewed healthcare journey!</p>
 
@@ -121,15 +147,16 @@
                         <input formControlName="grad_year" placeholder="Graduation Year" name="grad_year" type="text"
                             pInputText id="grad_year" aria-describedby="username-help" />
                     </div>
-                    <button class="btn btn-lg submit border text-center btn-hover" (click)="finalstep()">Submit
+                    <button class="btn btn-lg submit border text-center btn-hover" (click)="finalstep()">Next
                     </button>
                 </div>
                 <div class="photostep d-flex flex-column" *ngIf="photostep">
                     <div class=" m-auto border rounded-circle p-5 d-flex flex-column">
                         <img style="
                             border-radius: 6px;
-                            width: 50%;
-                            height: auto;
+                            width: 120px;
+                             height: 120px;
+                             object-fit: contain;
                         " class=" rounded m-auto img-fix-h img-fit img-fluid mb-2 p-link w-full"
                             [src]="uploadedPassport"
                             onError="this.src='../assets/streamline_user-profile-focus.png';" alt="Avatar File" />
