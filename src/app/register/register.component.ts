@@ -5,9 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../endpoints/user.service';
 import { UserDTO } from '../../resources/user.model';
 import { DoctorsService } from '../endpoints/doctors.service';
-import { Router, ActivatedRoute,
+import {
+  Router, ActivatedRoute,
   ActivatedRouteSnapshot,
-  Route, } from '@angular/router';
+  Route,
+} from '@angular/router';
 import { ClientsService } from '../endpoints/clients.service';
 import { NursesService } from '../endpoints/nurses.service';
 
@@ -40,7 +42,7 @@ export class RegisterComponent implements OnInit {
     private readonly doctorEndpoint: DoctorsService,
     private readonly nurseEndpoint: NursesService,
     private readonly clientEndpoint: ClientsService,
-     private readonly router: Router,
+    private readonly router: Router,
 
   ) {
     this.RegisterForm = new FormGroup({
@@ -67,14 +69,32 @@ export class RegisterComponent implements OnInit {
 
   // Logic For stepper
   next() {
-    if(this.RegisterForm.value.user_type == 'client'){
-      this.firststep = false;
-      this.clientstep =true;
+    if (this.RegisterForm.value.user_type,
+      this.RegisterForm.value.name,
+      this.RegisterForm.value.email,
+      this.RegisterForm.value.phoneno,
+      this.RegisterForm.value.gender,
+      this.RegisterForm.value.password,
+      this.RegisterForm.value.confirm_password
+    ) {
+      if (this.RegisterForm.value.password != this.RegisterForm.value.confirm_password) {
+        window.alert('Passwords dont match');
+        return;
+      }
+
+      if (this.RegisterForm.value.user_type == 'client') {
+        this.firststep = false;
+        this.clientstep = true;
+      }
+      if (this.RegisterForm.value.user_type == 'doctor' || this.RegisterForm.value.user_type == 'nurse') {
+        this.secondstep = true;
+        this.firststep = false;
+      }
     }
-    if (this.RegisterForm.value.user_type == 'doctor' || this.RegisterForm.value.user_type == 'nurse') {
-      this.secondstep = true;
-      this.firststep = false;
+    else {
+      window.alert('Please fill accordingly');
     }
+
   }
   submit() {
     const baseUrlLength = (environment.apiUrl + '/file/get/').length;
@@ -109,8 +129,16 @@ export class RegisterComponent implements OnInit {
     })
   }
   finalstep() {
-    this.secondstep = false;
-    this.photostep = true
+    if (this.RegisterForm.value.license_number,
+      this.RegisterForm.value.med_school,
+      !this.degreeFile.invalid,
+      this.RegisterForm.value.specialization,
+      this.RegisterForm.value.grad_year
+    ){
+
+      this.secondstep = false;
+      this.photostep = true;
+    }
   }
   firstframe() {
     this.firststep = true;
@@ -123,18 +151,20 @@ export class RegisterComponent implements OnInit {
     this.photostep = false
   }
 
-  stepcheck(){
-    if (this.RegisterForm.value.user_type == 'client'){
-    this.clientstep =true;
-    this.photostep = false;
-    return;
+  stepcheck() {
+    if (this.RegisterForm.value.user_type == 'client') {
+      this.clientstep = true;
+      this.photostep = false;
+      return;
     } else {
       this.secondstepback();
     }
   }
-  clientToFinal(){
-    this.clientstep =false;
-    this.photostep = true;
+  clientToFinal() {
+    if(this.clientForm.value.date_of_birth){
+      this.clientstep = false;
+      this.photostep = true;
+    }
   }
 
   adduser(userId: any, user_type: any) {
@@ -159,9 +189,9 @@ export class RegisterComponent implements OnInit {
           },
         })
         break;
-        case 'nurse':
+      case 'nurse':
 
-        const nurse ={
+        const nurse = {
           user_id: userId,
           license_number: this.RegisterForm.value.license_number,
           med_school: this.RegisterForm.value.med_school,
@@ -170,26 +200,26 @@ export class RegisterComponent implements OnInit {
           degree_file: this.degreeFile,
         }
         this.nurseEndpoint.create(nurse).subscribe({
-          next: (response)=>{
+          next: (response) => {
             console.log(response);
             this.router.navigate(['login'])
           }, error(err) {
-            
+
           },
         })
         break;
-        case 'client':
+      case 'client':
 
-        const client ={
+        const client = {
           user_id: userId,
           date_of_birth: this.clientForm.value.date_of_birth
         }
         this.clientEndpoint.create(client).subscribe({
-          next: (response)=>{
+          next: (response) => {
             console.log(response);
             this.router.navigate(['login'])
           }, error(err) {
-            
+
           },
         })
         break;

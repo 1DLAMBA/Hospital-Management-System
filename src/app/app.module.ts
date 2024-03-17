@@ -31,6 +31,9 @@ import { AboutComponent } from "./about/about.component";
 import { ServicesComponent } from "./services/services.component";
 import { ContactComponent } from "./contact/contact.component";
 import { PanelModule } from "./panel/panel.module";
+import { MessageService } from "primeng/api";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 
 
@@ -80,8 +83,9 @@ import { PanelModule } from "./panel/panel.module";
             NursesService,
             ServicesComponent,
             ContactComponent,
-            PanelModule
+            PanelModule,
+            MessageService
          ],
-         bootstrap: [],
+         bootstrap: [AppComponent],
 })
 export class AppModule { }
