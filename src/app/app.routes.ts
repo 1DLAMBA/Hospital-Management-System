@@ -8,6 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './panel/dashboard/dashboard.component';
 import { PanelComponent } from './panel/dashboard/panel/panel.component';
+import { AppointmentComponent } from './panel/dashboard/appointment/appointment.component';
 
 export const routes: Routes = [
     {
@@ -42,10 +43,10 @@ export const routes: Routes = [
           path: '',
           component: PanelComponent,
         },
-        // {
-        //   path: '',
-        //   component: PanelComponent,
-        // },
+        {
+          path: 'appointment',
+          component: AppointmentComponent,
+        },
       ]
       },
 ];

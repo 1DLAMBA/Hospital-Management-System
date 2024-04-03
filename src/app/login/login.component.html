@@ -1,5 +1,6 @@
+<p-toast  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 
-<p-toast></p-toast>
+<ngx-spinner bdColor = "#fff" size = "medium" color = "#17224d" [fullScreen] = "true"><div style="color: #17224d" class="d-flex vh-100" > <span class="bi bi-heart-pulse pulse m-auto"></span> </div></ngx-spinner>
 <div class="  d-flex ">
     <div class="holder shadow-lg  m-auto d-flex justify-content-center">
         <div class="  sideA">
@@ -27,6 +28,12 @@
             <p-divider align="center" type="dotted">
                 <b>Or</b>
             </p-divider>
+            <div *ngIf="invalidDetails" class="alert alert-danger" role="alert">
+               Invalid Email Or Password
+              </div>
+              <!-- <div  class="alert alert-danger error" role="alert">
+                Error Occured
+               </div> -->
             <form [formGroup]="LoginForm">
                 <div class="flex flex-column gap-2">
                     <label for="email">Email</label><br>
@@ -40,6 +47,8 @@
 
             </form>
             <p>Don't have an account? <a routerLink="../register">Register</a></p>
+            
+            <!-- <button mat-stroked-button (click)="openSnackBar(message.value, action.value)">Show snack-bar</button> -->
         </div>
     </div>
 </div>

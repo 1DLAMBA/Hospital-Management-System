@@ -1,3 +1,5 @@
+
+
 @media (max-width: 699px){
     .d-flex{
         flex-direction: column !important;
@@ -12,4 +14,7 @@
         margin-bottom: 50px;
     }
 
+}
+p{
+    font-family: "Nunito Sans", sans-serif;
 }

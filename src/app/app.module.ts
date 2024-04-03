@@ -1,7 +1,7 @@
 
 import { AppRoutingModule, routes } from "./app.routes";
-import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingComponent } from "./landing/landing.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { AppComponent } from "./app.component";
@@ -33,7 +33,9 @@ import { ContactComponent } from "./contact/contact.component";
 import { PanelModule } from "./panel/panel.module";
 import { MessageService } from "primeng/api";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { ToastsContainer } from "./toast-container";
+import { AnimateOnScroll, AnimateOnScrollModule } from 'primeng/animateonscroll';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 
@@ -66,6 +68,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         FileUploadModule,
         ToastModule,
         CalendarModule,
+        NgbTooltipModule,
+        ToastsContainer,
+        AnimateOnScrollModule,
+        NgxSpinnerModule
               ],
          exports:[
             NavBarComponent,
@@ -84,8 +90,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
             ServicesComponent,
             ContactComponent,
             PanelModule,
-            MessageService
+            // MessageService
          ],
-         bootstrap: [AppComponent],
+         schemas: [CUSTOM_ELEMENTS_SCHEMA],
+         // bootstrap: [AppComponent],
 })
 export class AppModule { }

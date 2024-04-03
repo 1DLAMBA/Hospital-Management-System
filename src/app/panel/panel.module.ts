@@ -5,6 +5,8 @@ import { PanelRoutingModule } from './panel-routing.module';
 import { PanelComponent } from './dashboard/panel/panel.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { SideNavComponent } from './side-nav/side-nav.component';
+import { ToastModule } from 'primeng/toast';
 
 
 
@@ -12,12 +14,14 @@ import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     DashboardComponent,
-    PanelComponent],
+    PanelComponent,
+  SideNavComponent],
   imports: [
     CommonModule,
     PanelRoutingModule,
     NgbModule,
     HttpClientModule,
+    ToastModule
 
   ],
   bootstrap :[DashboardComponent]

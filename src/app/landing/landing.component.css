@@ -2,7 +2,7 @@
     .herotext h1{
         font-size: calc(1.9rem + 2.0vw);
         color: white;
-        font-family: 'Nunito Sans', sans-serif;
+        font-family: "EB Garamond", serif;
       
       }
 }
@@ -10,7 +10,7 @@
     .herotext h1{
         font-size: calc(1rem + 2.0vw);
         color: white;
-        font-family: 'Nunito Sans', sans-serif;
+        font-family: "EB Garamond", serif;
       
       }
       .herobtns .btn{

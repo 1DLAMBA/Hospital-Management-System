@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/themes/bootstrap4-light-purple/theme.css";
 @import "primeng/resources/primeng.css";
 
 .wh1{
@@ -17,7 +17,7 @@ backdrop-filter: blur(4px);
     background-image: url('assets/bd.png');
     background-attachment: fixed;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     background-size: cover;
 }
 .herotext p{
@@ -100,7 +100,7 @@ color: white;
     width: 100%;
 }
 body{
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 .featureset1 img{
@@ -181,4 +181,36 @@ background-color: #0055AA !important;
 .primary-background{
     background-color: #17224d !important;  
 
+}
+
+.error{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.bi-heart-pulse{
+    font-size:xx-large
+}
+html, body { height: 100%; }
+body{ margin: 0;   font-family: "Nunito Sans", sans-serif; }
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pulse {
+   
+    border-radius: 50%;
+    padding: 20%;
+    animation: pulse 2s infinite;
 }

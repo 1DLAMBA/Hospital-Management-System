@@ -1,0 +1,17 @@
+.side-body{
+    background-color: #17224d !important;
+    color: white;  
+    height: 100vh;
+    
+}
+
+.side-btn{
+    background-color: #0055aa00;
+    width: 250px;
+    color: white;
+    border: 1px transparent;
+    align-items: flex-start;
+    border-radius: 5px;
+    padding-right: 100px;
+    padding-left: 25px;
+}

@@ -1,0 +1,15 @@
+<div class="side-body p-3">
+    <div class="d-flex justify-content-between gap-5 mb-3">
+        <h5>Phoenix.</h5>
+        <span class="bi bi-house-door">
+
+        </span>
+    </div>
+    <div *ngFor="let navType of nav_type" class="" >
+
+        <button class="{{navType.navClassName}}">
+            &nbsp;{{navType.title}}
+        </button>
+
+    </div>
+</div>
