@@ -49,10 +49,6 @@ export class LoginComponent implements OnDestroy, OnInit {
   invdet() {
     this.invalidDetails = true
   }
-  showStandard(template: TemplateRef<any>) {
-
-    this.toastService.show({ template });
-  }
 
 
   ngOnInit(): void {
@@ -60,7 +56,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     setTimeout(() => {
       /** spinner ends after 5 seconds */
       this.spinner.hide();
-    }, 5000);
+    }, 2000);
   }
   ngOnDestroy(): void {
     this.toastService.clear();

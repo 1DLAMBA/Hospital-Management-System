@@ -14,14 +14,18 @@ export const routes: Routes = [
     {
         path: '',
         component: LandingComponent,
+        data: { animation: 'HomePage' }
       },
       {
         path: 'services',
         component: ServicesComponent,
+        data: { animation: 'ServicePage' }
+
       },
       {
         path: 'about',
         component: AboutComponent,
+        data: { animation: 'AboutPage' }
       },
       {
         path: 'contact',

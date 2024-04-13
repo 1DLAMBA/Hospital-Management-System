@@ -191,6 +191,19 @@ background-color: #0055AA !important;
 .bi-heart-pulse{
     font-size:xx-large
 }
+.upload-button {
+    background-color: #0055AA !important;  
+}
+.upload-button:hover{
+    background-color: #fff !important;  
+    color: #17224d;
+    
+}
+.upload-button .spinner-border{
+    width: 18px;
+    height: 18px;
+}
+
 html, body { height: 100%; }
 body{ margin: 0;   font-family: "Nunito Sans", sans-serif; }
 @keyframes pulse {

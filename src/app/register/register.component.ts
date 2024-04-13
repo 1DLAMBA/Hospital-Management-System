@@ -12,6 +12,8 @@ import {
 } from '@angular/router';
 import { ClientsService } from '../endpoints/clients.service';
 import { NursesService } from '../endpoints/nurses.service';
+import { MessageService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -20,7 +22,8 @@ interface UploadEvent {
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
+  providers: [MessageService]
 })
 export class RegisterComponent implements OnInit {
   RegisterForm!: FormGroup;
@@ -30,11 +33,15 @@ export class RegisterComponent implements OnInit {
   clientstep: boolean = false;
   secondstep: boolean = false;
   photostep: boolean = false;
+  passportLoader: boolean = false;
   degreeFile: any;
   uploadedDegreeFile: any;
+  loader: boolean = false;
   passport: any;
   uploadedPassport: any;
   userId: any;
+  invalidFill: boolean = false;
+  submitLoader: boolean = false;
 
   constructor(
     private _http: HttpClient,
@@ -43,11 +50,14 @@ export class RegisterComponent implements OnInit {
     private readonly nurseEndpoint: NursesService,
     private readonly clientEndpoint: ClientsService,
     private readonly router: Router,
+    private messageService: MessageService,
+    private spinner: NgxSpinnerService,
+
 
   ) {
     this.RegisterForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
       confirm_password: new FormControl('', Validators.required),
       user_type: new FormControl('', Validators.required),
@@ -66,15 +76,22 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  degreeSuccess(message: any) {
 
+    this.messageService.add({ severity: 'success', detail: message });
+  }
+  degreeError(message: any) {
+
+    this.messageService.add({ severity: 'error', detail: message });
+  }
   // Logic For stepper
   next() {
-    if (this.RegisterForm.value.user_type,
-      this.RegisterForm.value.name,
-      this.RegisterForm.value.email,
-      this.RegisterForm.value.phoneno,
-      this.RegisterForm.value.gender,
-      this.RegisterForm.value.password,
+    if (this.RegisterForm.value.user_type &&
+      this.RegisterForm.value.name &&
+      this.RegisterForm.value.email &&
+      this.RegisterForm.value.phoneno &&
+      this.RegisterForm.value.gender &&
+      this.RegisterForm.value.password &&
       this.RegisterForm.value.confirm_password
     ) {
       if (this.RegisterForm.value.password != this.RegisterForm.value.confirm_password) {
@@ -92,20 +109,28 @@ export class RegisterComponent implements OnInit {
       }
     }
     else {
-      window.alert('Please fill accordingly');
+      this.degreeError('Please Fill Accordingly')
     }
 
   }
   submit() {
+    // if(!this.passport.invalid){
+    //   this.degreeError('Upload Passport')
+    // }
+    this.submitLoader=true;
     const baseUrlLength = (environment.apiUrl + '/file/get/').length;
-    this.degreeFile = this.uploadedDegreeFile.slice(
-      baseUrlLength,
-      this.uploadedDegreeFile.length
-    );
-    this.passport = this.uploadedPassport.slice(
-      baseUrlLength,
-      this.uploadedPassport.length
-    );
+    if (this.degreeFile) {
+      this.degreeFile = this.uploadedDegreeFile.slice(
+        baseUrlLength,
+        this.uploadedDegreeFile.length
+      );
+    }
+    if (this.passport) {
+      this.passport = this.uploadedPassport.slice(
+        baseUrlLength,
+        this.uploadedPassport.length
+      );
+    }
 
     const formData = {
       name: this.RegisterForm.value.name,
@@ -125,19 +150,24 @@ export class RegisterComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
+        this.submitLoader=false;
+        this.degreeError(error.error.error)
       }
     })
   }
   finalstep() {
-    if (this.RegisterForm.value.license_number,
-      this.RegisterForm.value.med_school,
-      !this.degreeFile.invalid,
-      this.RegisterForm.value.specialization,
+    if (this.RegisterForm.value.license_number &&
+      this.RegisterForm.value.med_school &&
+      !this.degreeFile.invalid &&
+      this.RegisterForm.value.specialization &&
       this.RegisterForm.value.grad_year
-    ){
+    ) {
 
       this.secondstep = false;
       this.photostep = true;
+    }
+    else {
+      this.degreeError('Please Fill Accordingly')
     }
   }
   firstframe() {
@@ -161,10 +191,12 @@ export class RegisterComponent implements OnInit {
     }
   }
   clientToFinal() {
-    if(this.clientForm.value.date_of_birth){
+    if (this.clientForm.value.date_of_birth) {
       this.clientstep = false;
       this.photostep = true;
+      return;
     }
+    this.degreeError('Please fill accordingly')
   }
 
   adduser(userId: any, user_type: any) {
@@ -228,6 +260,18 @@ export class RegisterComponent implements OnInit {
 
   // File UPLOAD
   handleFileUpload(e: any, type: string) {
+    switch (type) {
+      case 'degree':
+        this.loader = true;
+        break;
+      case 'passport':
+        this.passportLoader = true;
+        break;
+      default:
+        window.alert('something went wrong')
+        break;
+
+    }
     let file = e.target.files[0];
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
@@ -236,6 +280,7 @@ export class RegisterComponent implements OnInit {
     this._http.post(`${environment.apiUrl}/upload`, formData).subscribe({
       next: (response: any) => {
         const file = response.data;
+        this.loader = false;
 
         switch (type) {
           case 'degree':
@@ -243,6 +288,7 @@ export class RegisterComponent implements OnInit {
             break;
           case 'passport':
             this.passport = file;
+            this.passportLoader = false;
             break;
           default:
             window.alert('something went wrong')
@@ -251,12 +297,17 @@ export class RegisterComponent implements OnInit {
         }
       },
       complete: () => {
+        this.loader = false;
+        this.degreeSuccess('Uploaded')
+
         switch (type) {
           case 'degree':
             this.uploadedDegreeFile = environment.apiUrl + '/file/get/' + this.degreeFile
             break;
           case 'passport':
             this.uploadedPassport = environment.apiUrl + '/file/get/' + this.passport
+            this.passportLoader = false
+
             break;
           default:
             window.alert('something went wrong')
@@ -265,7 +316,9 @@ export class RegisterComponent implements OnInit {
 
       },
       error: (error: any) => {
-        window.alert('Error!')
+        this.loader = false;
+        this.degreeError('Please try again')
+        this.passportLoader = false;
       }
 
     })

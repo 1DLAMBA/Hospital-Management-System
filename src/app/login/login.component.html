@@ -1,6 +1,5 @@
 <p-toast  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 
-<ngx-spinner bdColor = "#fff" size = "medium" color = "#17224d" [fullScreen] = "true"><div style="color: #17224d" class="d-flex vh-100" > <span class="bi bi-heart-pulse pulse m-auto"></span> </div></ngx-spinner>
 <div class="  d-flex ">
     <div class="holder shadow-lg  m-auto d-flex justify-content-center">
         <div class="  sideA">
@@ -23,11 +22,11 @@
         <div class="form d-flex flex-column m-auto p-5">
             <h3>Welcome Back!</h3>
             <p>Enhancing your health and Safety</p>
-            <button class="btn btn-lg  mx-auto border btn-hover"><img
+            <!-- <button class="btn btn-lg  mx-auto border btn-hover"><img
                     src="../../assets/flat-color-icons_google.png" alt="">&nbsp; Log in with Google </button>
             <p-divider align="center" type="dotted">
                 <b>Or</b>
-            </p-divider>
+            </p-divider> -->
             <div *ngIf="invalidDetails" class="alert alert-danger" role="alert">
                Invalid Email Or Password
               </div>
