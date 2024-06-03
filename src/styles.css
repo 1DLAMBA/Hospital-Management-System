@@ -227,3 +227,11 @@ body{ margin: 0;   font-family: "Nunito Sans", sans-serif; }
     padding: 20%;
     animation: pulse 2s infinite;
 }
+.main-sect{
+    width: 60%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.main-sect div{
+    width: 100%;
+}

@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../../endpoints/user.service';
-import { UserResource } from '../../../../resources/user.model';
-import { environment } from '../../../../environments/environment';
+import { UserService } from '../../../../endpoints/user.service';
+import { UserResource } from '../../../../../resources/user.model';
 
 
 @Component({
-  selector: 'app-panel',
- 
-  templateUrl: './panel.component.html',
-  styleUrl: './panel.component.css'
+  selector: 'app-doctor-panel',
+  templateUrl: './doctor-panel.component.html',
+  styleUrl: './doctor-panel.component.css'
 })
-export class PanelComponent implements OnInit {
+export class DoctorPanelComponent implements OnInit {
   id: any;
   user!: UserResource
   data: any;
@@ -20,7 +18,13 @@ export class PanelComponent implements OnInit {
   upc_appt!: any[];
 
   constructor(private userEndpoint: UserService){
-   
+    this.upc_appt =[
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+
+    ]
   }
   ngOnInit(): void {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -101,7 +105,6 @@ export class PanelComponent implements OnInit {
       },
     ]
     this.id=localStorage.getItem('id')
-    this.getUser();
   }
   
   
@@ -109,8 +112,6 @@ export class PanelComponent implements OnInit {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user
-        console.log(this.user.user_type);
-        
         
       }
     })

@@ -1,0 +1,62 @@
+.appt{
+    background-color: #17224d;
+    color: white;
+    justify-content: space-between;
+    padding: 2%;
+    border-radius: 7px;
+    margin: auto;
+}
+
+.sub-card{
+    background-color: #17224d80;
+    /* margin: 2%; */
+    width: 30%;
+    color: white;
+    border-radius: 7px;
+
+}
+.sub-card span{
+    background-color: #0055aa;
+    border-radius: 50%;
+}
+.main-sect{
+    width: 49%;
+    margin: 3%;
+}
+
+.main-sect .stat-card{
+    background-color: #17224d !important;
+    color: white !important;
+    padding: 5% !important;
+}
+
+.appt-sect {
+    width: 50%;
+    background-color: #17224d;
+    border-radius: 7px;
+    display: flex;
+    padding-top: 3%;
+    padding-left: 2%;
+    padding-right: 2%;
+    flex-direction: column;
+    color: white !important;
+}
+.appt-sect .card{
+    background-color: #17224d !important;
+    /* margin: auto !important; */
+
+
+    width: 60% !important;
+}
+.calender {
+}
+:host {
+    ::ng-deep .p-datepicker {
+        background-color: #17224d !important;
+        color: white !important;
+        
+    } 
+    ::ng-deep .p-calender{
+
+    }
+}

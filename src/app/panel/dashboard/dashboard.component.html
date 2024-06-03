@@ -1,6 +1,21 @@
 <p-toast  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
-<div class="d-flex">
+<div class="d-flex holder">
 
-    <app-side-nav></app-side-nav>    
-    <router-outlet></router-outlet>
+    <app-side-nav></app-side-nav> 
+    <div class="header">
+        <div class="d-flex mb-3 d-ovr justify-content-between p-3">
+            <h4>Dashboard Overview</h4>
+            <div class="d-flex">
+                <div class="passport">
+                    <img  src="{{ avatar_file + user.passport }}">
+                </div>
+                <div>
+
+                    <p><b>{{user.name}}</b></p>
+                    <small>{{user.user_type}}</small>
+                </div>
+            </div>
+        </div>
+        <router-outlet></router-outlet>
+    </div>   
 </div>

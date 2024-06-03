@@ -1,15 +1,26 @@
-<div class="side-body p-3">
-    <div class="d-flex justify-content-between gap-5 mb-3">
-        <h5>Phoenix.</h5>
-        <span class="bi bi-house-door">
-
-        </span>
+<div class="side-body justify-content-between p-3">
+    <div class="top">
+        <div class="d-flex justify-content-between gap-5 mb-3">
+            <h5>Phoenix.</h5>
+            <span class="bi bi-house-door">
+    
+            </span>
+        </div>
+        <div *ngFor="let navType of nav_type" class="" >
+    
+            <button routerLinkActive="active" class="{{navType.navClassName}}" routerLink="{{navType.routerLink}}" [routerLinkActiveOptions]={exact:true}>
+                &nbsp;&nbsp;{{navType.title}}
+            </button>
+    
+        </div>
     </div>
-    <div *ngFor="let navType of nav_type" class="" >
 
-        <button class="{{navType.navClassName}}">
-            &nbsp;{{navType.title}}
-        </button>
-
+    <div class="bottom">
+        <p class="bi bi-chat-right">&nbsp; Support</p>
+        <hr>
+        <p>
+            Ololade Asake
+        </p>
+        <small>mrmoney&#64;gmail.com</small>
     </div>
 </div>

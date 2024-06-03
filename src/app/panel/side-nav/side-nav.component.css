@@ -2,16 +2,27 @@
     background-color: #17224d !important;
     color: white;  
     height: 100vh;
+    width: 23%;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
     
 }
 
 .side-btn{
     background-color: #0055aa00;
-    width: 250px;
+    width: 80%;
     color: white;
     border: 1px transparent;
     align-items: flex-start;
+    display: flex;
     border-radius: 5px;
-    padding-right: 100px;
-    padding-left: 25px;
+    padding-left:12px ;
+    
+}
+
+.active{
+    background-color: #0055aa;
+    color: white;
+
 }

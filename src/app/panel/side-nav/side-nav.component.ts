@@ -38,32 +38,63 @@ export class SideNavComponent implements OnInit {
     this.doctor_nav =[{
       navClassName:'side-btn bi bi-columns-gap my-2 py-3',
       title: 'Dashboard',
-      routerLink: 'panel'
+      routerLink: '../panel',
     },
     {
       navClassName:'side-btn bi bi-prescription2 my-2 py-3',
       title: 'Appointment',
-      routerLink: 'panel'
+      routerLink: 'appointment'
     },
     {
       navClassName:'side-btn bi bi-heart-pulse-fill my-2 py-3',
       title: 'Nurses',
-      routerLink: 'panel'
+      routerLink: 'nurses'
     },
     {
       navClassName:'side-btn bi bi-person-square my-2 py-3',
       title: 'Clients',
-      routerLink: 'panel'
+      routerLink: 'clients'
     },
     {
       navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
       title: 'Messages',
-      routerLink: 'panel'
+      routerLink: 'messages'
     },
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
-      routerLink: 'panel'
+      routerLink: 'profile'
+    },
+  ]
+    this.client_nav =[{
+      navClassName:'side-btn bi bi-columns-gap my-2 py-3',
+      title: 'Dashboard',
+      routerLink: '../panel',
+    },
+    {
+      navClassName:'side-btn bi bi-prescription2 my-2 py-3',
+      title: 'Appointment',
+      routerLink: 'appointment'
+    },
+    {
+      navClassName:'side-btn bi bi-person-square my-2 py-3',
+      title: 'Doctors',
+      routerLink: 'Doctors'
+    },
+    {
+      navClassName:'side-btn bi bi-heart-pulse-fill my-2 py-3',
+      title: 'Nurses',
+      routerLink: 'nurses'
+    },
+    {
+      navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
+      title: 'Messages',
+      routerLink: 'messages'
+    },
+    {
+      navClassName:'side-btn bi bi-person-circle my-2 py-3',
+      title: 'My Profile',
+      routerLink: 'profile'
     },
   ]
     switch (this.user.user_type) {

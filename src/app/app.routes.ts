@@ -9,6 +9,10 @@ import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './panel/dashboard/dashboard.component';
 import { PanelComponent } from './panel/dashboard/panel/panel.component';
 import { AppointmentComponent } from './panel/dashboard/appointment/appointment.component';
+import { NursesComponent } from './panel/dashboard/nurses/nurses.component';
+import { ClientsComponent } from './panel/dashboard/clients/clients.component';
+import { MessagesComponent } from './panel/dashboard/messages/messages.component';
+import { MyProfileComponent } from './panel/dashboard/my-profile/my-profile.component';
 
 export const routes: Routes = [
     {
@@ -51,6 +55,22 @@ export const routes: Routes = [
           path: 'appointment',
           component: AppointmentComponent,
         },
+        {
+          path: 'nurses',
+          component: NursesComponent,
+        },
+        {
+          path: 'clients',
+          component: ClientsComponent
+        },
+        {
+          path: 'messages',
+          component: MessagesComponent
+        },
+        {
+          path: 'profile',
+          component: MyProfileComponent
+        }
       ]
       },
 ];

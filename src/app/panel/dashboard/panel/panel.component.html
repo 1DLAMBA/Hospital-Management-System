@@ -1,1 +1,8 @@
-<p>panel works!</p>
+<section *ngIf='user.user_type == "doctor"'>
+
+    <app-doctor-panel></app-doctor-panel>
+</section>
+<section *ngIf='user.user_type == "client"'>
+
+    <app-client-panel></app-client-panel>
+</section>

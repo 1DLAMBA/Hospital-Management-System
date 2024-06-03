@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { UserResource } from '../../../resources/user.model';
 import { UserService } from '../../endpoints/user.service';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -13,6 +14,7 @@ export class DashboardComponent implements OnInit {
   id: any;
   user!: UserResource
   firstName!: string;
+  avatar_file!:string;
 
   constructor(
     private messageService: MessageService,
@@ -33,7 +35,7 @@ export class DashboardComponent implements OnInit {
         const splitNames= this.user.name.split(" ");
         this.firstName = splitNames[0];
         this.show(this.firstName);
-        
+        this.avatar_file = environment.apiUrl + '/file/get/';        
       }
     })
   }

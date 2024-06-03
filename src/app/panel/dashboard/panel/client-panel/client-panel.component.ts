@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../../endpoints/user.service';
-import { UserResource } from '../../../../resources/user.model';
-import { environment } from '../../../../environments/environment';
-
+import { UserService } from '../../../../endpoints/user.service';
+import { UserResource } from '../../../../../resources/user.model';
 
 @Component({
-  selector: 'app-panel',
- 
-  templateUrl: './panel.component.html',
-  styleUrl: './panel.component.css'
+  selector: 'app-client-panel',
+  templateUrl: './client-panel.component.html',
+  styleUrl: './client-panel.component.css'
 })
-export class PanelComponent implements OnInit {
+export class ClientPanelComponent implements OnInit {
   id: any;
   user!: UserResource
   data: any;
@@ -20,7 +17,13 @@ export class PanelComponent implements OnInit {
   upc_appt!: any[];
 
   constructor(private userEndpoint: UserService){
-   
+    this.upc_appt =[
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
+
+    ]
   }
   ngOnInit(): void {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -31,13 +34,13 @@ export class PanelComponent implements OnInit {
           labels: ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'],
           datasets: [
               {
-                  label: 'Male',
+                  label: 'Online Appointments',
                   backgroundColor: '#0055aa',
                   borderColor: '#0055aa',
                   data: [65, 59, 80, 81, 56, 55, 40]
               },
               {
-                  label: 'Female',
+                  label: 'Visitations',
                   backgroundColor: '#7A8AB5',
                   borderColor: '#7A8AB5',
                   data: [28, 48, 40, 19, 86, 27, 90]
@@ -101,7 +104,6 @@ export class PanelComponent implements OnInit {
       },
     ]
     this.id=localStorage.getItem('id')
-    this.getUser();
   }
   
   
@@ -109,11 +111,10 @@ export class PanelComponent implements OnInit {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user
-        console.log(this.user.user_type);
-        
         
       }
     })
   }
 
 }
+
