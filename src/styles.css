@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "primeng/resources/themes/bootstrap4-light-purple/theme.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
 .wh1{
@@ -18,7 +18,7 @@ backdrop-filter: blur(4px);
     background-attachment: fixed;
     width: 100%;
     /* height: 100%; */
-    background-size: cover;
+    background-size:cover;
 }
 .herotext p{
     color: white;
@@ -181,6 +181,9 @@ background-color: #0055AA !important;
 .primary-background{
     background-color: #17224d !important;  
 
+}
+.primary-color{
+    color: #17224d;
 }
 
 .error{

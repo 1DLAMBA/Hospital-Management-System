@@ -14,4 +14,17 @@ export class DoctorsService {
   create(data: DoctorRequest){
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
+
+
+  get(){
+    return this.httpClient.get(`${this.baseUrl}/get`);
+  }
+
+  getSingle(id:any){
+    return this.httpClient.get(`${this.baseUrl}/get/${id}`);
+  }
+
+  getDocUser(id:any){
+    return this.httpClient.get(`${this.baseUrl}/user/get/${id}`);
+  }
 }

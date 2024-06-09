@@ -1,1 +1,128 @@
-<p>nurse-panel works!</p>
+<section class="d-flex">
+
+    <section class="main-sect">
+    
+        <div class="d-flex justify-content-between">
+           <h3>Recent Appointment</h3>
+           <h4>View all</h4>
+        </div>
+    
+        <div class="appt d-flex">
+            <p>Ali Muhammed - General checkup</p>
+            <p class="text-secondary">Today: 8:30 am - 10:30 am</p>
+            <p>View Details</p>
+        </div>
+    
+        <div class="cards-sect my-5 d-flex justify-content-between">
+            <div class="sub-card d-flex">
+                <div class="m-2 d-flex">
+                    <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
+                    <div class="m-1">
+                        <h1>202</h1>
+                        <p>upcoming<br> appointments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-card d-flex">
+                <div class="m-2 d-flex">
+                    <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
+                    <div class="m-1">
+                        <h1>30</h1>
+                        <p>New<br> Patients</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-card d-flex">
+                <div class="m-2 d-flex">
+                    <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
+                    <div class="m-1">
+                        <h1>300</h1>
+                        <p>Number of <br> appointments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="card stat-card mb-4">
+            <p-chart type="bar" [data]="data" [options]="options" />
+        </div>
+    
+        <div class="d-flex justify-content-between">
+            <h3>Patient Data</h3>
+            <h4>View all</h4>
+         </div>
+         <div class="card">
+            <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>S/N</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Diagnosis</th>
+                        <th>Date/Time</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td>{{ product.serial }}</td>
+                        <td>{{ product.name }}</td>
+                        <td><p-tag [rounded]="true" severity="warning" value="pending"></p-tag></td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.patient }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </section>
+
+    <section class="appt-sect">
+        <div class="mx-auto calendar justify-content-center">
+            <p-calendar 
+                class="" 
+                [(ngModel)]="date" 
+                [inline]="true" 
+                [showWeek]="false"
+                panelStyle="background-color:blue"
+                
+               />
+                
+                
+        </div>
+        <div class="m-2">
+            <hr>
+            <h4>Upcoming Appointment</h4>
+            <div class="m-1">
+
+                <p-timeline [value]="upc_appt">
+                    <ng-template pTemplate="content" let-event>
+                        <small class="text-secondary">
+                            {{event.status}}
+                        </small>                        
+                    </ng-template>
+                    <ng-template pTemplate="opposite" let-event>
+                        {{event.date}}
+                    </ng-template>
+                </p-timeline>
+            </div>
+            <br>
+            <hr>
+            <h4>Previous Appointment</h4>
+            <div class="m-1">
+
+                <p-timeline [value]="upc_appt">
+                    <ng-template pTemplate="content" let-event>
+                        <small class="text-secondary">
+                            {{event.status}}
+                        </small>                        
+                    </ng-template>
+                    <ng-template pTemplate="opposite" let-event>
+                        {{event.date}}
+                    </ng-template>
+                </p-timeline>
+            </div>
+
+        </div>
+    </section>
+</section>
+
+

@@ -36,7 +36,7 @@
                 <div class="m-2 d-flex">
                     <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
                     <div class="m-1">
-                        <h1>300</h1>
+                        <h1>{{appointment.length}}</h1>
                         <p>Number of <br> appointments</p>
                     </div>
                 </div>
@@ -52,23 +52,23 @@
             <h4>View all</h4>
          </div>
          <div class="card">
-            <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+            <p-table [value]="appointment" [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>S/N</th>
                         <th>Name</th>
                         <th>Status</th>
-                        <th>Diagnosis</th>
+                        <th>Gender</th>
                         <th>Date/Time</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-appt>
                     <tr>
-                        <td>{{ product.serial }}</td>
-                        <td>{{ product.name }}</td>
+                        <td>{{ appt.id }}</td>
+                        <td>{{ appt.client.user.name }}</td>
                         <td><p-tag [rounded]="true" severity="warning" value="pending"></p-tag></td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.patient }}</td>
+                        <td>{{ appt.client.user.gender }}</td>
+                        <td>{{ appt.date_time }}</td>
                     </tr>
                 </ng-template>
             </p-table>

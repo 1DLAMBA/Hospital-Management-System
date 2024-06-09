@@ -36,6 +36,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastsContainer } from "./toast-container";
 import { AnimateOnScroll, AnimateOnScrollModule } from 'primeng/animateonscroll';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { AppointmentsService } from "./endpoints/appointments.service";
 
 
 
@@ -90,6 +91,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
             ServicesComponent,
             ContactComponent,
             PanelModule,
+            AppointmentsService
             // MessageService
          ],
          schemas: [CUSTOM_ELEMENTS_SCHEMA],

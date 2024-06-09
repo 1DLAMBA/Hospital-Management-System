@@ -6,3 +6,7 @@
 
     <app-client-panel></app-client-panel>
 </section>
+<section *ngIf='user.user_type == "nurse"'>
+
+    <app-nurse-panel></app-nurse-panel>
+</section>

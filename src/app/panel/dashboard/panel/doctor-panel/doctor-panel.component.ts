@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../../endpoints/user.service';
 import { UserResource } from '../../../../../resources/user.model';
+import { AppointmentsService } from '../../../../endpoints/appointments.service';
+import { DoctorsService } from '../../../../endpoints/doctors.service';
+import { DoctorResource } from '../../../../../resources/doctor.model';
+import { response } from 'express';
+import { AppointmentResource } from '../../../../../resources/appointment.model';
 
 
 @Component({
@@ -10,14 +15,20 @@ import { UserResource } from '../../../../../resources/user.model';
 })
 export class DoctorPanelComponent implements OnInit {
   id: any;
-  user!: UserResource
+  user!: any;
   data: any;
   options: any;
   products!: any;
   date: Date[] | undefined;
   upc_appt!: any[];
+  doctor!: DoctorResource;
+  appointment!: AppointmentResource[];
 
-  constructor(private userEndpoint: UserService){
+  constructor(
+    private userEndpoint: UserService,
+    private doctorEndpoint: DoctorsService,
+    private appointmentEndpoint: AppointmentsService,
+    ){
     this.upc_appt =[
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
@@ -105,6 +116,9 @@ export class DoctorPanelComponent implements OnInit {
       },
     ]
     this.id=localStorage.getItem('id')
+    this.getUser();
+    this.getDocUser();
+    this.getDocAppt();
   }
   
   
@@ -112,9 +126,31 @@ export class DoctorPanelComponent implements OnInit {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user
+        this.appointmentEndpoint.get(this.user.doctors.id, 'doctor').subscribe({
+          next: (response: any)=>{
+            this.appointment = response.appointments
+          }
+        })
         
       }
     })
+      
+    
+  }
+
+  getDocUser (){
+    this.doctorEndpoint.getDocUser(this.id).subscribe({
+      next: (response: any) => {
+        this.doctor = response.doctor;
+        
+      }
+    })
+  }
+
+  getDocAppt(){
+    // console.log('HERE', this.doctor);
+    console.log('HERE', this.user.doctors.id);
+  
   }
 
 }

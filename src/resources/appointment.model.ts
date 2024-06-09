@@ -6,7 +6,16 @@ export interface AppointmentResource{
     doctor_id: number,
     client_id:number,
     status: string,
+    symptoms: string,
     doctor: DoctorResource,
     client: ClientResource,
+    date_time: string
+}
+
+export interface AppointmentRequest{
+    doctor_id: number,
+    client_id:number,
+    status: string,
+    symptoms: string,
     date_time: string
 }

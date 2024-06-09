@@ -77,9 +77,22 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
     this.loginEndpoint.login(formData).subscribe({
       next: (response: any) => {
-        console.log(response.content)
+        console.log(response.user)
         this.spinner.hide();
-        this.router.navigate(['panel']);
+        switch (response.user.user_type) {
+          case 'doctor':
+            this.router.navigate(['panel/doctor-panel']);
+            break;
+          case 'client':
+            this.router.navigate(['panel/client-panel']);
+            break;
+          case 'nurse':
+            this.router.navigate(['panel/nurse-panel']);
+            break;
+        
+          default:
+            break;
+        }
         localStorage.setItem('id', response.user.id)
       },
       error: (res: HttpResponse<any>) => {
