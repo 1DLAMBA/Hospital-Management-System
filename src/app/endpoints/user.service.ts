@@ -19,4 +19,9 @@ export class UserService{
     return this.httpClient.post(`${this.baseUrl}/login`, data);
   }
 
+  get(id: number){
+    return this.httpClient.get(`${this.baseUrl}/get/${id}`);
+
+  }
+
 }

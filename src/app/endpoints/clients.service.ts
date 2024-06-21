@@ -13,4 +13,7 @@ export class ClientsService {
   create(data: ClientsRequest){
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
+  getClient(id: any){
+    return this.httpClient.get(`${this.baseUrl}/user/get/${id}`);
+  }
 }

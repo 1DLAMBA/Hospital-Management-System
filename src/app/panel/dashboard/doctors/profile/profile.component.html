@@ -1,0 +1,127 @@
+<p-toast></p-toast>
+<div class="flex appt-dialog justify-content-center">
+    <p-dialog header="Schedule an appointment" [(visible)]="visible" [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
+        [draggable]="false" [resizable]="false">
+        <form *ngIf="!preview" action="" [formGroup]="apptFormGroup" class="d-flex m-auto justify-content-between">
+
+
+            <div class=" calendar justify-content-center">
+                <p-calendar class="" formControlName="date" [inline]="true" [showWeek]="false" [showTime]="true"
+                    panelStyle="background-color:blue" />
+
+
+            </div>
+            <div class="diag-text my-auto d-flex justify-content-between flex-column">
+                <span class="bi bi-calendar4-week mb-5"></span>
+                <p class="mb-5">
+                    Booking an Appointment <br><br> with {{SingleDoctor.user.name}}<br>
+                </p>
+
+
+                <label for="symptoms">Complaints</label><br>
+                <textarea formControlName="symptoms" placeholder="Symptoms you are experiencing" name="symptoms"
+                    type="name" pInputText id="name" aria-describedby="username-help"></textarea>
+                <small *ngIf="apptFormGroup.get('symptoms')?.touched && apptFormGroup.get('name')?.hasError('required')"
+                    class="text-danger">
+                    Field Required
+                </small><br>
+
+
+                <p-button [disabled]="this.apptFormGroup.invalid" label="Proceed"  (click)="proceed()" severity="info" [raised]="true" [rounded]="true" />
+            </div>
+        </form>
+        <!-- <div *ngIf="preview">
+            <h3 class="primary-color">Preview</h3>
+            <hr>
+            <div class='d-flex'>
+               <span class="col-6">
+                   <h2>Date and time:</h2>
+
+               </span>
+               <span class="col-6">
+
+                   <small>{{this.formData.date_time  }}</small>
+               </span>
+            </div>
+            <div class='d-flex'>
+            <span class="col-6">
+                <h2>Complaints</h2>
+            </span>
+            <span class="col-6">
+            
+                <small>{{this.formData.symptoms}}</small>
+            </span>
+            </div>
+
+            <p-button label="Back" type="submit" (click)="back()" [style]="{ backgroundColor: 'white'}" severity="info" [raised]="true" [rounded]="true" />
+            <p-button label="Submit" type="submit" (click)="submit()" severity="info" [raised]="true" [rounded]="true" />
+            
+           
+        </div> -->
+
+      
+
+
+
+    </p-dialog>
+</div>
+
+<main class="d-flex flex-column">
+
+    <section class="hero p-3">
+
+        <!-- <p>{{SingleDoctor.user.name}}</p> -->
+    </section>
+
+    <section class="main mx-auto d-flex justify-content-between">
+        <div class="left-profile ">
+            <div class="inner-profile pb-2">
+                <img src="{{ avatar_file + SingleDoctor.user.passport }}">
+                <h1 class="m-2">{{SingleDoctor.user.name}}</h1>
+                <p class="m-2">{{SingleDoctor.specialization}}</p>
+                <p class="">{{SingleDoctor.availability}}</p>
+            </div>
+        </div>
+        <div class="right-profile p-2">
+            <span *ngIf="user.appointments">
+                <div *ngIf="user.appointments.status=='pending'" class="alert alert-warning">
+                    <p>You have a pending appointment</p>
+                </div>
+            </span>
+            <div class="m-2">
+                <h1 class="primary-color">Profile</h1>
+                <h3>{{SingleDoctor.user.name}}</h3>
+                <small>{{SingleDoctor.license_number}}</small>
+                <p>{{SingleDoctor.specialization}}</p>
+            </div>
+            <div class="m-2">
+                <h1 class="primary-color">Experience</h1>
+                <span class="d-flex">
+                    <p class="col-6">{{SingleDoctor.med_school}}</p>
+                    <p class="col-6">{{SingleDoctor.grad_year}}</p>
+                </span>
+            </div>
+            <div class="m-2">
+                <h1 class="primary-color">Contact</h1>
+                <span class="d-flex">
+                    <p class="col-6">{{SingleDoctor.user.email}}</p>
+                    <p class="col-6">{{SingleDoctor.user.phoneno}}</p>
+                </span>
+            </div>
+
+            <span *ngIf="user.appointments">
+
+                <p-button [disabled]="user.appointments.status" label="Request Appointment" (click)="showDialog()" severity="info" [raised]="true"
+                    [rounded]="true" />
+                </span>
+                <span *ngIf="!user.appointments">
+
+                    <p-button  label="Request Appointment" (click)="showDialog()" severity="info" [raised]="true"
+                        [rounded]="true" />
+                    </span>
+
+
+        </div>
+    </section>
+</main>

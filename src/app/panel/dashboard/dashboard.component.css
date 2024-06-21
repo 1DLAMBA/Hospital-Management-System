@@ -1,0 +1,28 @@
+.header{
+    width: 78%;
+    /* margin-left: 18% !important; */
+}
+.holder{
+    justify-content: space-between;
+}
+
+.d-ovr{
+    box-shadow: 0 4px 8px 0 rgba(99, 99, 99, 0.2), 0 6px 20px 0 rgba(99, 99, 99, 0.19);
+
+}
+
+.passport {
+    padding: 5px;
+    border: 1px solid #17224d;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.passport img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}

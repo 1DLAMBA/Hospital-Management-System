@@ -9,7 +9,7 @@ export interface DoctorResource {
     grad_year: string,
     degree_file: string,
     availability: string,
-    created_by: UserResource
+    user: UserResource
 }
 
 export interface DoctorRequest {

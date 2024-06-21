@@ -1,0 +1,195 @@
+<p-dialog header="Appointment Details" [(visible)]="apptDetails" [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
+    [draggable]="false" [resizable]="false">
+    <div class="d-flex" *ngIf="singleAppt">
+        <div class="m-auto">
+            <div class="d-flex justify-content-between">
+                <div class="img m-3">
+                    <img src="{{ avatar_file + singleAppt.client.user.passport }}">
+                </div>
+
+                <div class="m-auto d-flex border-left ">
+                    <div class="m-auto  p-3">
+                        <div class="">
+                            <b>Name</b>
+                            <p>{{singleAppt.client.user.name}}</p>
+                        </div>
+                        <div class="">
+                            <b>Phone Number</b>
+                            <p>{{singleAppt.client.user.phoneno}}</p>
+                        </div>
+                        <div class="">
+                            <b>Email</b>
+                            <p>{{singleAppt.client.user.email}}</p>
+                        </div>
+                        <div class="">
+                            <b>Appointment Date</b>
+                            <p>{{singleAppt.date_time}}</p>
+                        </div>
+                        <div class="">
+
+                            <b *ngIf="singleAppt.status == 'pending'" class="text-warning">{{singleAppt.status}}</b>
+                            <b *ngIf="singleAppt.status == 'Accepted'" class="text-success">{{singleAppt.status}}</b>
+                            <b *ngIf="singleAppt.status == 'Declined'" class="text-danger">{{singleAppt.status}}</b>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="border border-1 p-2 m-2">
+                    <b>Complaints</b>
+                    <p class="p-1">{{singleAppt.symptoms}}</p>
+                </div>
+
+            </div>
+            <span *ngIf="singleAppt.status=='pending'">
+                <button [disabled]="btnDisable" class="accept me-2" pButton label="Accept" severity="success" (click)="status(singleAppt.id, 'Accepted')" > </button>
+                <button  [disabled]="btnDisable" class="decline" pButton label="Decline" severity="warning" (click)="status(singleAppt.id, 'Declined')" ></button>
+            </span>
+            <span *ngIf="singleAppt.status=='Accepted' || singleAppt.status=='Declined'">
+                <button  [disabled]="btnDisable" class="accept me-2 cancel" pButton label="Cancel" severity="warning" (click)="status(singleAppt.id, 'pending')" > </button>
+              </span>
+        </div>
+    </div>
+
+</p-dialog>
+
+<section>
+    <div class="cards-sect my-5 d-flex justify-content-between">
+        <div class="sub-card d-flex">
+            <div class="m-2 d-flex text-warning">
+                <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
+                <div class="m-1 ">
+                    <h1>{{pendingAppointment}}</h1>
+                    <p class="">Pending<br> appointments</p>
+                </div>
+            </div>
+        </div>
+        <div class="sub-card d-flex">
+            <div class="m-2 d-flex text-success">
+                <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
+                <div class="m-1">
+                    <h1>{{acceptedAppointment}}</h1>
+                    <p>Accepted<br> appointments</p>
+                </div>
+            </div>
+        </div>
+        <div class="sub-card d-flex">
+            <div class="m-2 d-flex text-danger">
+                <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
+                <div class="m-1">
+                    <h1>{{declinedAppointment}}</h1>
+                    <p>Declined <br> appointments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+
+    <p-table #dt1 [value]="appointment" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+        [globalFilterFields]="['doctor.user.name', 'doctors.specialization', 'representative.name', 'status']">
+
+
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)" />
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue"
+                        (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')"
+                        placeholder="Search keyword" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width:7rem">
+                    <div class="flex align-items-center">
+                        View
+                        <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                    <div class="flex align-items-center">
+                        Client Name
+                        <p-columnFilter type="text" field="name" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Date and Time
+                        <p-columnFilter type="text" field="country.name" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:5rem">
+                    <div class="flex align-items-center">
+                        Status
+                        <!-- <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                    <ng-template pTemplate="header">
+                        <div class="px-3 pt-3 pb-0">
+                            <span class="font-bold">Agent Picker</span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        <p-multiSelect [(ngModel)]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name">
+                            <ng-template let-option pTemplate="item">
+                                <div class="inline-block vertical-align-middle">
+                                    <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="24" class="vertical-align-middle" />
+                                    <span class="ml-1 mt-1">{{ option.name }}</span>
+                                </div>
+                            </ng-template>
+                        </p-multiSelect>
+                    </ng-template>
+                </p-columnFilter> -->
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Phone Number
+                        <p-columnFilter type="date" field="date" display="menu" />
+                    </div>
+                </th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-appointments>
+            <tr>
+                <td>
+                    <p-button label="View" severity="info" [raised]="true" [rounded]="true"
+                        (click)="viewAppt(appointments.id)" />
+                </td>
+                <td class="d-flex">
+                    <div class="passport">
+                        <img src="{{ avatar_file + appointments.client.user.passport }}">
+                    </div>
+                    {{ appointments.client.user.name}}
+                </td>
+                <td>
+                    <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + doctors.country.code" style="width: 20px" /> -->
+                    <span class="ml-1 vertical-align-middle">{{appointments.date_time }}</span>
+                </td>
+                <td>
+                    <!-- <img [alt]="doctors.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ doctors.representative.image }}" width="32" style="vertical-align: middle" /> -->
+                    <!-- <span *ngIf="!doctor.availability">Unavailable</span> -->
+                    <span *ngIf="appointments.status=='pending'" class="ml-1 vertical-align-middle text-warning">{{ appointments.status }}</span>
+                    <span *ngIf="appointments.status=='Accepted'" class="ml-1 vertical-align-middle text-success">{{ appointments.status }}</span>
+                    <span  *ngIf="appointments.status=='Declined'" class="ml-1 vertical-align-middle text-danger">{{ appointments.status }}</span>
+                </td>
+                <td>
+                    {{ appointments.client.user.phoneno}}
+                </td>
+
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">None found.</td>
+            </tr>
+        </ng-template>
+
+
+    </p-table>
+</section>

@@ -17,8 +17,8 @@ backdrop-filter: blur(4px);
     background-image: url('assets/bd.png');
     background-attachment: fixed;
     width: 100%;
-    height: 100%;
-    background-size: cover;
+    /* height: 100%; */
+    background-size:cover;
 }
 .herotext p{
     color: white;
@@ -100,7 +100,7 @@ color: white;
     width: 100%;
 }
 body{
-    font-family: 'Nunito Sans', sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 
 .featureset1 img{
@@ -181,4 +181,60 @@ background-color: #0055AA !important;
 .primary-background{
     background-color: #17224d !important;  
 
+}
+.primary-color{
+    color: #17224d;
+}
+
+.error{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.bi-heart-pulse{
+    font-size:xx-large
+}
+.upload-button {
+    background-color: #0055AA !important;  
+}
+.upload-button:hover{
+    background-color: #fff !important;  
+    color: #17224d;
+    
+}
+.upload-button .spinner-border{
+    width: 18px;
+    height: 18px;
+}
+
+html, body { height: 100%; }
+body{ margin: 0;   font-family: "Nunito Sans", sans-serif; }
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pulse {
+   
+    border-radius: 50%;
+    padding: 20%;
+    animation: pulse 2s infinite;
+}
+.main-sect{
+    width: 60%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.main-sect div{
+    width: 100%;
 }

@@ -1,7 +1,7 @@
 
 import { AppRoutingModule, routes } from "./app.routes";
-import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingComponent } from "./landing/landing.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { AppComponent } from "./app.component";
@@ -31,6 +31,12 @@ import { AboutComponent } from "./about/about.component";
 import { ServicesComponent } from "./services/services.component";
 import { ContactComponent } from "./contact/contact.component";
 import { PanelModule } from "./panel/panel.module";
+import { MessageService } from "primeng/api";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastsContainer } from "./toast-container";
+import { AnimateOnScroll, AnimateOnScrollModule } from 'primeng/animateonscroll';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { AppointmentsService } from "./endpoints/appointments.service";
 
 
 
@@ -63,6 +69,10 @@ import { PanelModule } from "./panel/panel.module";
         FileUploadModule,
         ToastModule,
         CalendarModule,
+        NgbTooltipModule,
+        ToastsContainer,
+        AnimateOnScrollModule,
+        NgxSpinnerModule
               ],
          exports:[
             NavBarComponent,
@@ -80,8 +90,11 @@ import { PanelModule } from "./panel/panel.module";
             NursesService,
             ServicesComponent,
             ContactComponent,
-            PanelModule
+            PanelModule,
+            AppointmentsService
+            // MessageService
          ],
-         bootstrap: [],
+         schemas: [CUSTOM_ELEMENTS_SCHEMA],
+         // bootstrap: [AppComponent],
 })
 export class AppModule { }
