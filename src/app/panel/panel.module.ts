@@ -28,6 +28,8 @@ import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/n
 import { DoctorAppointmentComponent } from './dashboard/appointment/doctor-appointment/doctor-appointment.component';
 import { ClientAppointmentComponent } from './dashboard/appointment/client-appointment/client-appointment.component';
 import { AppointmentComponent } from './dashboard/appointment/appointment.component';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+
 
 
 @NgModule({
@@ -64,7 +66,8 @@ import { AppointmentComponent } from './dashboard/appointment/appointment.compon
     RouterOutlet,
     ReactiveFormsModule,
     NgbDatepickerModule,
-    JsonPipe
+    JsonPipe,
+    NgxSpinnerModule
     
   ],
   bootstrap: [DashboardComponent]

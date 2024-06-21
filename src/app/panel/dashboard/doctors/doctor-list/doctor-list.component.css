@@ -30,7 +30,7 @@ section{
         background-color: #17224d !important;
         color: white !important;
         border: 0;
-        border-radius: 7px;
+        border-radius: 5px;
         
     } 
     ::ng-deep .p-calender{

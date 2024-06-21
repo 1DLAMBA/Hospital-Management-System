@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api';
 import { UserResource } from '../../../resources/user.model';
 import { UserService } from '../../endpoints/user.service';
 import { environment } from '../../../environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private userEndpoint: UserService
+    private userEndpoint: UserService,
+    private spinner: NgxSpinnerService,
   ){
 
   }
@@ -26,6 +28,8 @@ export class DashboardComponent implements OnInit {
     this.id=localStorage.getItem('id')
     this.getUser();
   }
+
+
 
   getUser (){
     this.userEndpoint.get(this.id).subscribe({

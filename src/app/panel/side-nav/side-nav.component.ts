@@ -69,7 +69,7 @@ export class SideNavComponent implements OnInit {
     this.client_nav =[{
       navClassName:'side-btn bi bi-columns-gap my-2 py-3',
       title: 'Dashboard',
-      routerLink: '../panel',
+      routerLink: 'client-panel',
     },
     {
       navClassName:'side-btn bi bi-prescription2 my-2 py-3',
@@ -100,7 +100,7 @@ export class SideNavComponent implements OnInit {
     this.nurse_nav =[{
       navClassName:'side-btn bi bi-columns-gap my-2 py-3',
       title: 'Dashboard',
-      routerLink: '../panel',
+      routerLink: 'nurse-panel',
     },
     {
       navClassName:'side-btn bi bi-prescription2 my-2 py-3',

@@ -15,13 +15,17 @@ import { response } from 'express';
   styleUrl: './doctor-appointment.component.css'
 })
 export class DoctorAppointmentComponent implements OnInit {
-  apptDetails: boolean= false;
+  apptDetails: boolean = false;
   id: any;
   user!: any;
   appointment!: AppointmentResource[];
   avatar_file!: string;
   searchValue: string | undefined;
-  singleAppt: any='';
+  singleAppt: any = '';
+  pendingAppointment: any;
+  acceptedAppointment: any;
+  declinedAppointment: any;
+  btnDisable: boolean = false;
 
 
   constructor(
@@ -44,7 +48,10 @@ export class DoctorAppointmentComponent implements OnInit {
         this.avatar_file = environment.apiUrl + '/file/get/';
         this.appointmentEndpoint.get(this.user.doctors.id, 'doctor').subscribe({
           next: (response: any) => {
-            this.appointment = response.appointments
+            this.appointment = response.appointments;
+            this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;
+            this.acceptedAppointment = this.appointment.filter((user: any) => user.status=='Accepted').length;
+            this.declinedAppointment = this.appointment.filter((user: any) => user.status=='Declined').length;
           }
         })
 
@@ -52,11 +59,11 @@ export class DoctorAppointmentComponent implements OnInit {
     })
   }
 
-  viewAppt(appt_id: any){
+  viewAppt(appt_id: any) {
     this.appointmentEndpoint.getSingle(appt_id).subscribe({
-      next: (response: any)=>{
+      next: (response: any) => {
         this.apptDetails = true;
-        this.singleAppt= response.appointments;
+        this.singleAppt = response.appointments;
       }
     })
   }
@@ -64,5 +71,47 @@ export class DoctorAppointmentComponent implements OnInit {
   clear(table: Table) {
     table.clear();
     this.searchValue = ''
-}
+  }
+
+  status(id: any, status: any) {
+    this.btnDisable=true;
+    if (status == 'Accepted') {
+      const formData = {
+        status: 'Accepted'
+      }
+      this.editStatus(id, formData);
+      this.getUser();
+
+      return;
+    } else if (status == 'Declined') {
+      const formData = {
+        status: 'Declined'
+      }
+      this.editStatus(id, formData);
+      this.getUser();
+
+      return;
+    } else {
+      const formData = {
+        status: 'pending'
+      }
+      this.editStatus(id, formData);
+      this.getUser();
+
+      return;
+
+    }
+  }
+
+  editStatus(id: any, status: any) {
+
+    this.appointmentEndpoint.edit(id, status).subscribe({
+      next: (response: any) => {
+        // this.apptDetails = false;
+        this.viewAppt(id);
+        this.btnDisable=false;
+
+      }
+    })
+  }
 }

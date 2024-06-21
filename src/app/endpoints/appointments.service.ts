@@ -15,6 +15,11 @@ export class AppointmentsService {
   create(data: AppointmentRequest) {
     return this.httpClient.post(`${this.baseUrl}/create`, data)
   }
+
+  edit(id: any, status:any){
+    return this.httpClient.post(`${this.baseUrl}/statusedit/${id}`, status)
+  }
+  
   get(id: any, user_type: any) {
     switch (user_type) {
       case 'doctor':
