@@ -9,7 +9,7 @@ export interface AppointmentResource{
     symptoms: string,
     doctor: DoctorResource,
     client: ClientResource,
-    date_time: string
+    date_time: Date
 }
 
 export interface AppointmentRequest{

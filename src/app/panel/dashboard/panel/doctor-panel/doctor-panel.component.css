@@ -24,6 +24,10 @@
     margin: 3%;
 }
 
+.main-sect a{
+    text-decoration: none !important;
+}
+
 .main-sect .stat-card{
     background-color: #17224d !important;
     color: white !important;

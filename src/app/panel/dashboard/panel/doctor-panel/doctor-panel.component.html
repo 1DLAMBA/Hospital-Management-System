@@ -1,24 +1,30 @@
 <section class="d-flex">
 
     <section class="main-sect">
-    
+
         <div class="d-flex justify-content-between">
-           <h3>Recent Appointment</h3>
-           <h4>View all</h4>
+            <h3>Recent Appointment</h3>
+            <a routerLink="/panel/doctor-appointment">View all</a>
         </div>
-    
+
         <div class="appt d-flex">
-            <p>Ali Muhammed - General checkup</p>
-            <p class="text-secondary">Today: 8:30 am - 10:30 am</p>
-            <p>View Details</p>
+            <span *ngIf="recentAppt" class="d-flex m-auto">
+
+                <p>{{recentAppt.client.user.name}} - {{complaint}}</p>
+                <p class="text-secondary mx-2">{{recentAppt.date_time}}</p>
+                <p>View Details</p>
+            </span>
+            <span *ngIf="!recentAppt">
+                <p>No recent appointments</p>
+            </span>
         </div>
-    
+
         <div class="cards-sect my-5 d-flex justify-content-between">
             <div class="sub-card d-flex">
                 <div class="m-2 d-flex">
                     <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
                     <div class="m-1">
-                        <h1>202</h1>
+                        <h1>{{acceptedAppointmentNum}}</h1>
                         <p>upcoming<br> appointments</p>
                     </div>
                 </div>
@@ -27,7 +33,7 @@
                 <div class="m-2 d-flex">
                     <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
                     <div class="m-1">
-                        <h1>30</h1>
+                        <h1>{{pendingAppointment}}</h1>
                         <p>New<br> Patients</p>
                     </div>
                 </div>
@@ -42,16 +48,16 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="card stat-card mb-4">
             <p-chart type="bar" [data]="data" [options]="options" />
         </div>
-    
+
         <div class="d-flex justify-content-between">
             <h3>Patient Data</h3>
             <h4>View all</h4>
-         </div>
-         <div class="card">
+        </div>
+        <div class="card">
             <p-table [value]="appointment" [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template pTemplate="header">
                     <tr>
@@ -66,7 +72,11 @@
                     <tr>
                         <td>{{ appt.id }}</td>
                         <td>{{ appt.client.user.name }}</td>
-                        <td><p-tag [rounded]="true" severity="warning" value="pending"></p-tag></td>
+                        <td>
+                            <p-tag [rounded]="true" severity="warning" *ngIf="appt.status=='pending'" value="{{appt.status}}"></p-tag>
+                            <p-tag [rounded]="true" severity="success" *ngIf="appt.status=='Accepted'" value="{{appt.status}}"></p-tag>
+                            <p-tag [rounded]="true" severity="danger" *ngIf="appt.status=='Declined'" value="{{appt.status}}"></p-tag>
+                        </td>
                         <td>{{ appt.client.user.gender }}</td>
                         <td>{{ appt.date_time }}</td>
                     </tr>
@@ -77,16 +87,10 @@
 
     <section class="appt-sect">
         <div class="mx-auto calendar justify-content-center">
-            <p-calendar 
-                class="" 
-                [(ngModel)]="date" 
-                [inline]="true" 
-                [showWeek]="false"
-                panelStyle="background-color:blue"
-                
-               />
-                
-                
+            <p-calendar class="" [(ngModel)]="date" [inline]="true" [showWeek]="false"
+                panelStyle="background-color:blue" />
+
+
         </div>
         <div class="m-2">
             <hr>
@@ -96,11 +100,11 @@
                 <p-timeline [value]="upc_appt">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
-                            {{event.status}}
-                        </small>                        
+                            {{event.client.user.name}}
+                        </small>
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
-                        {{event.date}}
+                        {{event.date_time}}
                     </ng-template>
                 </p-timeline>
             </div>
@@ -109,14 +113,14 @@
             <h4>Previous Appointment</h4>
             <div class="m-1">
 
-                <p-timeline [value]="upc_appt">
+                <p-timeline [value]="previousAppointment">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
-                            {{event.status}}
-                        </small>                        
+                            {{event.client.user.name}}
+                        </small>
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
-                        {{event.date}}
+                        {{event.date_time}}
                     </ng-template>
                 </p-timeline>
             </div>
@@ -124,5 +128,3 @@
         </div>
     </section>
 </section>
-
-
