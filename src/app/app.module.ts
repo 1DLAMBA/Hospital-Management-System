@@ -37,6 +37,8 @@ import { ToastsContainer } from "./toast-container";
 import { AnimateOnScroll, AnimateOnScrollModule } from 'primeng/animateonscroll';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { AppointmentsService } from "./endpoints/appointments.service";
+import { AssignmentsService } from "./endpoints/assignments.service";
+import { MedicalService } from "./endpoints/medical.service";
 
 
 
@@ -91,8 +93,9 @@ import { AppointmentsService } from "./endpoints/appointments.service";
             ServicesComponent,
             ContactComponent,
             PanelModule,
-            AppointmentsService
-            // MessageService
+            AppointmentsService,
+            AssignmentsService,
+            MedicalService
          ],
          schemas: [CUSTOM_ELEMENTS_SCHEMA],
          // bootstrap: [AppComponent],

@@ -1,0 +1,107 @@
+<section>
+    <!-- 
+        <p-dialog header="Schedule an appointment" [(visible)]="visible" [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
+        [draggable]="false" [resizable]="false">
+        </p-dialog> -->
+        <p-table
+                #dt1
+                [value]="nurses"
+                dataKey="id"
+                [rows]="10"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [paginator]="true"
+                [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']"
+            >
+            
+            
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash"  />
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <!-- <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" /> -->
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width:7rem">
+                        <div class="flex align-items-center">
+                            View
+                            <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                        </div>
+                    </th>
+                    <th style="min-width:7rem">
+                        <div class="flex align-items-center">
+                            Name
+                            <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                        </div>
+                    </th>
+                    <th style="min-width:15rem">
+                        <div class="flex align-items-center">
+                            Phone Number
+                            <p-columnFilter type="text" field="name" display="menu" />
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            License Number
+                            <p-columnFilter type="text" field="country.name" display="menu" />
+                        </div>
+                    </th>
+                    <th style="min-width:5rem">
+                        <div class="flex align-items-center">
+                            Availability
+                            
+                        </div>
+                    </th>
+                    <th style="min-width:10rem">
+                        <div class="flex align-items-center">
+                            Email
+                            <p-columnFilter type="date" field="date" display="menu" />
+                        </div>
+                    </th>
+                    
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-nurse>
+                <tr >
+                    <td>
+                    <p-button label="view" icon="bi bi-eye" severity="info" [raised]="true"  [rounded]="true" routerLink="nurse-profile/{{nurse.id}}"/>
+                    </td>
+                    <td class="d-flex">
+                        <div class="passport">
+                            <img  src="{{ avatar_file + nurse.user.passport }}">
+                        </div>
+                        {{ nurse.user.name}}
+                    </td>
+                    <td>
+                        <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
+                        <span class="ml-1 vertical-align-middle">{{ nurse.user.phoneno }}</span>
+                    </td>
+                    <td>
+                        <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
+                        <span class="ml-1 vertical-align-middle">{{ nurse.license_number }}</span>
+                    </td>
+                    <td>
+                        <!-- <img [alt]="nurses.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ nurses.representative.image }}" width="32" style="vertical-align: middle" /> -->
+                        <span *ngIf="!nurse.availability">Unavailable</span>
+                        <span *ngIf="nurse.availability" class="ml-1 vertical-align-middle">{{ nurse.availability }}</span>
+                    </td>
+                    <td>
+                        {{ nurse.user.email}}
+                    </td>
+                   
+                   
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7">No nurses found.</td>
+                </tr>
+            </ng-template>
+            
+            
+            </p-table>
+    </section>

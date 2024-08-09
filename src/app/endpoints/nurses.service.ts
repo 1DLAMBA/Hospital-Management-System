@@ -14,4 +14,11 @@ export class NursesService {
   create(data: NurseRequest){
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
+
+  get(){
+    return this.httpClient.get(`${this.baseUrl}/get`);
+  }
+  getSingle(id:any){
+    return this.httpClient.get(`${this.baseUrl}/get/${id}`);
+  }
 }

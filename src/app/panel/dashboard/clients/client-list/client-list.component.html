@@ -1,0 +1,122 @@
+<section>
+
+    <p-dialog header="Schedule an appointment" [(visible)]="visible" [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex', backgroundcolor: '#17224d'}"
+    [draggable]="false" [resizable]="false">
+    <div class="profile-body">
+        <div class='back-head'>
+        </div>
+        <div class="main d-flex"></div>
+
+    </div>
+    </p-dialog>
+    <p-table
+            #dt1
+            [value]="clients"
+            dataKey="id"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']"
+        >
+        
+        
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash"  />
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <!-- <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" /> -->
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width:7rem">
+                    <div class="flex align-items-center">
+                        View
+                        <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                    <div class="flex align-items-center">
+                        Name
+                        <p-columnFilter type="text" field="name" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Phone Number
+                        <p-columnFilter type="text" field="country.name" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:5rem">
+                    <div class="flex align-items-center">
+                        Email
+                        <!-- <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                            <ng-template pTemplate="header">
+                                <div class="px-3 pt-3 pb-0">
+                                    <span class="font-bold">Agent Picker</span>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                <p-multiSelect [(ngModel)]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name">
+                                    <ng-template let-option pTemplate="item">
+                                        <div class="inline-block vertical-align-middle">
+                                            <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="24" class="vertical-align-middle" />
+                                            <span class="ml-1 mt-1">{{ option.name }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-multiSelect>
+                            </ng-template>
+                        </p-columnFilter> -->
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Doctor
+                        <p-columnFilter type="date" field="date" display="menu" />
+                    </div>
+                </th>
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-client>
+            <tr >
+                <td>
+                <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/>
+                </td>
+                <td class="d-flex">
+                    <div class="passport">
+                        <img  src="{{ avatar_file + client.user.passport }}">
+                    </div>
+                    {{ client.user.name}}
+                </td>
+                <td>
+                    <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
+                    <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span>
+                </td>
+                <td>
+                    <!-- <img [alt]="nurses.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ nurses.representative.image }}" width="32" style="vertical-align: middle" /> -->
+                    <span>{{client.user.email}}</span>
+                    <!-- <span *ngIf="nurse.availability" class="ml-1 vertical-align-middle">{{ nurse.availability }}</span> -->
+                </td>
+                <td>
+                    <span *ngIf="client.doctors">
+                        {{ client.doctors.user.name}}
+
+                    </span>
+                </td>
+               
+               
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No nurses found.</td>
+            </tr>
+        </ng-template>
+        
+        
+        </p-table>
+</section>

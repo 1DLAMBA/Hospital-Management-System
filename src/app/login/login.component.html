@@ -28,7 +28,7 @@
                 <b>Or</b>
             </p-divider> -->
             <div *ngIf="invalidDetails" class="alert alert-danger" role="alert">
-               Invalid Email Or Password
+               {{error_message}}
               </div>
               <!-- <div  class="alert alert-danger error" role="alert">
                 Error Occured
@@ -42,7 +42,8 @@
                     <label for="password">Password</label><br>
                     <input formControlName="password" name="password" type="password" pInputText id="password" aria-describedby="username-help" />
                 </div>
-                <button class="btn btn-lg submit border text-center btn-hover" (click)="login()">Submit </button>
+                <button *ngIf="!submitLoading" class="btn btn-lg submit border text-center btn-hover" (click)="login()">Submit </button>
+                <button *ngIf="submitLoading" class="btn btn-lg submit border text-center btn-hover" disabled>Submiting... </button>
 
             </form>
             <p>Don't have an account? <a routerLink="../register">Register</a></p>

@@ -33,6 +33,9 @@
                             <b *ngIf="singleAppt.status == 'Declined'" class="text-danger">{{singleAppt.status}}</b>
 
                         </div>
+                <p-button label="View Profile" severity="info" [raised]="true"  [rounded]="true" routerLink="../clients/profile/{{singleAppt.client.id}}"/>
+
+
                     </div>
                 </div>
             </div>

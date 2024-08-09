@@ -35,6 +35,7 @@ export class ProfileComponent implements OnInit {
   formData: any;
   preview: boolean = false;
   user: any;
+  appointment: boolean=true;
 
 
 
@@ -56,8 +57,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSingleDoctor(this.id);
-    this.user_id = localStorage.getItem('id')
-    this.getClient();
+    this.user_id = localStorage.getItem('id');
+    this.getUser(this.user_id);
 
   }
 
@@ -70,13 +71,26 @@ export class ProfileComponent implements OnInit {
     this.messageService.add({ severity: 'success', detail: message });
   }
 
-  getClient(){
-    this.clientEndpoint.getClient(this.user_id).subscribe({
-      next: (response: any)=>{
-        this.user = response.client;
+  getUser (id: any){
+    this.userEndpoint.get(id).subscribe({
+      next: (response: any) => {
+        this.user = response.user;
+        const appointmentDate = new Date(this.user.clients.appointments.date_time);
+        const today = new Date();
+        if(appointmentDate.getDate() < today.getDate()){
+          this.appointment=false;
+        }
+
+        console.log('USER', response);
+        
+    // this.getClient(this.user.id);
+
+        this.avatar_file = environment.apiUrl + '/file/get/';        
       }
     })
   }
+
+ 
 
 
   showDialog() {
@@ -106,7 +120,7 @@ export class ProfileComponent implements OnInit {
         date_time: moment(this.apptFormGroup.value.date).format('YYYY-MM-DD HH:mm'),
         status: 'pending',
         doctor_id: this.SingleDoctor.id,
-        client_id: this.user.id,
+        client_id: this.user.clients.id,
         // client_id:this.apptFormGroup.value.date,
       }
     

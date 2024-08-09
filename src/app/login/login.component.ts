@@ -14,6 +14,8 @@ import { HttpResponse } from '@angular/common/http';
 import { ToastService } from '../toast.service';
 import { ToastsContainer } from '../toast-container';
 import { NgxSpinnerService } from "ngx-spinner";
+import { AuthService } from '../auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -27,6 +29,8 @@ export class LoginComponent implements OnDestroy, OnInit {
   user?: UserResource;
   LoginForm: FormGroup;
   invalidDetails: boolean = false;
+  error_message: string='';
+  submitLoading: boolean=false;
 
   constructor(
     private loginEndpoint: UserService,
@@ -34,6 +38,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private readonly router: Router,
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
+    private authService: AuthService,
   ) {
     this.LoginForm = this.fb.group({
       email: this.fb.control('', [Validators.required]),
@@ -64,6 +69,7 @@ export class LoginComponent implements OnDestroy, OnInit {
 
   login() {
     this.spinner.show();
+    this.submitLoading = true;
 
     if (this.LoginForm.invalid) {
       this.spinner.hide();
@@ -75,10 +81,14 @@ export class LoginComponent implements OnDestroy, OnInit {
       email: this.LoginForm.value.email,
       password: this.LoginForm.value.password,
     }
+    console.log('Log in' , formData);
+    
     this.loginEndpoint.login(formData).subscribe({
       next: (response: any) => {
+    this.submitLoading = false;
         console.log(response.user)
         this.spinner.hide();
+        this.authService.login(response)
         switch (response.user.user_type) {
           case 'doctor':
             this.router.navigate(['panel/doctor-panel']);
@@ -96,7 +106,9 @@ export class LoginComponent implements OnDestroy, OnInit {
         localStorage.setItem('id', response.user.id)
       },
       error: (res: HttpResponse<any>) => {
-        this.invalidDetails = true
+        this.invalidDetails = true;
+        this.submitLoading = false;
+        this.error_message=res.statusText;
         this.spinner.hide();
 
       }

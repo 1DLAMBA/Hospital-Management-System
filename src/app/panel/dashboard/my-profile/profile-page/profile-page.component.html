@@ -1,0 +1,177 @@
+<main class="d-flex flex-column">
+
+    <section class="hero p-3">
+
+        <!-- <p>{{user.clients.user.name}}</p> -->
+    </section>
+
+    <section class="main mx-auto d-flex justify-content-between">
+        <div class="left-profile ">
+            <div class="inner-profile pb-2">
+                <img src="{{ avatar_file + user.passport }}">
+                <h1 class="m-2">{{user.name}}</h1>
+                
+            </div>
+            <b>Patient Details</b>
+            <div class="d-flex subs mt-2 justify-content-between">
+                <p class=" text-secondary">Date of birth:</p>
+                <p class="">{{user.clients.date_of_birth | date}}</p>
+            </div>
+            <div class="d-flex subs justify-content-between">
+                <p class=" text-secondary">Gender:</p>
+                <p class="">{{user.gender}}</p>
+            </div>
+            <hr>
+            <b>Contact Information</b>
+            <div class="d-flex subs mt-2 justify-content-between">
+                <p class=" text-secondary">Phone Num:</p>
+                <p class="">{{user.phoneno}}</p>
+            </div>
+            <div class="d-flex subs justify-content-between">
+                <p class=" text-secondary">Email:</p>
+                <p class="">{{user.email}}</p>
+            </div>
+            <p-button label="Edit Profile" (click)="showDialog()" severity="info" [raised]="true" [rounded]="true" />
+
+        </div>
+        <div class="right-profile">
+            <div class="p-2 subs-holder" *ngIf="user.clients.appointments" >
+                <div *ngIf="user.clients.appointments.status=='Accepted'" class="">
+                    <b>Current Appointment</b>
+                   
+                    <div class="d-flex justify-content-between m-1">
+                        <div class="">
+    
+                            <span >Patient Complaints:</span> <p class="text-secondary">{{user.clients.appointments.symptoms}}</p>
+                        </div>
+                        <div class="">
+                            <span >Date:</span> <p class="text-secondary">{{user.clients.appointments.date_time | date}}</p>
+                        </div>
+                        <div class="">
+                            <span >Doctor:</span> <p class="text-secondary">{{user.clients.appointments.doctor.user.name }}</p>
+                        </div>
+                        <div class=" hold3">
+                            <span class="fs-6" >Status:</span> 
+                            <p-tag [rounded]="true" severity="success" value="{{user.clients.appointments.status}}"></p-tag>
+
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="user.clients.appointments.status=='pending' && appointment" >
+                    <b>Current Appointment</b>
+                   
+                    <div class="d-flex justify-content-between m-1">
+                        <div class="">
+    
+                            <span >Patient Complaints:</span> <p class="text-secondary">{{user.clients.appointments.symptoms}}</p>
+                        </div>
+                        <div class="">
+                            <span >Date:</span> <p class="text-secondary">{{user.clients.appointments.date_time | date}}</p>
+                        </div>
+                        <div class="">
+                            <span >Doctor:</span> <p class="text-secondary">{{user.clients.appointments.doctor.user.name }}</p>
+                        </div>
+                        <div class=" hold3">
+                            <span class="fs-6" >Status:</span> 
+                            <p-tag [rounded]="true" severity="warning" value="{{user.clients.appointments.status}}"></p-tag>
+
+                        </div>
+                    </div>
+                   
+                </div>
+                <div *ngIf="user.clients.appointments.status=='Declined' || !user.clients.appointments ||user.clients.appointments.status=='pending' || !user.clients.appointments" class="">
+                    <p>No pending appointment</p>
+                </div>
+            </div>
+            <div class="m-2">
+                <h1 class="primary-color">Medical Records</h1>
+                <p-table
+                
+            #dt1
+            
+            dataKey="id"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']"
+        >
+        
+        
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash"  />
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <!-- <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" /> -->
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width:7rem">
+                    <div class="flex align-items-center">
+                        View
+                        <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                    <div class="flex align-items-center">
+                        Record Number
+                        <p-columnFilter type="text" field="name" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Diagnosis
+                        <p-columnFilter type="text" field="country.name" display="menu" />
+                    </div>
+                </th>
+                
+                <th style="min-width:10rem">
+                    <div class="flex align-items-center">
+                        Doctor
+                        <p-columnFilter type="date" field="date" display="menu" />
+                    </div>
+                </th>
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-client>
+            <tr >
+                <td>
+                <!-- <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/> -->
+                </td>
+                <td class="d-flex">
+                    
+                </td>
+                <td>
+                    <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
+                    <!-- <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span> -->
+                </td>
+               
+                <td>
+                  
+                </td>
+               
+               
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No medical records found.</td>
+            </tr>
+        </ng-template>
+        
+        
+        </p-table>
+
+            </div>
+            
+            
+
+           
+           
+
+        </div>
+    </section>
+</main>

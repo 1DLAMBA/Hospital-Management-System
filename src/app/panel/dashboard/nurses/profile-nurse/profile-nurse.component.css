@@ -1,0 +1,83 @@
+.hero{
+    width: 100%;
+    height: 30vh;
+}
+
+.appt-dialog p{
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+    height: 100%;
+}
+.diag-text{
+    /* height: 100%; */
+    width: 45%;
+}
+
+.diag-text span{
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.main{
+    margin-top:-13% ;
+    width: 90%;
+}
+.left-profile{
+    width: 22%;
+    border-radius: 30px 30px;
+
+}
+.inner-profile{
+    width: 100%;
+    background-color: #17224d;
+    border-radius: 30px 30px;
+    color: white;
+    /* box-shadow: 0 4px 8px 0 rgba(99, 99, 99, 0.2), 0 6px 20px 0 rgba(99, 99, 99, 0.19); */
+
+}
+.subs{
+    width: 100%;
+}
+
+.left-profile img{
+    width: 100%;
+}
+
+.right-profile{
+    width: 75%;
+    background-color: white;
+
+}
+.status{
+    background-color: rgb(255, 201, 100);
+    padding: 10%;
+    border-radius: 10%;
+}
+.hold3{
+    width: 10%;
+}
+
+.subs-holder{
+    background-color: #17224d !important;
+    color: white;
+}
+
+:host {
+    /* ::ng-deep .p-button {
+        background-color: #17224d !important;
+        color: white !important;
+        border: 0;
+        border-radius: 5px;
+        
+    }  */
+    ::ng-deep  .message-button {
+        background-color: #145a57 !important;
+        color: white !important;
+        border: 0;
+        border-radius: 5px;
+        
+    } 
+    ::ng-deep .p-dialog{
+        flex-direction: column;
+    }
+}

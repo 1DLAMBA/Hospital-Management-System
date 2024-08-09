@@ -1,0 +1,59 @@
+section{
+    width:95%;
+    margin-left:2% ;
+}
+
+.passport {
+    padding: 5px;
+    border: 1px solid #17224d;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.passport img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.img {
+    width: 30%;
+    height: 30%;
+}
+
+.img img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.border-left{
+    border-left: 1px solid rgba(155, 154, 154, 0.597);
+}
+
+:host {
+    ::ng-deep .p-button {
+        background-color: #17224d !important;
+        color: white !important;
+        border: 0;
+        border-radius: 5px;
+        
+    } 
+    ::ng-deep .p-calender{
+
+    }
+}
+
+.accept{
+    background-color: green !important;
+}
+
+.decline{
+    background-color: red !important;
+}
+.cancel{
+    background-color: orange !important;
+}
