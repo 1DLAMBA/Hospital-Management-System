@@ -63,7 +63,7 @@ export class SideNavComponent implements OnInit {
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
-      routerLink: 'profile'
+      routerLink: `my-profile/doctor/${this.id}`
     },
   ]
     this.client_nav =[{
@@ -94,7 +94,7 @@ export class SideNavComponent implements OnInit {
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
-      routerLink: 'profile'
+      routerLink: `my-profile/client/${this.id}`
     },
   ]
     this.nurse_nav =[{
@@ -105,7 +105,7 @@ export class SideNavComponent implements OnInit {
     {
       navClassName:'side-btn bi bi-prescription2 my-2 py-3',
       title: 'Assignment',
-      routerLink: 'appointment'
+      routerLink: 'assignment'
     },
     {
       navClassName:'side-btn bi bi-person-square my-2 py-3',
@@ -120,7 +120,7 @@ export class SideNavComponent implements OnInit {
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
-      routerLink: 'profile'
+      routerLink: `my-profile/nurse/${this.id}`
     },
   ]
     switch (this.user.user_type) {

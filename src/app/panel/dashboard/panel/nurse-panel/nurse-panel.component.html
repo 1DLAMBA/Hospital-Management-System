@@ -3,14 +3,14 @@
     <section class="main-sect">
     
         <div class="d-flex justify-content-between">
-           <h3>Recent Appointment</h3>
+           <h3>Recent Assignment</h3>
            <h4>View all</h4>
         </div>
     
         <div class="appt d-flex">
-            <p>Ali Muhammed - General checkup</p>
-            <p class="text-secondary">Today: 8:30 am - 10:30 am</p>
-            <p>View Details</p>
+            <p *ngIf="recentAppt">Patient<br>{{recentAppt.client.user.name}} </p>
+            <p *ngIf="recentAppt">Task<br>{{recentAppt.assignment_message}} </p>
+            <p *ngIf="recentAppt" class="text-secondary">Doctor<br>{{recentAppt.doctor.user.name}}</p>
         </div>
     
         <div class="cards-sect my-5 d-flex justify-content-between">
@@ -18,26 +18,18 @@
                 <div class="m-2 d-flex">
                     <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
                     <div class="m-1">
-                        <h1>202</h1>
+                        <h1 *ngIf="upc_appt">{{upc_appt.length}}</h1>
                         <p>upcoming<br> appointments</p>
                     </div>
                 </div>
             </div>
-            <div class="sub-card d-flex">
-                <div class="m-2 d-flex">
-                    <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
-                    <div class="m-1">
-                        <h1>30</h1>
-                        <p>New<br> Patients</p>
-                    </div>
-                </div>
-            </div>
+            
             <div class="sub-card d-flex">
                 <div class="m-2 d-flex">
                     <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
                     <div class="m-1">
-                        <h1>300</h1>
-                        <p>Number of <br> appointments</p>
+                        <h1>{{appointment.length}}</h1>
+                        <p>Number of <br> assignments</p>
                     </div>
                 </div>
             </div>
@@ -52,23 +44,26 @@
             <h4>View all</h4>
          </div>
          <div class="card">
-            <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+            <p-table [value]="appointment" [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>S/N</th>
-                        <th>Name</th>
+                        <!-- <th>S/N</th> -->
+                        <th>Client Name</th>
                         <th>Status</th>
-                        <th>Diagnosis</th>
-                        <th>Date/Time</th>
+                        <th>Assigned by</th>
+                        <!-- <th>Date/Time</th> -->
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-assignment>
                     <tr>
-                        <td>{{ product.serial }}</td>
-                        <td>{{ product.name }}</td>
-                        <td><p-tag [rounded]="true" severity="warning" value="pending"></p-tag></td>
-                        <td>{{ product.category }}</td>
-                        <td>{{ product.patient }}</td>
+                        <!-- <td>{{ product.serial }}</td> -->
+                        <td>{{ assignment.client.user.name }}</td>
+                        <td>
+                            <p-tag *ngIf="assignment.status == 'pending'" [rounded]="true" severity="warning" value="pending"></p-tag>
+                            <p-tag *ngIf="assignment.status == 'Accepted'" [rounded]="true" severity="success" value="Accepted"></p-tag>
+                        </td>
+                        <td>{{ assignment.doctor.user.name }}</td>
+                        <!-- <td>{{ assignment.patient }}</td> -->
                     </tr>
                 </ng-template>
             </p-table>
@@ -100,7 +95,7 @@
                         </small>                        
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
-                        {{event.date}}
+                        <!-- {{event.date}} -->
                     </ng-template>
                 </p-timeline>
             </div>
@@ -109,14 +104,14 @@
             <h4>Previous Appointment</h4>
             <div class="m-1">
 
-                <p-timeline [value]="upc_appt">
+                <p-timeline [value]="previousAppointment">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
                             {{event.status}}
                         </small>                        
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
-                        {{event.date}}
+                        <!-- {{event.date}} -->
                     </ng-template>
                 </p-timeline>
             </div>

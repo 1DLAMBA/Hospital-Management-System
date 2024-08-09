@@ -21,6 +21,15 @@ import { DoctorAppointmentComponent } from './panel/dashboard/appointment/doctor
 import { ClientAppointmentComponent } from './panel/dashboard/appointment/client-appointment/client-appointment.component';
 import { ClientPanelComponent } from './panel/dashboard/panel/client-panel/client-panel.component';
 import { NursePanelComponent } from './panel/dashboard/panel/nurse-panel/nurse-panel.component';
+import { PanelResolver } from './panel/dashboard/panel/panel-resolver';
+import { ClientListComponent } from './panel/dashboard/clients/client-list/client-list.component';
+import { ClientProfileComponent } from './panel/dashboard/clients/client-profile/client-profile.component';
+import { DoctorProfileComponent } from './panel/dashboard/my-profile/doctor-profile/doctor-profile.component';
+import { NurseListComponent } from './panel/dashboard/nurses/nurse-list/nurse-list.component';
+import { NurseProfileComponent } from './panel/dashboard/my-profile/nurse-profile/nurse-profile.component';
+import { ProfileNurseComponent } from './panel/dashboard/nurses/profile-nurse/profile-nurse.component';
+import { ProfilePageComponent } from './panel/dashboard/my-profile/profile-page/profile-page.component';
+import { AssignmentsComponent } from './panel/dashboard/assignments/assignments.component';
 
 export const routes: Routes = [
     {
@@ -51,14 +60,17 @@ export const routes: Routes = [
         path: 'register',
         component: RegisterComponent,
       },
+      
       {
         path: 'panel',
         component: DashboardComponent,
+        // resolve: {user: PanelResolver},
         data: { hideNavbarAndFooter: true },
         children: [
           {
           path: 'doctor-panel',
           component: DoctorPanelComponent,
+          // resolve: {user: PanelResolver}
         },
           {
           path: 'nurse-panel',
@@ -81,12 +93,36 @@ export const routes: Routes = [
           component: ClientAppointmentComponent,
         },
         {
+          path: 'assignment',
+          component: AssignmentsComponent,
+        },
+        {
           path: 'nurses',
           component: NursesComponent,
+          children: [
+            {
+              path: '',
+              component: NurseListComponent
+            },
+            {
+              path: 'nurse-profile/:id',
+              component: ProfileNurseComponent
+            },
+          ]
         },
         {
           path: 'clients',
-          component: ClientsComponent
+          component: ClientsComponent,
+          children: [
+            {
+              path: '',
+              component:ClientListComponent
+            },
+            {
+              path: 'profile/:id',
+              component:ClientProfileComponent
+            },
+          ]
         },
         {
           path: 'doctors',
@@ -107,8 +143,22 @@ export const routes: Routes = [
           component: MessagesComponent
         },
         {
-          path: 'profile',
-          component: MyProfileComponent
+          path: 'my-profile',
+          component: MyProfileComponent,
+          children:[
+            {
+              path:'doctor/:id',
+              component:DoctorProfileComponent
+            },
+            {
+              path:'client/:id',
+              component:ProfilePageComponent
+            },
+            {
+              path:'nurse/:id',
+              component:NurseProfileComponent
+            },
+          ]
         },
       ]
       },

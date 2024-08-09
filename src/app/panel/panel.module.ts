@@ -29,6 +29,20 @@ import { DoctorAppointmentComponent } from './dashboard/appointment/doctor-appoi
 import { ClientAppointmentComponent } from './dashboard/appointment/client-appointment/client-appointment.component';
 import { AppointmentComponent } from './dashboard/appointment/appointment.component';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { PanelResolver } from './dashboard/panel/panel-resolver';
+import { NursesComponent } from './dashboard/nurses/nurses.component';
+import { ClientsComponent } from './dashboard/clients/clients.component';
+import { ClientProfileComponent } from './dashboard/clients/client-profile/client-profile.component';
+import { ClientListComponent } from './dashboard/clients/client-list/client-list.component';
+import { DoctorProfileComponent } from './dashboard/my-profile/doctor-profile/doctor-profile.component';
+import { ProfilePageComponent } from './dashboard/my-profile/profile-page/profile-page.component';
+import { MyProfileComponent } from './dashboard/my-profile/my-profile.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { ProfileNurseComponent } from './dashboard/nurses/profile-nurse/profile-nurse.component';
+import { NurseListComponent } from './dashboard/nurses/nurse-list/nurse-list.component';
+import { NurseProfileComponent } from './dashboard/my-profile/nurse-profile/nurse-profile.component';
+import { AssignmentsComponent } from './dashboard/assignments/assignments.component';
+
 
 
 
@@ -43,10 +57,21 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
     DoctorsComponent,
     ClientDoctorComponent,
     DoctorListComponent,
+    NursesComponent,
     ProfileComponent,
     DoctorAppointmentComponent,
     ClientAppointmentComponent,
-    AppointmentComponent
+    AppointmentComponent,
+    ClientsComponent,
+    ClientProfileComponent,
+    ClientListComponent,
+    DoctorProfileComponent,
+    ProfilePageComponent,
+    MyProfileComponent,
+    ProfileNurseComponent,
+    NurseListComponent,
+    NurseProfileComponent,
+    AssignmentsComponent
   ],
   imports: [
     CommonModule,
@@ -67,8 +92,8 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
     ReactiveFormsModule,
     NgbDatepickerModule,
     JsonPipe,
-    NgxSpinnerModule
-    
+    NgxSpinnerModule,
+    InputSwitchModule
   ],
   bootstrap: [DashboardComponent]
 })

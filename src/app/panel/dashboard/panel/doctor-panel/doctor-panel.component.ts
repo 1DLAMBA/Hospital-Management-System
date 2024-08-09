@@ -5,6 +5,7 @@ import { AppointmentsService } from '../../../../endpoints/appointments.service'
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { response } from 'express';
+import { ActivatedRoute } from '@angular/router';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import moment from 'moment';
 
@@ -248,14 +249,14 @@ export class DoctorPanelComponent implements OnInit {
             this.previousAppointment = this.acceptedAppointment.filter((user: any) => {
               const appointmentDate = new Date(user.date_time);
               const today = new Date();
-              return appointmentDate.getDate() < today.getDate();
+              return appointmentDate < today;
             });
 
             ;
             this.upc_appt = this.acceptedAppointment.filter((user: any) => {
               const appointmentDate = new Date(user.date_time);
               const today = new Date();
-              return appointmentDate.getDate() > today.getDate();
+              return appointmentDate > today;
             });
             this.recentAppt = this.acceptedAppointment[0];
 

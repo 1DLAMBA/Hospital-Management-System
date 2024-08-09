@@ -14,6 +14,9 @@ export class ClientsService {
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
   getClient(id: any){
-    return this.httpClient.get(`${this.baseUrl}/user/get/${id}`);
+    return this.httpClient.get(`${this.baseUrl}/get/${id}`);
+  }
+  get(){
+    return this.httpClient.get(`${this.baseUrl}/get`);
   }
 }

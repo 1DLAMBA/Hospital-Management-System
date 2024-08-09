@@ -13,3 +13,12 @@ export interface MedicalRecordResource{
     client: ClientResource,
     doctor: DoctorResource
 }
+export interface MedicalRecordRequest{
+    assigned_doctor_id: number,
+    record_number:number,
+    client_id:number,
+    diagnosis:string,
+    past_diagnosis:string,
+    allergies: string,
+    treatment: string,
+}

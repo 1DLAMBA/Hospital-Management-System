@@ -8,11 +8,11 @@
         </div>
 
         <div class="appt d-flex">
-            <span *ngIf="recentAppt" class="d-flex m-auto">
+            <span *ngIf="recentAppt" class="d-flex m-auto justify-content-between">
 
                 <p>{{recentAppt.client.user.name}} - {{complaint}}</p>
                 <p class="text-secondary mx-2">{{recentAppt.date_time}}</p>
-                <p>View Details</p>
+                <!-- <a routerLink="/panel/doctor-appointment">View more</a> -->
             </span>
             <span *ngIf="!recentAppt">
                 <p>No recent appointments</p>
@@ -24,7 +24,7 @@
                 <div class="m-2 d-flex">
                     <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
                     <div class="m-1">
-                        <h1>{{acceptedAppointmentNum}}</h1>
+                        <h1>{{upc_appt.length}}</h1>
                         <p>upcoming<br> appointments</p>
                     </div>
                 </div>
