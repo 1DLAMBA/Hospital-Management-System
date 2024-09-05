@@ -111,20 +111,16 @@
             </div>
 
             <span *ngIf="user.clients.appointments">
-                <span *ngIf="appointment">
                 
-                    <p-button [disabled]="user.clients.appointments.status == 'pending' || user.clients.appointments.status == 'Accepted'" label="Request Appointment"  severity="info" [raised]="true"
+                
+                    <p-button [disabled]="appointment" label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
                         [rounded]="true" />
-                    </span>
-                <span *ngIf="!appointment">
-
-                    <p-button  label="Request Appointment" (click)="showDialog()" severity="info" [raised]="true"
-                    [rounded]="true" />
-                    </span>
+                  
+                
                 </span>
                 <span *ngIf="!user.clients.appointments">
 
-                    <p-button  label="Request Appointment" (click)="showDialog()" severity="info" [raised]="true"
+                    <p-button  label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
                         [rounded]="true" />
                     </span>
 

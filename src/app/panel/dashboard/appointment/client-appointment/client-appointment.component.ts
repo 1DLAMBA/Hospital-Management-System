@@ -45,39 +45,43 @@ export class ClientAppointmentComponent implements OnInit {
 
     this.getUser();
   }
+  getAppt(id: any){
+    this.appointmentEndpoint.get(id, 'client').subscribe({
+      next: (response: any) => {
+        this.appointment = response.appointments;
+        this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;
+        this.acceptedAppointment = this.appointment.filter((user: any) => user.status=='Accepted').length;
+        this.declinedAppointment = this.appointment.filter((user: any) => user.status=='Declined').length;
+        this.today = new Date;
+        this.today.getDate();
+        this.futureAppointment = this.appointment.filter((user: any) => {
+          const appointmentDate = new Date(user.date_time);
+          // const today = new Date();
+          return appointmentDate.getDate() >= this.today.getDate() ;
+        });
+        console.log('USER', this.appointment);
+
+      }
+    })
+  }
   getUser() {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user;
         
         this.avatar_file = environment.apiUrl + '/file/get/';
-        this.appointmentEndpoint.get(this.user.clients.id, 'client').subscribe({
-          next: (response: any) => {
-            this.appointment = response.appointments;
-            this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;
-            this.acceptedAppointment = this.appointment.filter((user: any) => user.status=='Accepted').length;
-            this.declinedAppointment = this.appointment.filter((user: any) => user.status=='Declined').length;
-            this.today = new Date;
-            this.today.getDate();
-            this.futureAppointment = this.appointment.filter((user: any) => {
-              const appointmentDate = new Date(user.date_time);
-              // const today = new Date();
-              return appointmentDate.getDate() >= this.today.getDate() ;
-            });
-            console.log('USER', this.appointment);
-
-          }
-        })
+        this.getAppt(this.user.clients.id)
+        
 
       }
     })
   }
 
-  viewAppt(appt_id: any) {
-    this.appointmentEndpoint.getSingle(appt_id).subscribe({
+  delete(appt_id: any) {
+    this.appointmentEndpoint.delete(appt_id).subscribe({
       next: (response: any) => {
-        this.apptDetails = true;
-        this.singleAppt = response.appointments;
+        console.log(response);
+        this.getAppt(this.user.clients.id);
       }
     })
   }
@@ -122,7 +126,7 @@ export class ClientAppointmentComponent implements OnInit {
     this.appointmentEndpoint.edit(id, status).subscribe({
       next: (response: any) => {
         // this.apptDetails = false;
-        this.viewAppt(id);
+        this.delete(id);
         this.btnDisable=false;
 
       }

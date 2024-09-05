@@ -45,7 +45,7 @@ export class AppointmentsService {
     return this.httpClient.get(`${this.baseUrl}/get/${id}`)
     
   }
-  // create(data: AppointmentRequest){
-  //   return this.httpClient.post(`${this.baseUrl}/create`, data)
-  // }
+  delete(id: any) {
+    return this.httpClient.delete(`${this.baseUrl}/delete/${id}`)
+  }
 }

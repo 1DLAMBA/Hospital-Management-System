@@ -180,7 +180,7 @@
         <ng-template pTemplate="body" let-appointments>
             <tr>
                 <td>
-                <button [disabled]="appointments.status !=='pending'"  (click)="viewAppt(appointments.id)"  class="decline" pButton label="Cancel" severity="warning" ></button>
+                <button [disabled]="appointments.status !=='pending'"  (click)="delete(appointments.id)"  class="decline-outline" pButton  size="small" icon="bi bi-trash3" severity="warning" ></button>
 
                     
                 </td>

@@ -60,7 +60,8 @@
                         <td>{{ assignment.client.user.name }}</td>
                         <td>
                             <p-tag *ngIf="assignment.status == 'pending'" [rounded]="true" severity="warning" value="pending"></p-tag>
-                            <p-tag *ngIf="assignment.status == 'Accepted'" [rounded]="true" severity="success" value="Accepted"></p-tag>
+                            <p-tag *ngIf="assignment.status == 'done'" [rounded]="true" severity="success" value="Done"></p-tag>
+                            <p-tag *ngIf="assignment.status == 'Declined'" [rounded]="true" severity="danger" value="Declined"></p-tag>
                         </td>
                         <td>{{ assignment.doctor.user.name }}</td>
                         <!-- <td>{{ assignment.patient }}</td> -->
@@ -91,11 +92,11 @@
                 <p-timeline [value]="upc_appt">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
-                            {{event.status}}
+                            {{event.assignment_message}}
                         </small>                        
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
-                        <!-- {{event.date}} -->
+                        {{event.client.user.name}}
                     </ng-template>
                 </p-timeline>
             </div>
@@ -107,11 +108,12 @@
                 <p-timeline [value]="previousAppointment">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
-                            {{event.status}}
+                            {{event.assignment_message}}
+
                         </small>                        
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
-                        <!-- {{event.date}} -->
+                        {{event.client.user.name}}
                     </ng-template>
                 </p-timeline>
             </div>

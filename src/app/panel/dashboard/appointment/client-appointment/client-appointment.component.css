@@ -54,6 +54,12 @@ section{
 .decline{
     background-color: rgb(255, 0, 0) !important;
 }
+
+.decline-outline{
+    background-color: white !important;
+    color: rgb(255, 0, 0) !important;
+    border: solid 1px rgb(255, 0, 0) !important;;
+}
 .cancel{
     background-color: orange !important;
 }

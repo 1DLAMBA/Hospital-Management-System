@@ -24,6 +24,7 @@ export class AssignmentsService {
   get(id: any) {
     return this.httpClient.get(`${this.baseUrl}/get/${id}`)
   }
+ 
 
   getSingle(id: any) {
     return this.httpClient.get(`${this.baseUrl}/getSingle/${id}`)

@@ -35,7 +35,7 @@ export class ProfileComponent implements OnInit {
   formData: any;
   preview: boolean = false;
   user: any;
-  appointment: boolean=true;
+  appointment!: boolean;
 
 
 
@@ -60,7 +60,7 @@ export class ProfileComponent implements OnInit {
     this.user_id = localStorage.getItem('id');
     this.getUser(this.user_id);
 
-  }
+}
 
   successAlert(message: any) {
 
@@ -77,7 +77,8 @@ export class ProfileComponent implements OnInit {
         this.user = response.user;
         const appointmentDate = new Date(this.user.clients.appointments.date_time);
         const today = new Date();
-        if(appointmentDate.getDate() < today.getDate()){
+        // console.log(appointmentDate, today)
+        if(appointmentDate < today || this.user.clients.appointments.status !='pending' ){
           this.appointment=false;
         }
 
