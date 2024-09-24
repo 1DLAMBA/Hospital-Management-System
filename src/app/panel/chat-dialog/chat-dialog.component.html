@@ -1,0 +1,22 @@
+<div [style]="{ width: '50rem', height:'100%' }" class="card flex flex-column align-items-center gap-2">
+
+<p-dialog header="Chat with {{ receiverId }}" [modal]="true" [style]="{ width: '50rem', height:'100%' }" [visible]="true" >
+    <div [style]="{ width: '50rem', height:'100%' }" class="chat-container">
+          <div class="message-container" *ngFor="let message of messages">
+                <div [ngClass]="{ 'user-message': message.from === 'user', 'bot-message': message.from === 'bot' }">
+                    <div class="message-bubble">
+                        <p>{{ message.text }}</p>
+                        <span class="message-time">{{ message.time }}</span>
+                    </div>
+                </div>
+            </div>
+
+        <div class="input-container">
+            <input pInputText [(ngModel)]="newMessage" rows="3" placeholder="Type your message..."/>
+            <button pButton type="button"  class="bi" icon="bi bi-send" (click)="sendMessage()"></button>
+        </div>
+    </div>
+  </p-dialog>
+  </div>
+
+  

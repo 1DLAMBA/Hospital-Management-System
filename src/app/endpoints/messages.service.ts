@@ -23,8 +23,8 @@ export class MessagesService {
     return this.httpClient.post(`${this.baseUrl}/seen`, { messageId });
   }
   
-  getMessageHistory(userId: number) {
-    return this.httpClient.get(`${this.baseUrl}/history/${userId}`);
+  getMessageHistory(formData:any) {
+    return this.httpClient.post(`${this.baseUrl}/history`, formData);
   }
   
 

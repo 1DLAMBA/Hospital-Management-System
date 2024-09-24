@@ -1,6 +1,8 @@
 
 import { AppRoutingModule, routes } from "./app.routes";
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { MessageComponent, StreamAutocompleteTextareaModule, StreamChatModule } from 'stream-chat-angular';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingComponent } from "./landing/landing.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
@@ -39,6 +41,12 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { AppointmentsService } from "./endpoints/appointments.service";
 import { AssignmentsService } from "./endpoints/assignments.service";
 import { MedicalService } from "./endpoints/medical.service";
+import { ConversationService } from "./endpoints/conversation.service";
+import { MessagesComponent } from "./panel/dashboard/messages/messages.component";
+import { MessagesService } from "./endpoints/messages.service";
+import { ChatDialogComponent } from "./panel/chat-dialog/chat-dialog.component";
+import { ChatDialogService } from "./panel/chat-dialog.service";
+import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
 
 
 
@@ -52,7 +60,9 @@ import { MedicalService } from "./endpoints/medical.service";
         RegisterComponent,
         AboutComponent,
         ServicesComponent,
-        ContactComponent
+        ContactComponent,
+        MessagesComponent,
+      //   ChatDialogComponent
 
          ],
     imports: [ 
@@ -72,9 +82,12 @@ import { MedicalService } from "./endpoints/medical.service";
         ToastModule,
         CalendarModule,
         NgbTooltipModule,
+        DialogModule,
         ToastsContainer,
         AnimateOnScrollModule,
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        DynamicDialogModule
+      
               ],
          exports:[
             NavBarComponent,
@@ -82,7 +95,7 @@ import { MedicalService } from "./endpoints/medical.service";
             LandingComponent,
             LoginComponent,
             RegisterComponent,
-            AboutComponent
+            AboutComponent,
             
          ],
          providers:[
@@ -95,9 +108,16 @@ import { MedicalService } from "./endpoints/medical.service";
             PanelModule,
             AppointmentsService,
             AssignmentsService,
-            MedicalService
+            MedicalService,
+            MessagesService,
+            ConversationService,
+            TranslateService,
+            ChatDialogService,
+            DialogService,
+            importProvidersFrom(TranslateModule.forRoot())
          ],
          schemas: [CUSTOM_ELEMENTS_SCHEMA],
+         // entr: [ChatDialogComponent],
          // bootstrap: [AppComponent],
 })
 export class AppModule { }

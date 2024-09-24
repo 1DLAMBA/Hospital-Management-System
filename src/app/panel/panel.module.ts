@@ -42,6 +42,9 @@ import { ProfileNurseComponent } from './dashboard/nurses/profile-nurse/profile-
 import { NurseListComponent } from './dashboard/nurses/nurse-list/nurse-list.component';
 import { NurseProfileComponent } from './dashboard/my-profile/nurse-profile/nurse-profile.component';
 import { AssignmentsComponent } from './dashboard/assignments/assignments.component';
+import { ChatDialogComponent } from './chat-dialog/chat-dialog.component';
+import { ChatDialogService } from './chat-dialog.service';
+import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 
 
 
@@ -71,7 +74,8 @@ import { AssignmentsComponent } from './dashboard/assignments/assignments.compon
     ProfileNurseComponent,
     NurseListComponent,
     NurseProfileComponent,
-    AssignmentsComponent
+    AssignmentsComponent,
+    ChatDialogComponent
   ],
   imports: [
     CommonModule,
@@ -93,8 +97,11 @@ import { AssignmentsComponent } from './dashboard/assignments/assignments.compon
     NgbDatepickerModule,
     JsonPipe,
     NgxSpinnerModule,
-    InputSwitchModule
+    InputSwitchModule,
+    DynamicDialogModule, 
+    
   ],
-  bootstrap: [DashboardComponent]
+  bootstrap: [DashboardComponent],
+  providers:[ChatDialogService, DialogService]
 })
 export class PanelModule { }
