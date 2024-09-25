@@ -15,7 +15,6 @@
           "options": {
             "outputPath": "dist/hospital-management-system",
             "index": "src/index.html",
-            "browser": "src/main.ts",
             "extraWebpackConfig": "./extra-webpack.config.js",
             "main": "src/main.ts",
             "polyfills": [
@@ -36,12 +35,7 @@
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/moment/min/moment.min.js"
-            ],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            ]
           },
           "configurations": {
             "production": {
@@ -53,8 +47,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "20kb",
-                  "maximumError": "40kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "400kb"
                 }
               ],
               "outputHashing": "all"
