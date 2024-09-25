@@ -3,7 +3,6 @@ import { UserService } from '../../../../endpoints/user.service';
 import { UserResource } from '../../../../../resources/user.model';
 import { AssignmentsService } from '../../../../endpoints/assignments.service';
 import { AssigmentResourse } from '../../../../../resources/assignment.model';
-import moment from 'moment';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { NurseResource } from '../../../../../resources/nurse.model';
 import { NursesComponent } from '../../nurses/nurses.component';
