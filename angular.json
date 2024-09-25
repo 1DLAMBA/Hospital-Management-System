@@ -11,11 +11,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/hospital-management-system",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "extraWebpackConfig": "./extra-webpack.config.js",
             "polyfills": [
               "zone.js"
             ],
@@ -33,7 +34,7 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-               "node_modules/moment/min/moment.min.js"
+              "node_modules/moment/min/moment.min.js"
             ],
             "server": "src/main.server.ts",
             "prerender": true,
@@ -66,7 +67,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "hospital-management-system:build:production"
@@ -78,13 +79,13 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "ngx-build-plus:extract-i18n",
           "options": {
             "buildTarget": "hospital-management-system:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "ngx-build-plus:karma",
           "options": {
             "polyfills": [
               "zone.js",
@@ -104,7 +105,7 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-               "node_modules/moment/min/moment.min.js"
+              "node_modules/moment/min/moment.min.js"
             ]
           }
         }
