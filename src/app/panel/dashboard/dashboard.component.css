@@ -4,10 +4,76 @@
 }
 .holder{
     justify-content: space-between;
+    display: flex;
 }
 
 .d-ovr{
     box-shadow: 0 4px 8px 0 rgba(99, 99, 99, 0.2), 0 6px 20px 0 rgba(99, 99, 99, 0.19);
+
+}
+.mob-nav {
+    width: 100%;
+    background-color: #17224d;
+    z-index: 6;
+    position: fixed; /* Fix the position at the bottom */
+    bottom: 0; /* Stick to the bottom */
+    display: flex; /* Use flexbox for button alignment */
+    justify-content: space-around; /* Space buttons evenly */
+    padding: 10px 0; /* Add some padding */
+}
+
+.mob-nav a {
+    background-color: transparent; /* Dark a background */
+    color: white;
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Add padding for a better hit area */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.mob-nav a:hover {
+    background-color: #31469b5b; /* Darker background on hover */
+}
+.mob-nav .active{
+    background-color: white;
+    padding: 3%;
+    color: #17224d;
+
+}
+
+@media (max-width: 499px){
+
+    .header{
+        width: 100% !important;
+        margin:auto;
+        
+
+    }
+
+    .mob-nav{
+        width: 100vw;
+        /* display: none; */
+        background-color: #17224d;
+        z-index: 6;
+        
+    }
+
+    
+    .holder{
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+@media (min-width: 499px){
+
+    .mob-nav{
+        width: 100%;
+        display: none;
+    }
+    
+    
 
 }
 

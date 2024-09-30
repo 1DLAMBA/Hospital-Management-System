@@ -1,6 +1,6 @@
 <p-toast  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 
-<div class="d-flex holder">
+<div class=" holder">
 
     <app-side-nav></app-side-nav> 
 
@@ -21,4 +21,15 @@
         </div>
         <router-outlet></router-outlet>
     </div>   
+    <div class="mob-nav">
+        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel">
+            
+        </a>
+        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="doctor-appointment">
+
+        </a>
+        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
+
+        </a>
+    </div>
 </div>
