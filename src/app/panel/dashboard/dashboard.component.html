@@ -21,11 +21,41 @@
         </div>
         <router-outlet></router-outlet>
     </div>   
-    <div class="mob-nav">
+    <!-- ADD NG IF HERE TO CHECK USER TYPE BEFORE RENDERING MOBILE NAV -->
+    <div *ngIf="user.user_type=='doctor'" class="mob-nav">
         <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel">
             
         </a>
         <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="doctor-appointment">
+
+        </a>
+        <a routerLinkActive="active"  class=" bi bi-heart-pulse-fill" routerLink="nurses">
+
+        </a>
+        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
+
+        </a>
+    </div>
+    <div *ngIf="user.user_type=='nurse'" class="mob-nav">
+        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="nurse-panel">
+            
+        </a>
+        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="assignment">
+
+        </a>
+    
+        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
+
+        </a>
+    </div>
+    <div *ngIf="user.user_type=='client'" class="mob-nav">
+        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="client-panel">
+            
+        </a>
+        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="client-appointment">
+
+        </a>
+        <a routerLinkActive="active"  class=" bi bi-heart-pulse-fill" routerLink="nurses">
 
         </a>
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
