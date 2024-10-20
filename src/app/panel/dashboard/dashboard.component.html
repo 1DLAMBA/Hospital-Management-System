@@ -6,7 +6,7 @@
 
     <!-- MAIN PANEL -->
     <div class="header">
-        <div class="d-flex  d-ovr justify-content-between p-3">
+        <div class="d-flex   d-ovr justify-content-between p-3">
             <h4>Dashboard Overview</h4>
             <div class="d-flex">
                 <div class="passport">
@@ -19,6 +19,16 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex mob-head  justify-content-between p-1">
+            <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+            <div class="d-flex">
+                <div class="passport">
+                    <img  src="{{ avatar_file + user.passport }}">
+                </div>
+                
+            </div>
+        </div>
+        
         <router-outlet></router-outlet>
     </div>   
     <!-- ADD NG IF HERE TO CHECK USER TYPE BEFORE RENDERING MOBILE NAV -->

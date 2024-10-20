@@ -1,5 +1,6 @@
 .header{
     width: 83%;
+    height: fit-content;
     /* margin-left: 18% !important; */
 }
 .holder{
@@ -10,7 +11,9 @@
 .d-ovr{
     box-shadow: 0 4px 8px 0 rgba(99, 99, 99, 0.2), 0 6px 20px 0 rgba(99, 99, 99, 0.19);
 
+
 }
+
 .mob-nav {
     width: 100%;
     background-color: #17224d;
@@ -61,10 +64,23 @@
         
     }
 
+    .d-ovr{
+        display: none !important;
+    }
+
     
     .holder{
         display: flex;
         flex-direction: column;
+    }
+
+    .mob-head{
+        position: sticky;
+        top: 1px;
+        left: 0px;
+        z-index: 2;
+        background-color: rgba(251, 251, 251, 0.519);
+        backdrop-filter: blur(3px);
     }
 
 }
@@ -74,7 +90,9 @@
         width: 100%;
         display: none;
     }
-    
+    .mob-head{
+        display: none !important;
+    }
     
 
 }
