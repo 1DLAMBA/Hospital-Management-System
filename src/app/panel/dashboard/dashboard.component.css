@@ -47,6 +47,14 @@
 
 }
 
+.mob-head .navi{
+    background-color: #17224d;
+    color: white;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(99, 99, 99, 0.2), 0 6px 20px 0 rgba(99, 99, 99, 0.19);
+
+}
+
 @media (max-width: 499px){
 
     .header{

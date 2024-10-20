@@ -20,7 +20,12 @@
             </div>
         </div>
         <div class="d-flex mob-head  justify-content-between p-1">
-            <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+            <div class="navi d-flex p-2">
+                
+                <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                <p class="m-auto" style="font-size: smaller;"><b>{{user.name}}</b></p>
+
+            </div>
             <div class="d-flex">
                 <div class="passport">
                     <img  src="{{ avatar_file + user.passport }}">
