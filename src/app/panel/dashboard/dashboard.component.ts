@@ -16,6 +16,9 @@ export class DashboardComponent implements OnInit {
   user!: UserResource
   firstName!: string;
   avatar_file!:string;
+  visible: boolean = false;
+
+  position: string = 'center';
 
   constructor(
     private messageService: MessageService,
@@ -29,6 +32,10 @@ export class DashboardComponent implements OnInit {
     this.getUser();
   }
 
+  showDialog() {
+      // this.position = position;
+      this.visible = true;
+  }
 
 
   getUser (){
@@ -44,9 +51,7 @@ export class DashboardComponent implements OnInit {
     })
   }
   show(firstname: any) {
-
     this.messageService.add({ icon: ' bi bi-person', severity: 'success', detail: `Hello, ${firstname}`  });
     console.log(this.user);
-    
   }
 }

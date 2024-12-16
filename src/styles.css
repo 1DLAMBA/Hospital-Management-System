@@ -54,7 +54,7 @@
     }
 
     .panel-hold .main-sect{
-        width: 100vh;
+        width: 95% !important;
     }
     .panel-hold .appt-sect{
         width: 100% !important;
