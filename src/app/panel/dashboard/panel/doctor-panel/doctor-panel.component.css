@@ -19,10 +19,12 @@
     background-color: #0055aa;
     border-radius: 50%;
 }
-.main-sect{
-    width: 49%;
-    margin: 3%;
-}
+
+
+    .main-sect{
+        width: 90% ;
+        margin: 3%;
+    }
 
 .main-sect a{
     text-decoration: none !important;

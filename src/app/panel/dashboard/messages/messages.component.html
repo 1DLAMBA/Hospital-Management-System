@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="card flex flex-column align-items-center gap-2">
 
     <p-dialog [modal]="true" [showHeader]="false" [(visible)]="visible" [style]="{ width: '50rem', height:'50rem' }">
@@ -41,6 +42,7 @@
                     </span>
                     <span class="fw-bold" *ngIf="conversation.user_one_id == this.id">
                         <img  src="{{ avatar_file + conversation.user_two.passport}}">
+                        
                     </span>
 
                 </div>

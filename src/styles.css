@@ -11,6 +11,57 @@
     scrollbar-color: #17224d #ffffff00; /* Adjust scrollbar colors */
 }
 
+
+.panel-hold{
+    display: flex;
+
+}
+
+@media (min-width: 499px){
+    .panel-hold .main-sect{
+        width: 49% !important;
+        margin: 3%;
+    }
+}
+
+@media (max-width: 499px){
+    .header{
+        width: 100% !important;
+    }
+    .sub-card{
+        width: 29% !important;
+    }
+    .sub-card span{
+        width: 28%;
+        padding: 5% !important;
+        background-color: transparent !important;
+    }
+
+    .sub-card  p{
+        font-size: 0.67rem !important;
+        padding: 1%;
+        width: 100%;
+        object-fit: contain;
+    }
+    .sub-card div{
+        margin: 0 !important;
+        padding: 1% !important;
+    }
+    .panel-hold {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .panel-hold .main-sect{
+        width: 95% !important;
+    }
+    .panel-hold .appt-sect{
+        width: 100% !important;
+    }
+
+}
+
 .wh1{
     color: white;
 }

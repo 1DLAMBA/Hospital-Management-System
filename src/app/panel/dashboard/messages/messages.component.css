@@ -62,7 +62,7 @@ ul{
   flex-direction: column;
   /* height: 80vh; */
   max-width: 600px;
-  margin: 10% auto;
+  margin: 30% auto;
 }
 
 .chat-window {

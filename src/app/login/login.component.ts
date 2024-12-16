@@ -10,7 +10,7 @@ import {
 } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageService } from 'primeng/api';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ToastService } from '../toast.service';
 import { ToastsContainer } from '../toast-container';
 import { NgxSpinnerService } from "ngx-spinner";
@@ -105,10 +105,11 @@ export class LoginComponent implements OnDestroy, OnInit {
         }
         localStorage.setItem('id', response.user.id)
       },
-      error: (res: HttpResponse<any>) => {
+      error: (res: HttpErrorResponse) => {
+        console.log(res);
         this.invalidDetails = true;
         this.submitLoading = false;
-        this.error_message=res.statusText;
+        this.error_message=res.error;
         this.spinner.hide();
 
       }

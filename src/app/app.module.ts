@@ -117,7 +117,6 @@ import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
             importProvidersFrom(TranslateModule.forRoot())
          ],
          schemas: [CUSTOM_ELEMENTS_SCHEMA],
-         // entr: [ChatDialogComponent],
-         // bootstrap: [AppComponent],
+         
 })
 export class AppModule { }

@@ -111,7 +111,7 @@
 <section>
 
 
-    <p-table #dt1 [value]="appointment" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+    <p-table #dt1 [tableStyle]="{'min-width': '50rem'}" [value]="appointment" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
         [globalFilterFields]="['doctor.user.name', 'doctors.specialization', 'representative.name', 'status']">
 
 

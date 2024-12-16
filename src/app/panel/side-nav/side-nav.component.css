@@ -21,6 +21,13 @@
     
 }
 
+
+@media (max-width: 499px){
+
+.dt-view {
+ display: none;
+}
+}
 .active{
     background-color: #0055aa;
     color: white;
