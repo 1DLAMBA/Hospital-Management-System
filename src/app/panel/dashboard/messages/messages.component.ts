@@ -29,7 +29,7 @@ export class MessagesComponent implements OnInit {
   conversations?: any;
   visible: boolean = false;
   position: string = 'center';
-  avatar_file!:string;
+  avatar_file:string =environment.apiUrl + '/file/get/';
   messages:any[] =[] ;
   newMessage: string = '';
   receiver_id: any;
@@ -37,10 +37,15 @@ export class MessagesComponent implements OnInit {
   chatName: any;
   pusher: any;
   channel: any;
+  newMessageStyle: boolean = false;
   messageReceived: boolean = false ;
   @ViewChild('messageContainer') messageContainer!: ElementRef;
 
+  ngOnInit(): void {
+       
+    this.getConversation();
 
+  }
   constructor(
     private chatService: ChatClientService,
     private channelService: ChannelService,
@@ -77,18 +82,16 @@ export class MessagesComponent implements OnInit {
       console.log(this.id, data.message.receiver_id )
       if(this.id == data.message.receiver_id){
         this.messageService.add({severity: 'info', summary: 'new message', detail: data.message.message})
+        console.log('new message',data.message)
+        this.getConversation();
+      
       }
       // Handle incoming message
       this.getConversation();
     });
   }
 
- ngOnInit() {
-
-    this.avatar_file = environment.apiUrl + '/file/get/';        
-    this.getConversation();
-
-  }
+ 
 
   ngAfterViewChecked() {
     // Always scroll to the bottom after Angular finishes checking the view
@@ -103,17 +106,21 @@ export class MessagesComponent implements OnInit {
     }
   }
 
-  getConversation(){
+  getConversation() {
     this.conversationEndpoint.getConversations(this.id).subscribe({
-      next: (response: any) => {
-        console.log('CONVO',response)
-        this.conversations = response.data
-      }, error: (error: any) => {
-        console.error(error);
+        next: (response: any) => {
+            console.log('CONVO', response);
+            // Sort conversations by updated_at in descending order (most recent first)
+            this.conversations = response.data.sort((a: any, b: any) => 
+                new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+            );
+        },
+        error: (error: any) => {
+            console.error(error);
+        }
+    });
+}
 
-      }
-    })
-  }
 
 
  sendMessage() {
@@ -177,6 +184,7 @@ export class MessagesComponent implements OnInit {
 
       })
     }
+    this.scrollToBottom();
 
   }
   close(){

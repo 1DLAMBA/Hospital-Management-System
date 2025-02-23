@@ -59,8 +59,7 @@ export class ClientProfileComponent implements OnInit {
   position: string = 'center';
 
   messages: any = [
-    { from: 'user', text: 'Hi there! How are you?', time: '10:00 AM' },
-    { from: 'bot', text: 'Hello! I am good, how can I help you?', time: '10:01 AM' },
+   
   ];
   newMessage: string = '';
 
