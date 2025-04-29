@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <div class="card flex flex-column align-items-center gap-2">
 
-    <p-dialog [modal]="true" [showHeader]="false" [(visible)]="visible" [style]="{ width: '50rem', height:'50rem' }">
+    <p-dialog [modal]="true" [showHeader]="false" [(visible)]="visible" [style]="{ width: '50rem', height:'auto' }">
         <div class=" head d-flex m-2">
             <button pButton class="bi bi-arrow-left" (click)="visible=false"> </button>
 
@@ -10,9 +10,9 @@
         </div>
         <h5 class="fw-bold my-auto" >{{chatName}}</h5>
         </div>
-        <div class="chat-container d-flex">
+        <div #messageContainer class="chat-container d-flex">
             
-                <div class="message-container" *ngFor="let message of messages">
+                <div  class="message-container" *ngFor="let message of messages">
                     <div [ngClass]="{ 'user-message': message.sender_id == this.id, 'bot-message': message.receiver_id == this.id }">
                         <div class="message-bubble">
                             <p>{{ message.message }}</p>
@@ -35,7 +35,8 @@
     <div class="convo-list m-2 d-flex flex-column">
         <div class="list-hold m-auto" *ngFor="let conversation of conversations">
 
-            <ul (click)="showDialog(conversation)"class="p-2 border border-1 d-flex">
+            <!-- <ul (click)="showDialog(conversation)"class="p-2 border border-1 d-flex"  [ngClass]="{'closed':conversation.is_opened, 'opened':!conversation.is_opened}">     -->
+            <ul (click)="showDialog(conversation)"class="p-2 border border-1 d-flex" >    
                 <div class="passport">
                     <span class="fw-bold" *ngIf="conversation.user_two_id == this.id">
                         <img  src="{{ avatar_file + conversation.user_one.passport}}">

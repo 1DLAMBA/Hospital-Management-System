@@ -4,12 +4,15 @@ import { UserResource } from '../../../resources/user.model';
 import { UserService } from '../../endpoints/user.service';
 import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MessagesService } from '../../endpoints/messages.service';
+import Pusher from 'pusher-js';
 
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.css',
+  providers: [MessageService]
 })
 export class DashboardComponent implements OnInit {
   id: any;
@@ -17,21 +20,46 @@ export class DashboardComponent implements OnInit {
   firstName!: string;
   avatar_file!:string;
   visible: boolean = false;
-
+  newNotificationBatch:boolean = false;
   position: string = 'center';
+  pusher: any;
+  channel: any;
 
   constructor(
     private messageService: MessageService,
     private userEndpoint: UserService,
     private spinner: NgxSpinnerService,
+    private messagesServe: MessagesService,
   ){
+this.pusher = new Pusher('45cde359e2dec89841a7', {
+      cluster: 'mt1',
+      // forceTLS: true,
+    });
 
+    this.channel = this.pusher.subscribe('messaging-channel');
+    
+    this.channel.bind('MessageSent', (data: any) => {
+      console.log('Message received:', data.message);
+      console.log(this.id, data.message.receiver_id )
+      if(this.id == data.message.receiver_id){
+        this.messageService.add({severity: 'info', summary: 'new message', detail: data.message.message})
+        // console.log('new message',data.message)
+        this.newNotificationBatch = true;
+        // this.getConversation();
+      
+      }
+      // Handle incoming message
+      // this.getConversation();
+    });
   }
   ngOnInit(): void {
     this.id=localStorage.getItem('id')
     this.getUser();
   }
 
+  notificationBadge(){
+    this.newNotificationBatch = false;
+  }
   showDialog() {
       // this.position = position;
       this.visible = true;

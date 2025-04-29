@@ -28,7 +28,17 @@ header="Edit Profile"
                 <div>
 
                     <p><b>{{user.name}}</b></p>
-                    <small>{{user.user_type}}</small>
+                    <div class="d-flex gap-5">
+                        <small>{{user.user_type}}</small>
+                        <div class="d-flex ">
+                            <button style="border: 0; background-color: white;" *ngIf="newNotificationBatch" (click)="notificationBadge()" pBadge>
+                                <i class="bi bi-bell text-3xl"></i>
+                              </button>
+                              <button style="border: 0; background-color: white;" *ngIf="!newNotificationBatch" (click)="notificationBadge()">
+                                <i class="bi bi-bell text-3xl"></i>
+                              </button>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
