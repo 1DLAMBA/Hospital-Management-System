@@ -150,5 +150,133 @@
     border-radius: 10px;
   }
   
+/* New Medical Record Dialog Styling */
+:host ::ng-deep .medical-record-dialog .p-dialog-content {
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.med-record-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+}
+
+.med-record-header {
+  background: linear-gradient(135deg, #3f51b5, #2196f3);
+  color: white;
+  padding: 20px 25px;
+  position: relative;
+}
+
+.med-record-header::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0));
+}
+
+.med-record-header h5 {
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.med-record-header .icon-container {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  margin-right: 15px;
+}
+
+.med-record-header .icon-container i {
+  font-size: 24px;
+}
+
+.med-record-body {
+  padding: 30px 25px;
+  flex: 1;
+  background-color: #f8f9fa;
+}
+
+.med-record-body label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.med-record-body .form-control {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.med-record-body .form-control:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+}
+
+.med-record-body .form-control::placeholder {
+  color: #adb5bd;
+  font-size: 0.9rem;
+}
+
+.med-record-footer {
+  padding: 15px 25px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.med-record-footer .btn-primary {
+  background-color: #2196f3;
+  border-color: #2196f3;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.med-record-footer .btn-primary:hover {
+  background-color: #0d8aee;
+  border-color: #0d8aee;
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+  transform: translateY(-2px);
+}
+
+.med-record-footer .btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3);
+}
+
+.med-record-footer .btn-primary:disabled {
+  background-color: #90caf9;
+  border-color: #90caf9;
+  opacity: 0.7;
+}
+
+.med-record-footer .btn-outline-secondary {
+  color: #6c757d;
+  border-color: #ced4da;
+  background-color: white;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.med-record-footer .btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+  color: #495057;
+}
+  
   
   

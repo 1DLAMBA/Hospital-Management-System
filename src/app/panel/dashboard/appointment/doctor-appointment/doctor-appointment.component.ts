@@ -46,7 +46,7 @@ export class DoctorAppointmentComponent implements OnInit {
       next: (response: any) => {
         this.user = response.user
         this.avatar_file = environment.apiUrl + '/file/get/';
-        this.appointmentEndpoint.get(this.user.doctors.id, 'doctor').subscribe({
+        this.appointmentEndpoint.get(this.user.doctors.id+ '?_=' + new Date().getTime(), 'doctor').subscribe({
           next: (response: any) => {
             this.appointment = response.appointments;
             this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;

@@ -1,62 +1,54 @@
 <p-toast></p-toast>
-<div class="card flex flex-column align-items-center gap-2">
 
-    <p-dialog [modal]="true" [showHeader]="false" [(visible)]="visible" [style]="{ width: '50rem', height:'auto' }">
-        <div class=" head d-flex m-2">
-            <button pButton class="bi bi-arrow-left" (click)="visible=false"> </button>
+<div class="messages-container">
+    <app-loader></app-loader>
 
-            <div class="passport d-flex m-1 justify-content-between">
-            <img  src="{{ avatar_file + chatDp}}">
-        </div>
-        <h5 class="fw-bold my-auto" >{{chatName}}</h5>
-        </div>
-        <div #messageContainer class="chat-container d-flex">
-            
-                <div  class="message-container" *ngFor="let message of messages">
-                    <div [ngClass]="{ 'user-message': message.sender_id == this.id, 'bot-message': message.receiver_id == this.id }">
-                        <div class="message-bubble">
-                            <p>{{ message.message }}</p>
-                            <span class="message-time">{{ message.created_at | date:'medium' }}</span>
-                        </div>
+    <div class="m-3">
+        <h3 class="text-primary mb-3">Messages</h3>
+        <div class="convo-list d-flex flex-column">
+            <div class="list-hold" *ngFor="let conversation of conversations">
+                <ul (click)="showDialog(conversation)" class="p-3 border d-flex align-items-center">    
+                    <div class="passport">
+                        <img *ngIf="conversation.user_two_id == this.id" src="{{ avatar_file + conversation.user_one.passport}}">
+                        <img *ngIf="conversation.user_one_id == this.id" src="{{ avatar_file + conversation.user_two.passport}}">
                     </div>
-                </div>
-
-            <div class="input-container">
-                <input pInputText [(ngModel)]="newMessage" rows="3" placeholder="Type your message..." />
-                <button pButton type="button" class="bi" icon="bi bi-send" (click)="sendMessage()"></button>
+                    <div class="conversation-preview">
+                        <span class="fw-bold d-block" *ngIf="conversation.user_one_id == this.id">
+                            {{conversation.user_two.name}}
+                        </span>
+                        <span class="fw-bold d-block" *ngIf="conversation.user_two_id == this.id">
+                            {{conversation.user_one.name}}
+                        </span>
+                        <span class="message-preview">{{conversation.last_message}}</span>
+                    </div>
+                </ul>
             </div>
-        </div>
-
-    </p-dialog>
-</div>
-
-<div class="m-2">
-    <b>Messages</b>
-    <div class="convo-list m-2 d-flex flex-column">
-        <div class="list-hold m-auto" *ngFor="let conversation of conversations">
-
-            <!-- <ul (click)="showDialog(conversation)"class="p-2 border border-1 d-flex"  [ngClass]="{'closed':conversation.is_opened, 'opened':!conversation.is_opened}">     -->
-            <ul (click)="showDialog(conversation)"class="p-2 border border-1 d-flex" >    
-                <div class="passport">
-                    <span class="fw-bold" *ngIf="conversation.user_two_id == this.id">
-                        <img  src="{{ avatar_file + conversation.user_one.passport}}">
-                    </span>
-                    <span class="fw-bold" *ngIf="conversation.user_one_id == this.id">
-                        <img  src="{{ avatar_file + conversation.user_two.passport}}">
-                        
-                    </span>
-
-                </div>
-                <div> <span class="fw-bold" *ngIf="conversation.user_one_id == this.id">
-                        {{conversation.user_two.name}}</span>
-                        <span class="fw-bold" *ngIf="conversation.user_two_id == this.id">
-                            {{conversation.user_one.name}}</span>
-                    <br>{{conversation.last_message}}
-                </div>
-            </ul>
-
-
         </div>
     </div>
 
+    <p-dialog [modal]="true" [showHeader]="false" [(visible)]="visible" [style]="{ width: '50rem' }">
+        <div class="head d-flex align-items-center">
+            <button pButton class="p-button-text text-white me-3" icon="bi bi-arrow-left" (click)="visible=false"></button>
+            <div class="passport me-2">
+                <img src="{{ avatar_file + chatDp}}">
+            </div>
+            <h5 class="fw-bold m-0">{{chatName}}</h5>
+        </div>
+        
+        <div #messageContainer class="chat-container">
+            <div class="message-container" *ngFor="let message of messages">
+                <div [ngClass]="message.sender_id == this.id ? 'user-message' : 'bot-message'">
+                    <div class="message-bubble">
+                        <p class="m-0">{{ message.message }}</p>
+                        <span class="message-time">{{ message.created_at | date:'MMM d, yyyy, h:mm:ss a' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input pInputText [(ngModel)]="newMessage" placeholder="Type your message..." (keyup.enter)="sendMessage()"/>
+            <button pButton type="button" icon="bi bi-send-fill" (click)="sendMessage()"></button>
+        </div>
+    </p-dialog>
 </div>

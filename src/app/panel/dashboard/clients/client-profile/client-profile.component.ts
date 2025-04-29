@@ -4,7 +4,7 @@ import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators , FormBuilder} from '@angular/forms';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
 import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { JsonPipe } from '@angular/common';
@@ -36,7 +36,7 @@ export class ClientProfileComponent implements OnInit {
   id: string = this.route.snapshot.params['id'];
   singleClient!: ClientResource | any;
   singleNurse!: NurseResource | any;
-
+  medRecord: boolean=false;
   avatar_file!: string;
   date: Date[] | undefined;
   visible: boolean = false;
@@ -55,6 +55,8 @@ export class ClientProfileComponent implements OnInit {
   assignForm!: FormGroup;
   assignments!: any[];
   visibleMsg: boolean = false;
+  display: boolean = false;
+  medicalRecordForm!: FormGroup;
 
   position: string = 'center';
 
@@ -75,12 +77,22 @@ export class ClientProfileComponent implements OnInit {
     private medicalEndpoint: MedicalService,
     private assignmentEndpoint: AssignmentsService,
     private chatDialogService: ChatDialogService,
-    private MessagesEnpoint: MessagesService
+    private MessagesEnpoint: MessagesService,
+    private fb: FormBuilder
   ) {
     this.assignForm = new FormGroup({
       assignment_message: new FormControl('', Validators.required),
       // diagnosis: new FormControl('', Validators.required)
     })
+    this.medicalRecordForm = this.fb.group({
+      client_id: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      assigned_doctor_id: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      record_number: ['', Validators.required],
+      diagnosis: ['', Validators.required],
+      past_diagnosis: [''],
+      allergies: [''],
+      treatment: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -92,6 +104,7 @@ export class ClientProfileComponent implements OnInit {
   openChat() {
     this.chatDialogService.openChat('sender123', 'receiver456');
   }
+  
 
   successAlert(message: any) {
 
@@ -107,6 +120,45 @@ export class ClientProfileComponent implements OnInit {
     this.visibleMsg = true;
     console.log('reached');
 
+  }
+  showMedRecDialog() {
+    // Generate a unique record number (timestamp + random string)
+    const timestamp = new Date().getTime();
+    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const recordNumber = `MR-${timestamp}-${randomStr}`;
+    
+    // Set the hidden fields
+    this.medicalRecordForm.patchValue({
+      client_id: this.singleClient.id, // Set from the current client
+      assigned_doctor_id: this.user_id, // Set from logged in user
+      record_number: recordNumber // Set the generated record number
+    });
+    
+    this.display = true;
+  }
+  
+  onSubmit() {
+    if (this.medicalRecordForm.valid) {
+      // Log form values for debugging
+      console.log('Medical Record Data:', this.medicalRecordForm.value);
+      
+      // Send to your medical records service
+      this.medicalEndpoint.create(this.medicalRecordForm.value).subscribe({
+        next: (response: any) => {
+          console.log('Medical record created:', response);
+          this.successAlert('Medical record created successfully');
+          this.display = false; // Close dialog after submission
+          // Optionally refresh medical records list
+        },
+        error: (error: any) => {
+          console.error('Error creating medical record:', error);
+          this.dangerAlert('Failed to create medical record');
+        }
+      });
+    } else {
+      // Mark fields as touched to show validation errors
+      this.medicalRecordForm.markAllAsTouched();
+    }
   }
   sendMessage() {
     if (this.newMessage.trim()) {

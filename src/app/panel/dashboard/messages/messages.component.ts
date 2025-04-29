@@ -14,6 +14,8 @@ import Pusher from 'pusher-js';
 import { MessageService } from 'primeng/api';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-messages',
@@ -48,7 +50,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
     private conversationEndpoint: ConversationService,
     private messageService: MessageService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private loadingService: LoadingService
   ) {
     const apiKey = 'ahhwc6pvafxh';
     const userId = '1335351';
@@ -71,7 +75,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
       if (this.router.url.includes('/messages')) {
         console.log('Navigated back to messages component, refreshing conversations');
         this.getConversation();
-        this.convogetter();
+        // Removed duplicate call to convogetter()
       }
     });
 
@@ -80,18 +84,18 @@ export class MessagesComponent implements OnInit, OnDestroy {
     
   }
 
-  convogetter(){
-    this.getConversation()
-  }
+  // Removed convogetter method as duplicate call to getConversation
   getConversation() {
     console.log('Fetching conversations for user:', this.id);
-    this.conversationEndpoint.getConversations(this.id).subscribe({
+    // Use conversation service method with cache-busting timestamp query param
+    this.conversationEndpoint.getConversations(this.id + '?_=' + new Date().getTime()).subscribe({
       next: (response: any) => {
         console.log('Conversations received:', response);
         // Sort conversations by updated_at in descending order (most recent first)
         this.conversations = response.data.sort((a: any, b: any) => 
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         );
+        this.loadingService.stopLoading();
       },
       error: (error: any) => {
         console.error('Error fetching conversations:', error);
@@ -100,11 +104,14 @@ export class MessagesComponent implements OnInit, OnDestroy {
           summary: 'Error',
           detail: 'Failed to load conversations'
         });
+        this.loadingService.stopLoading();
       }
     });
   }
   ngOnInit(): void {
     // Initial data load
+    this.loadingService.startLoading();
+
     this.getConversation();
   }
 
@@ -138,20 +145,19 @@ export class MessagesComponent implements OnInit, OnDestroy {
         });
         
         // Update current chat if it's from the same sender
-        if (this.visible && this.receiver_id == data.message.sender_id) {
           this.messages.push({
             sender_id: data.message.sender_id,
             message: data.message.message,
             created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           });
           this.scrollToBottom();
+          this.getConversation();
         }
-      }
+      });
       
       // Always refresh the conversation list to show the latest message
-      this.getConversation();
-    });
-  }
+    };
+  
 
   ngAfterViewChecked() {
     // Scroll to bottom after Angular finishes checking the view
@@ -210,6 +216,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
   
   showDialog(conversation: any) {
+    this.loadingService.startLoading();
     if (conversation.user_one.id == this.id) {
       const formData = {
         user_id: this.id,
@@ -219,6 +226,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
       this.chatDp = conversation.user_two.passport;
       this.chatName = conversation.user_two.name;
       this.loadMessageHistory(formData);
+      this.loadingService.stopLoading();
     } else if (conversation.user_two.id == this.id) {
       const formData = {
         user_id: this.id,
@@ -228,6 +236,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
       this.chatDp = conversation.user_one.passport;
       this.chatName = conversation.user_one.name;
       this.loadMessageHistory(formData);
+      this.loadingService.stopLoading();
     }
   }
 

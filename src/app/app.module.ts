@@ -1,4 +1,3 @@
-
 import { AppRoutingModule, routes } from "./app.routes";
 import { MessageComponent, StreamAutocompleteTextareaModule, StreamChatModule } from 'stream-chat-angular';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, ApplicationConfig, importProvidersFrom } from '@angular/core';
@@ -48,10 +47,7 @@ import { ChatDialogComponent } from "./panel/chat-dialog/chat-dialog.component";
 import { ChatDialogService } from "./panel/chat-dialog.service";
 import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
 
-
-
 @NgModule({
-
     declarations: [
         LandingComponent,
         NavBarComponent,
@@ -61,10 +57,8 @@ import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
         AboutComponent,
         ServicesComponent,
         ContactComponent,
-        MessagesComponent,
-      //   ChatDialogComponent
-
-         ],
+        //   ChatDialogComponent
+    ],
     imports: [ 
         NgbModule,
         CommonModule,
@@ -86,37 +80,33 @@ import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
         ToastsContainer,
         AnimateOnScrollModule,
         NgxSpinnerModule,
-        DynamicDialogModule
-      
-              ],
-         exports:[
-            NavBarComponent,
-            FooterComponent,
-            LandingComponent,
-            LoginComponent,
-            RegisterComponent,
-            AboutComponent,
-            
-         ],
-         providers:[
-            UserService,
-            DoctorsService,
-            ClientsService,
-            NursesService,
-            ServicesComponent,
-            ContactComponent,
-            PanelModule,
-            AppointmentsService,
-            AssignmentsService,
-            MedicalService,
-            MessagesService,
-            ConversationService,
-            TranslateService,
-            ChatDialogService,
-            DialogService,
-            importProvidersFrom(TranslateModule.forRoot())
-         ],
-         schemas: [CUSTOM_ELEMENTS_SCHEMA],
-         
+        DynamicDialogModule,
+        PanelModule
+    ],
+    exports:[
+        NavBarComponent,
+        FooterComponent,
+        LandingComponent,
+        LoginComponent,
+        RegisterComponent,
+        AboutComponent,
+    ],
+    providers:[
+        UserService,
+        DoctorsService,
+        ClientsService,
+        NursesService,
+        ServicesComponent,
+        ContactComponent,
+        PanelModule,
+        AppointmentsService,
+        AssignmentsService,
+        MedicalService,
+        TranslateService,
+        ChatDialogService,
+        DialogService,
+        importProvidersFrom(TranslateModule.forRoot())
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }
