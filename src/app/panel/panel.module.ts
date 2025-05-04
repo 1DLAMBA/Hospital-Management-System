@@ -45,7 +45,8 @@ import { AssignmentsComponent } from './dashboard/assignments/assignments.compon
 import { ChatDialogComponent } from './chat-dialog/chat-dialog.component';
 import { ChatDialogService } from './chat-dialog.service';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
-
+import { BadgeModule } from 'primeng/badge';
+// import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 
 
@@ -99,6 +100,8 @@ import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
     NgxSpinnerModule,
     InputSwitchModule,
     DynamicDialogModule, 
+    BadgeModule,
+    // OverlayBadgeModule
     
   ],
   bootstrap: [DashboardComponent],

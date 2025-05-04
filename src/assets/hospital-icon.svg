@@ -1,0 +1,14 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="#17224D"/>
+  
+  <!-- Simplified hospital building - wider for better visibility -->
+  <rect x="30" y="30" width="40" height="45" fill="white"/>
+  
+  <!-- Simplified roof -->
+  <polygon points="50,20 25,30 75,30" fill="white"/>
+  
+  <!-- Larger red cross -->
+  <rect x="43" y="38" width="14" height="30" fill="#E74C3C"/>
+  <rect x="35" y="46" width="30" height="14" fill="#E74C3C"/>
+</svg>

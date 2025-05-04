@@ -107,9 +107,13 @@ export class LoginComponent implements OnDestroy, OnInit {
       },
       error: (res: HttpErrorResponse) => {
         console.log(res);
+        if(res.status === 400){
+
+          this.error_message=res.error;
+        }
         this.invalidDetails = true;
         this.submitLoading = false;
-        this.error_message=res.error;
+        this.error_message=res.message;
         this.spinner.hide();
 
       }
