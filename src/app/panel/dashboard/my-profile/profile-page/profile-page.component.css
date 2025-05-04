@@ -1,65 +1,286 @@
-.hero{
+/* --- Profile Page Enhancements --- */
+.hero {
     width: 100%;
     height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background: linear-gradient(90deg, #17224d 60%, #fff 100%); */
+    color: white;
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 2px 8px rgba(23,34,77,0.08);
 }
 
-.appt-dialog p{
-    font-size: 1.5rem !important;
-    font-weight: 400 !important;
-    height: 100%;
-}
-.diag-text{
-    /* height: 100%; */
-    width: 45%;
+.main {
+    margin-top: -4%;
+    width: 95%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
 }
 
-.diag-text span{
-    font-size: 3rem;
+/* --- Enhanced Client Details Card --- */
+.left-profile {
+    width: 22%;
+    min-width: 250px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #17224d 80%, #2e3c6a 100%);
+    color: white;
+    box-shadow: 0 8px 32px rgba(23,34,77,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    margin-bottom: 1.5rem;
+    /* border-left: 6px solid #00bcd4; */
+    position: relative;
+    overflow: hidden;
+}
+
+.left-profile img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 4px solid #00bcd4;
+    box-shadow: 0 4px 16px rgba(0,188,212,0.18);
+    background: #fff;
+}
+
+.inner-profile h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.left-profile b {
+    display: block;
+    font-size: 1.13rem;
+    color: #00bcd4;
+    margin-top: 1.2rem;
+    margin-bottom: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-left: 3px solid #00bcd4;
+    padding-left: 0.5rem;
+    background: none;
+}
+
+.left-profile b::before {
+    content: '\1F464'; /* 👤 icon */
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+    color: #00bcd4;
+}
+
+.left-profile b:nth-of-type(2)::before {
+    content: '\2709'; /* ✉ icon for Contact */
+}
+
+.left-profile .subs {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0.2rem 0.7rem;
+    align-items: center;
+    margin-bottom: 0.3rem;
+    padding: 0.1rem 0;
+}
+
+.left-profile .subs p {
+    margin-bottom: 0;
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 400;
+}
+
+.left-profile .subs p.text-secondary {
+    color: #b0bec5 !important;
+    text-align: right;
+    font-weight: 500;
+}
+
+.left-profile hr {
+    border: none;
+    border-top: 1px solid #00bcd4;
+    margin: 1.2rem 0 1rem 0;
+    width: 100%;
+    opacity: 0.3;
+}
+
+.left-profile p-button {
+    margin-top: 1.5rem;
+    width: 100%;
+    font-size: 1.1rem;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,188,212,0.10);
+}
+
+.right-profile {
+    width: 70%;
+    min-width: 300px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(23,34,77,0.07);
+    padding: 2rem 1.5rem;
+}
+
+.right-profile h1.primary-color {
+    color: #17224d;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid #17224d;
+    padding-left: 0.5rem;
+}
+
+.right-profile h3 {
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
-.main{
-    margin-top:-13% ;
-    width: 90%;
+.right-profile p, .right-profile small {
+    font-size: 1rem;
+    color: #333;
 }
-.left-profile{
-    width: 22%;
-    border-radius: 30px 30px;
 
+/* --- Appointment Modal Enhancements --- */
+.appt-dialog .p-dialog {
+    border-radius: 18px !important;
+    box-shadow: 0 8px 32px rgba(23,34,77,0.15) !important;
+    padding: 1.5rem 1rem !important;
+    max-width: 95vw;
 }
-.inner-profile{
+
+.appt-dialog form {
+    gap: 2rem;
+    padding: 1rem 0.5rem;
+    border-radius: 12px;
+    background: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(23,34,77,0.05);
+}
+
+.appt-dialog label {
+    font-weight: 600;
+    color: #17224d;
+    margin-bottom: 0.25rem;
+}
+
+.appt-dialog textarea {
     width: 100%;
-    background-color: #17224d;
-    border-radius: 30px 30px;
-    color: white;
-    /* box-shadow: 0 4px 8px 0 rgba(99, 99, 99, 0.2), 0 6px 20px 0 rgba(99, 99, 99, 0.19); */
-
+    min-height: 60px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    resize: vertical;
 }
-.subs{
+
+.appt-dialog .p-button {
     width: 100%;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    border-radius: 8px !important;
+    padding: 0.75rem 0 !important;
 }
 
-.left-profile img{
-    width: 100%;
+.appt-dialog .calendar {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(23,34,77,0.07);
+    padding: 1rem;
 }
 
-.right-profile{
-    width: 75%;
-    background-color: white;
-
-}
-.status{
-    background-color: rgb(255, 201, 100);
-    padding: 10%;
-    border-radius: 10%;
-}
-.hold3{
-    width: 10%;
+.appt-dialog p {
+    font-size: 1.2rem !important;
+    font-weight: 400 !important;
+    height: 100%;
 }
 
-.subs-holder{
-    background-color: #17224d !important;
-    color: white;
+.diag-text {
+    width: 45%;
+}
+
+.diag-text span {
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .main {
+        flex-direction: column;
+        align-items: center;
+    }
+    .left-profile {
+        width: 100% !important;
+        min-width: unset;
+        margin-bottom: 1.5rem;
+        padding: 1.5rem 1rem 1rem 1rem;
+    }
+    .right-profile {
+        width: 100% !important;
+        min-width: unset;
+    }
+    .hero {
+        height: 20vh;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .main {
+        width: 100%;
+        padding: 0 0.5rem;
+    }
+    .right-profile, .left-profile {
+        padding: 1rem 0.5rem;
+    }
+    .hero {
+        font-size: 1rem;
+        padding: 1rem 0.5rem;
+        height: 15vh;
+        min-height: 80px;
+        max-height: 120px;
+    }
+    .appt-dialog form {
+        flex-direction: column !important;
+        gap: 1rem;
+    }
+    .appt-dialog .calendar, .diag-text {
+        width: 100% !important;
+    }
+    .appt-dialog .p-button {
+        font-size: 1rem;
+        padding: 0.5rem 0 !important;
+    }
+    .left-profile {
+        padding: 1rem 0.5rem 0.5rem 0.5rem;
+    }
+    .left-profile img {
+        width: 90px;
+        height: 90px;
+    }
+    .inner-profile h1 {
+        font-size: 1.2rem;
+    }
+    .left-profile b {
+        font-size: 1rem;
+    }
+    .left-profile .subs {
+        grid-template-columns: 1fr;
+        gap: 0.1rem 0;
+    }
+    .left-profile .subs p.text-secondary {
+        text-align: left;
+    }
+    .left-profile p-button {
+        font-size: 1rem;
+        padding: 0.5rem 0 !important;
+    }
 }
 
 :host {
@@ -68,7 +289,6 @@
         color: white !important;
         border: 0;
         border-radius: 5px;
-        
     } 
     ::ng-deep .p-dialog{
         flex-direction: column;

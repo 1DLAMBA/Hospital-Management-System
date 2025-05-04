@@ -42,13 +42,16 @@ header="Edit Profile"
                 </div>
             </div>
         </div>
-        <div class="d-flex mob-head  justify-content-between p-1">
-            <button (onClick)="showDialog()" class="navi d-flex p-2">
-                
-                <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
-                <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+        <div *ngIf="user.user_type=='doctor'" class="d-flex mob-head  justify-content-between p-1">
+            <a routerLink="my-profile/doctor/{{this.id}}">
 
-            </button>
+                <button class="navi d-flex p-2">
+                    
+                    <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                    <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+    
+                </button>
+            </a>
             <div class="d-flex">
                 <div class="passport">
                     <img  src="{{ avatar_file + user.passport }}">
@@ -56,8 +59,44 @@ header="Edit Profile"
                 
             </div>
         </div>
-        
-        <router-outlet></router-outlet>
+        <div *ngIf="user.user_type=='client'" class="d-flex mob-head  justify-content-between p-1">
+            <a routerLink="my-profile/client/{{this.id}}">
+
+                <button class="navi d-flex p-2">
+                    
+                    <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                    <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+    
+                </button>
+            </a>
+            <div class="d-flex">
+                <div class="passport">
+                    <img  src="{{ avatar_file + user.passport }}">
+                </div>
+                
+            </div>
+        </div>
+        <div *ngIf="user.user_type=='nurse'" class="d-flex mob-head  justify-content-between p-1">
+            <a routerLink="my-profile/nurse/{{this.id}}">
+
+                <button class="navi d-flex p-2">
+                    
+                    <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                    <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+    
+                </button>
+            </a>
+            <div class="d-flex">
+                <div class="passport">
+                    <img  src="{{ avatar_file + user.passport }}">
+                </div>
+                
+            </div>
+        </div>
+        <div class="mb-5">
+
+            <router-outlet></router-outlet>
+        </div>
     </div>   
     <!-- ADD NG IF HERE TO CHECK USER TYPE BEFORE RENDERING MOBILE NAV -->
     <div *ngIf="user.user_type=='doctor'" class="mob-nav">

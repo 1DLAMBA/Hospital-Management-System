@@ -23,103 +23,93 @@
 
 <!-- Medical Record Creation Dialog -->
 <p-dialog [(visible)]="display" [modal]="true" [closable]="true" 
-    [style]="{width: '600px'}" [baseZIndex]="10000" styleClass="medical-record-dialog"
+    [style]="{width: '550px'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog"
     [showHeader]="false">
     
     <form [formGroup]="medicalRecordForm" (ngSubmit)="onSubmit()">
       <div class="med-record-container">
         <!-- Header -->
         <div class="med-record-header">
-          <div class="d-flex align-items-center">
-            <div class="icon-container">
-              <i class="bi bi-clipboard2-pulse"></i>
+          <div class="header-content">
+            <div class="header-icon">
+              <i class="pi pi-file-medical"></i>
             </div>
-            <div>
-              <h5 class="mb-0">Create Medical Record</h5>
-              <p class="text-white-50 mb-0">For patient: {{singleClient?.user?.name}}</p>
+            <div class="header-text">
+              <h3>Medical Record</h3>
+              <p>{{singleClient?.user?.name}}</p>
             </div>
           </div>
+          <button type="button" class="close-btn" (click)="display=false">
+            <i class="pi pi-times"></i>
+          </button>
         </div>
         
         <!-- Form Body -->
         <div class="med-record-body">
-          <!-- Hidden fields that will be set in the component -->
+          <!-- Hidden fields -->
           <input type="hidden" formControlName="client_id">
           <input type="hidden" formControlName="assigned_doctor_id">
           <input type="hidden" formControlName="record_number">
           
-          <div class="mb-4">
-            <label class="form-label" for="diagnosis">
-              Diagnosis <span class="text-danger">*</span>
-            </label>
+          <div class="form-field">
+            <label for="diagnosis">Diagnosis <span class="required">*</span></label>
             <textarea 
               id="diagnosis" 
               formControlName="diagnosis" 
-              class="form-control" 
               rows="3"
               placeholder="Enter patient diagnosis"></textarea>
             <small *ngIf="medicalRecordForm.get('diagnosis')?.touched && medicalRecordForm.get('diagnosis')?.hasError('required')" 
-              class="text-danger">
+              class="error-message">
               Diagnosis is required
             </small>
           </div>
           
-          <div class="mb-4">
-            <label class="form-label" for="treatment">
-              Treatment <span class="text-danger">*</span>
-            </label>
+          <div class="form-field">
+            <label for="treatment">Treatment <span class="required">*</span></label>
             <textarea 
               id="treatment" 
               formControlName="treatment" 
-              class="form-control" 
               rows="3"
               placeholder="Enter prescribed treatment plan"></textarea>
             <small *ngIf="medicalRecordForm.get('treatment')?.touched && medicalRecordForm.get('treatment')?.hasError('required')" 
-              class="text-danger">
+              class="error-message">
               Treatment is required
             </small>
           </div>
           
-          <div class="row">
-            <div class="col-md-6 mb-4">
-              <label class="form-label" for="past_diagnosis">
-                Past Diagnosis
-              </label>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="past_diagnosis">Past Diagnosis</label>
               <textarea 
                 id="past_diagnosis" 
                 formControlName="past_diagnosis" 
-                class="form-control" 
                 rows="2"
                 placeholder="Enter any past diagnoses"></textarea>
             </div>
             
-            <div class="col-md-6 mb-4">
-              <label class="form-label" for="allergies">
-                Allergies
-              </label>
+            <div class="form-field">
+              <label for="allergies">Allergies</label>
               <textarea 
                 id="allergies" 
                 formControlName="allergies" 
-                class="form-control" 
                 rows="2"
                 placeholder="List any known allergies"></textarea>
             </div>
           </div>
         </div>
         
-        <!-- Footer with Actions -->
+        <!-- Footer -->
         <div class="med-record-footer">
-          <button type="button" class="btn btn-outline-secondary" (click)="display=false">
-            <i class="bi bi-x-lg me-1"></i> Cancel
+          <button type="button" class="cancel-btn" (click)="display=false">
+            Cancel
           </button>
-          <button type="submit" class="btn btn-primary ms-2" [disabled]="medicalRecordForm.invalid">
-            <i class="bi bi-save me-1"></i> Save Record
+          <button type="submit" class="save-btn" [disabled]="medicalRecordForm.invalid">
+            Save Record
           </button>
         </div>
       </div>
     </form>
 </p-dialog>
-
 <p-dialog header="Assign Nurse" [(visible)]="createAssignDiag" [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '40vw', display: 'flex'}"
     [draggable]="false" [resizable]="false">
@@ -244,7 +234,7 @@
         <!-- <p>{{singleClient.user.name}}</p> -->
     </section>
 
-    <section class="main mx-auto d-flex justify-content-between">
+    <section class="main mx-auto d-flex flex-wrap justify-content-between">
         <div class="left-profile ">
             <div class="inner-profile pb-2">
                 <img src="{{ avatar_file + singleClient.user.passport }}">
@@ -286,21 +276,19 @@
                 <div *ngIf="singleClient.appointments.status=='Accepted'" class="">
                     <b>Last Appointment</b>
 
-                    <div class="d-flex justify-content-between m-1">
-                        <div class="">
+                    <div class="d-flex  appointment-container justify-content-between m-1">
+                        <div class="d-flex">
 
                             <span>Patient Complaints:</span>
                             <p class="text-secondary">{{singleClient.appointments.symptoms}}</p>
-                        </div>
-                        <div class="">
+                        
                             <span>Date:</span>
                             <p class="text-secondary">{{singleClient.appointments.date_time | date}}</p>
                         </div>
-                        <div class="">
+                        <div class="d-flex">
                             <span>Doctor:</span>
                             <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
-                        </div>
-                        <div class=" hold3">
+                        
                             <span class="fs-6">Status:</span>
                             <p-tag [rounded]="true" severity="success"
                                 value="{{singleClient.appointments.status}}"></p-tag>

@@ -1,61 +1,111 @@
 <p-dialog header="Appointment Details" [(visible)]="apptDetails" [modal]="true"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
-    [draggable]="false" [resizable]="false">
-    <div class="d-flex" *ngIf="singleAppt">
-        <div class="m-auto">
-            <div class="d-flex justify-content-between">
-                <div class="img m-3">
-                    <img src="{{ avatar_file + singleAppt.client.user.passport }}">
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '50vw' }"
+    [draggable]="false" [resizable]="false" styleClass="modern-dialog">
+    <ng-template pTemplate="header">
+        <div class="dialog-header">
+            <h2>Appointment Details</h2>
+            <p-button icon="pi pi-times" (click)="apptDetails=false" styleClass="p-button-rounded p-button-text"></p-button>
+        </div>
+    </ng-template>
+    
+    <div class="appointment-container" *ngIf="singleAppt">
+        <!-- Client Info Section -->
+        <div class="client-section">
+            <div class="client-header">
+                <div class="avatar-container">
+                    <img [src]="avatar_file + singleAppt.client.user.passport" alt="Client Photo" class="client-avatar">
                 </div>
-
-                <div class="m-auto d-flex border-left ">
-                    <div class="m-auto  p-3">
-                        <div class="">
-                            <b>Name</b>
-                            <p>{{singleAppt.client.user.name}}</p>
-                        </div>
-                        <div class="">
-                            <b>Phone Number</b>
-                            <p>{{singleAppt.client.user.phoneno}}</p>
-                        </div>
-                        <div class="">
-                            <b>Email</b>
-                            <p>{{singleAppt.client.user.email}}</p>
-                        </div>
-                        <div class="">
-                            <b>Appointment Date</b>
-                            <p>{{singleAppt.date_time}}</p>
-                        </div>
-                        <div class="">
-
-                            <b *ngIf="singleAppt.status == 'pending'" class="text-warning">{{singleAppt.status}}</b>
-                            <b *ngIf="singleAppt.status == 'Accepted'" class="text-success">{{singleAppt.status}}</b>
-                            <b *ngIf="singleAppt.status == 'Declined'" class="text-danger">{{singleAppt.status}}</b>
-
-                        </div>
-                <p-button label="View Profile" severity="info" [raised]="true"  [rounded]="true" routerLink="../clients/profile/{{singleAppt.client.id}}"/>
-
-
+                
+                <div class="status-badge" [ngClass]="{
+                    'status-pending': singleAppt.status === 'pending',
+                    'status-accepted': singleAppt.status === 'Accepted',
+                    'status-declined': singleAppt.status === 'Declined'
+                }">
+                    {{ singleAppt.status }}
+                </div>
+            </div>
+            
+            <div class="client-details">
+                <div class="detail-row">
+                    <h3 class="client-name">{{ singleAppt.client.user.name }}</h3>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="pi pi-calendar"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Appointment Date</span>
+                        <span class="detail-value">{{ singleAppt.date_time | date:'medium' }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="pi pi-phone"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">{{ singleAppt.client.user.phoneno }}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-icon">
+                        <i class="pi pi-envelope"></i>
+                    </div>
+                    <div class="detail-content">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ singleAppt.client.user.email }}</span>
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="border border-1 p-2 m-2">
-                    <b>Complaints</b>
-                    <p class="p-1">{{singleAppt.symptoms}}</p>
-                </div>
-
-            </div>
-            <span *ngIf="singleAppt.status=='pending'">
-                <button [disabled]="btnDisable" class="accept me-2" pButton label="Accept" severity="success" (click)="status(singleAppt.id, 'Accepted')" > </button>
-                <button  [disabled]="btnDisable" class="decline" pButton label="Decline" severity="warning" (click)="status(singleAppt.id, 'Declined')" ></button>
-            </span>
-            <span *ngIf="singleAppt.status=='Accepted' || singleAppt.status=='Declined'">
-                <button  [disabled]="btnDisable" class="accept me-2 cancel" pButton label="Cancel" severity="warning" (click)="status(singleAppt.id, 'pending')" > </button>
-              </span>
+        </div>
+        
+        <!-- Complaints Section -->
+        <div class="complaints-section">
+            <h4 class="section-title">Complaints</h4>
+            <p class="complaints-text">{{ singleAppt.symptoms }}</p>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <ng-container *ngIf="singleAppt.status === 'pending'">
+                <p-button 
+                    label="Accept" 
+                    icon="pi pi-check" 
+                    [disabled]="btnDisable" 
+                    styleClass="p-button-raised p-button-success" 
+                    (click)="status(singleAppt.id, 'Accepted')">
+                </p-button>
+                
+                <p-button 
+                    label="Decline" 
+                    icon="pi pi-times" 
+                    [disabled]="btnDisable" 
+                    styleClass="p-button-raised p-button-danger" 
+                    (click)="status(singleAppt.id, 'Declined')">
+                </p-button>
+            </ng-container>
+            
+            <ng-container *ngIf="singleAppt.status === 'Accepted' || singleAppt.status === 'Declined'">
+                <p-button 
+                    label="Cancel" 
+                    icon="pi pi-undo" 
+                    [disabled]="btnDisable" 
+                    styleClass="p-button-raised p-button-warning" 
+                    (click)="status(singleAppt.id, 'pending')">
+                </p-button>
+            </ng-container>
+            
+            <p-button 
+                label="View Profile" 
+                icon="pi pi-user" 
+                styleClass="p-button-raised p-button-info" 
+                routerLink="../clients/profile/{{singleAppt.client.id}}">
+            </p-button>
         </div>
     </div>
-
 </p-dialog>
 
 <section>

@@ -67,17 +67,17 @@
     </p-dialog>
 </div>
 
-<main class="d-flex flex-column">
+<main class="d-flex flex-column flex-wrap">
 
     <section class="hero p-3">
 
         <!-- <p>{{SingleDoctor.user.name}}</p> -->
     </section>
 
-    <section class="main mx-auto d-flex justify-content-between">
+    <section class="main mx-auto d-flex flex-wrap justify-content-between">
         <div class="left-profile ">
-            <div class="inner-profile pb-2">
-                <img src="{{ avatar_file + SingleDoctor.user.passport }}">
+            <div class="inner-profile d-flex flex-column pb-2">
+                <img class="m-auto" src="{{ avatar_file + SingleDoctor.user.passport }}">
                 <h1 class="m-2">{{SingleDoctor.user.name}}</h1>
                 <p class="m-2">{{SingleDoctor.specialization}}</p>
                 <p class="">{{SingleDoctor.availability}}</p>
@@ -91,9 +91,12 @@
             </span>
             <div class="m-2">
                 <h1 class="primary-color">Profile</h1>
-                <h3>{{SingleDoctor.user.name}}</h3>
-                <small>{{SingleDoctor.license_number}}</small>
-                <p>{{SingleDoctor.specialization}}</p>
+                <div class="d-flex flex-wrap">
+
+                    <h3 class="col-6">{{SingleDoctor.user.name}}</h3>
+                    <small class="col-6">{{SingleDoctor.license_number}}</small>
+                    <p class="col-12">{{SingleDoctor.specialization}}</p>
+                </div>
             </div>
             <div class="m-2">
                 <h1 class="primary-color">Experience</h1>
@@ -104,9 +107,9 @@
             </div>
             <div class="m-2">
                 <h1 class="primary-color">Contact</h1>
-                <span class="d-flex">
-                    <p class="col-6">{{SingleDoctor.user.email}}</p>
-                    <p class="col-6">{{SingleDoctor.user.phoneno}}</p>
+                <span class="d-flex flex-wrap">
+                    <p class="col-12">{{SingleDoctor.user.email}}</p>
+                    <p class="col-12">{{SingleDoctor.user.phoneno}}</p>
                 </span>
             </div>
 
