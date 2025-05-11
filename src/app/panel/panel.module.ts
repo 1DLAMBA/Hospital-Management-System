@@ -46,9 +46,13 @@ import { ChatDialogComponent } from './chat-dialog/chat-dialog.component';
 import { ChatDialogService } from './chat-dialog.service';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { BadgeModule } from 'primeng/badge';
-// import { OverlayBadgeModule } from 'primeng/overlaybadge';
-
-
+import { InputNumber, InputNumberModule } from 'primeng/inputnumber';
+import { MessagesComponent } from './dashboard/messages/messages.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessagesService } from '../endpoints/messages.service';
+import { ConversationService } from '../endpoints/conversation.service';
+import { LoaderComponent } from '../components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -76,8 +80,10 @@ import { BadgeModule } from 'primeng/badge';
     NurseListComponent,
     NurseProfileComponent,
     AssignmentsComponent,
-    ChatDialogComponent
-  ],
+    ChatDialogComponent,
+    MessagesComponent,
+
+LoaderComponent  ],
   imports: [
     CommonModule,
     PanelRoutingModule,
@@ -101,10 +107,12 @@ import { BadgeModule } from 'primeng/badge';
     InputSwitchModule,
     DynamicDialogModule, 
     BadgeModule,
-    // OverlayBadgeModule
-    
+    InputNumberModule,
+    InputTextModule,
+    InputTextareaModule,
+    ProgressSpinnerModule
   ],
   bootstrap: [DashboardComponent],
-  providers:[ChatDialogService, DialogService]
+  providers:[ChatDialogService, DialogService,MessagesService,ConversationService]
 })
 export class PanelModule { }

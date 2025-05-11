@@ -23,4 +23,10 @@ export class MedicalService {
   get(id: any) {
     return this.httpClient.get(`${this.baseUrl}/get/${id}`)
   }
+  getDoc(id: any) {
+    return this.httpClient.get(`${this.baseUrl}/getDocRec/${id}`)
+  }
+  getClient(id: any) {
+    return this.httpClient.get(`${this.baseUrl}/getCliRec/${id}`)
+  }
 }

@@ -7,8 +7,8 @@
 
     <section class="main mx-auto d-flex justify-content-between">
         <div class="left-profile ">
-            <div class="inner-profile pb-2">
-                <img src="{{ avatar_file + user.passport }}">
+            <div class="inner-profile pb-2 d-flex flex-column">
+                <img class="m-auto" src="{{ avatar_file + user.passport }}">
                 <h1 class="m-2">{{user.name}}</h1>
                 
             </div>
@@ -85,86 +85,75 @@
             </div>
             <div class="m-2">
                 <h1 class="primary-color">Medical Records</h1>
-                <p-table
-                
-            #dt1
-            
-            dataKey="id"
-            [rows]="10"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            [paginator]="true"
-            [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']"
-        >
-        
-        
-        <ng-template pTemplate="caption">
-            <div class="flex">
-                <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash"  />
-                <span class="p-input-icon-left ml-auto">
-                    <i class="pi pi-search"></i>
-                    <!-- <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" /> -->
-                </span>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="min-width:7rem">
-                    <div class="flex align-items-center">
-                        View
-                        <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
-                    </div>
-                </th>
-                <th style="min-width:15rem">
-                    <div class="flex align-items-center">
-                        Record Number
-                        <p-columnFilter type="text" field="name" display="menu" />
-                    </div>
-                </th>
-                <th style="min-width:10rem">
-                    <div class="flex align-items-center">
-                        Diagnosis
-                        <p-columnFilter type="text" field="country.name" display="menu" />
-                    </div>
-                </th>
-                
-                <th style="min-width:10rem">
-                    <div class="flex align-items-center">
-                        Doctor
-                        <p-columnFilter type="date" field="date" display="menu" />
-                    </div>
-                </th>
-                
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-client>
-            <tr >
-                <td>
-                <!-- <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/> -->
-                </td>
-                <td class="d-flex">
-                    
-                </td>
-                <td>
-                    <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
-                    <!-- <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span> -->
-                </td>
-               
-                <td>
-                  
-                </td>
-               
-               
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7">No medical records found.</td>
-            </tr>
-        </ng-template>
-        
-        
-        </p-table>
+                <p-table #dt1 dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+                [value]="medicalRecords"  [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']">
 
+
+                  <ng-template pTemplate="caption">
+                      <div class="d-flex justify-content-between">
+                          <p-button pRipple label="Clear" size="small" [outlined]="true" icon="pi pi-filter-slash" />
+                          
+                      </div>
+                  </ng-template>
+                  <ng-template pTemplate="header">
+                      <tr>
+                          <th style="min-width:7rem">
+                              <div class="flex align-items-center">
+                                  View
+                                  <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                              </div>
+                          </th>
+
+                          <th style="min-width:10rem">
+                              <div class="flex align-items-center">
+                                  Diagnosis
+                              </div>
+                          </th>
+                          <th style="min-width:15rem">
+                              <div class="flex align-items-center">
+                                  Treatment
+                              </div>
+                          </th>
+
+                          <th style="min-width:10rem">
+                              <div class="flex align-items-center">
+                                  Doctor
+                              </div>
+                          </th>
+
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-medicalRecords>
+                      <tr>
+                          <td>
+                              <p-button label="View" severity="info" [raised]="true"  [rounded]="true" (click)="openMedRecordView(medicalRecords)" />
+                          </td>
+                          <td class="d-flex">
+                              {{medicalRecords?.diagnosis}}
+                          </td>
+                          <td>
+                              {{medicalRecords?.treatment}}
+
+                              <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
+                              <!-- <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span> -->
+                          </td>
+
+                          <td>
+                              {{medicalRecords?.doctor.user.name}}
+
+                          </td>
+
+
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                      <tr>
+                          <td colspan="7">No medical records found.</td>
+                      </tr>
+                  </ng-template>
+
+
+              </p-table>
             </div>
             
             
@@ -175,3 +164,74 @@
         </div>
     </section>
 </main>
+
+<p-dialog [(visible)]="viewMedRecordDialog" [modal]="true" [closable]="true" [style]="{width: '700px'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog" [showHeader]="false">
+    <div id="printable-med-record">
+      <div class="print-header flex-header">
+        <div class="passport-block">
+          <img *ngIf="user?.passport" [src]="avatar_file + user.passport" alt="Patient Passport" class="passport-img" />
+        </div>
+        <div class="header-info-block">
+          <h2 class="mb-3">Medical Record</h2>
+          <div class="record-row">
+            <i class="bi bi-person me-1"></i>
+            <span class="print-label text-secondary">Patient:</span>
+            <span class="print-value">{{user?.name}}</span>
+          </div>
+          <div class="record-row">
+            <i class="bi bi-person-badge me-1"></i>
+            <span class="print-label text-secondary">Doctor:</span>
+            <span class="print-value">{{selectedMedRecord?.doctor?.user?.name}}</span>
+          </div>
+          <div class="record-row">
+            <i class="bi bi-hash me-1"></i>
+            <span class="print-label text-secondary">Record #:</span>
+            <b>{{selectedMedRecord?.record_number}}</b>
+          </div>
+          <div class="record-row">
+            <i class="bi bi-calendar me-1"></i>
+            <span class="print-label text-secondary">Date:</span>
+            <b>{{selectedMedRecord?.created_at | date:'medium'}}</b>
+          </div>
+          <div class="record-row">
+            <i class="bi bi-briefcase me-1"></i>
+            <span class="print-label text-secondary">Specialization:</span>
+            <span class="print-value">{{selectedMedRecord?.doctor?.specialization}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex-sections">
+        <div class="section-half">
+          <div class="print-section">
+            <div class="print-label">Diagnosis:</div>
+            <div class="print-value">{{selectedMedRecord?.diagnosis}}</div>
+          </div>
+          <div class="print-section">
+            <div class="print-label">Past Diagnosis:</div>
+            <div class="print-value">{{selectedMedRecord?.past_diagnosis}}</div>
+          </div>
+        </div>
+        <div class="section-half">
+          <div class="print-section">
+            <div class="print-label">Prescription/Treatment:</div>
+            <div class="print-value">{{selectedMedRecord?.treatment}}</div>
+          </div>
+          <div class="print-section">
+            <div class="print-label">Allergies:</div>
+            <div class="print-value">{{selectedMedRecord?.allergies}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="print-footer">
+        <small>Generated by HMS | {{selectedMedRecord?.updated_at | date:'medium'}}</small>
+      </div>
+    </div>
+    <div class="med-record-footer" style="justify-content: flex-end;">
+      <button type="button" class="bi bi-printer-fill btn btn-success" (click)="printMedRecord()">
+        <i class="pi pi-print"></i> Print
+      </button>
+      <button type="button" class="btn btn-danger" (click)="viewMedRecordDialog=false">
+        Close
+      </button>
+    </div>
+  </p-dialog>

@@ -34,17 +34,23 @@
             
             <div class="m-2">
                 <div class="d-flex justify-content-between col-12">
-                    <h1 class="col-3">Profile</h1>
-                    <p class="col-3"> <span class="text-secondary">Primary Specialty:</span><br>
-                    {{user.doctors.specialization}}</p>
-               
+                    <div class="col-12">
 
-                    <p class="col-3"><span class="text-secondary">License Number:</span><br>
-                    {{user.doctors.license_number}}</p>
+                        <h1 class="col-12">Profile</h1>
+                    </div>
+                    <div class="row col-12">
+
+                        <p class="col-6"> <span class="text-secondary">Primary Specialty:</span><br>
+                        {{user.doctors.specialization}}</p>
+                   
+    
+                        <p class="col-6"><span class="text-secondary">License Number:</span><br>
+                        {{user.doctors.license_number}}</p>
+                    </div>
                 </div>
                 <hr>
                 <div class="d-flex justify-content-between col-12">
-                    <b class="col-3">Contact Details</b>
+                    <b class="col-12">Contact Details</b>
 
                     <p class="col-3"><span class="text-secondary">Email:</span><br>
                     {{user.email}}</p>
@@ -57,11 +63,11 @@
                 <div class="d-flex justify-content-between col-12">
                     <b class="col-3">Experience</b>
 
-                    <p class="col-3"><span class="text-secondary">Education:</span><br>
+                    <p class="col-12"><span class="text-secondary">Education:</span><br>
                     {{user.doctors.med_school}}</p>
               
 
-                    <p class="col-3"><span class="text-secondary">Practicing since:</span><br>
+                    <p class="col-6"><span class="text-secondary">Practicing since:</span><br>
                     {{user.doctors.grad_year}}</p>
                 </div>
             </div>

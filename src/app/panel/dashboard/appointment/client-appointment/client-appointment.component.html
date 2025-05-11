@@ -62,7 +62,7 @@
     <div class="d-flex active bg-blue p-2 m-2" *ngIf="futureAppointment">
         <div *ngFor="let appi of futureAppointment" class="active">
             <div *ngIf="appi.status=='Accepted' || appi.status=='pending'" class="  mx-4">
-                <b>Current Appointment</b>
+                <b>Last Appointment</b>
                 <div class=" d-flex sub justify-content-between ">
                     <p><span class="text-secondary">Doctor:</span><br>{{appi.doctor.user.name}}</p>
                     <p><span class="text-secondary">Date:</span><br>{{appi.date_time | date}}</p>

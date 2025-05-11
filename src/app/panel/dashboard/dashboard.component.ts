@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessagesService } from '../../endpoints/messages.service';
 import Pusher from 'pusher-js';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   newNotificationBatch:boolean = false;
   position: string = 'center';
   pusher: any;
+  router?: Router;
   channel: any;
 
   constructor(
@@ -30,6 +31,7 @@ export class DashboardComponent implements OnInit {
     private userEndpoint: UserService,
     private spinner: NgxSpinnerService,
     private messagesServe: MessagesService,
+    //  router: Router
   ){
 this.pusher = new Pusher('45cde359e2dec89841a7', {
       cluster: 'mt1',

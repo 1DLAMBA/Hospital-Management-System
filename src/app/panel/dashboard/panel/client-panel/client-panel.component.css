@@ -1,3 +1,17 @@
+@media (max-width: 499px){
+    .sub-card{
+        width: 100% !important;
+        flex-direction: column !important;
+        margin-top: 3%;
+    }
+    .sub-card .m-auto{
+        display:flex !important;
+        gap:10% ;
+        padding-top:  5% !important;
+    }
+}
+
+
 .appt{
     background-color: #17224d;
     color: white;

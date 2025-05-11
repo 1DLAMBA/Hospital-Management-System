@@ -4,7 +4,7 @@ import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators , FormBuilder} from '@angular/forms';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
 import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { JsonPipe } from '@angular/common';
@@ -36,7 +36,7 @@ export class ClientProfileComponent implements OnInit {
   id: string = this.route.snapshot.params['id'];
   singleClient!: ClientResource | any;
   singleNurse!: NurseResource | any;
-
+  medRecord: boolean=false;
   avatar_file!: string;
   date: Date[] | undefined;
   visible: boolean = false;
@@ -55,6 +55,10 @@ export class ClientProfileComponent implements OnInit {
   assignForm!: FormGroup;
   assignments!: any[];
   visibleMsg: boolean = false;
+  display: boolean = false;
+  medicalRecordForm!: FormGroup;
+  viewMedRecordDialog: boolean = false;
+  selectedMedRecord: any = null;
 
   position: string = 'center';
 
@@ -62,6 +66,7 @@ export class ClientProfileComponent implements OnInit {
    
   ];
   newMessage: string = '';
+  medicalRecords!: any[];
 
 
 
@@ -75,23 +80,33 @@ export class ClientProfileComponent implements OnInit {
     private medicalEndpoint: MedicalService,
     private assignmentEndpoint: AssignmentsService,
     private chatDialogService: ChatDialogService,
-    private MessagesEnpoint: MessagesService
+    private MessagesEnpoint: MessagesService,
+    private fb: FormBuilder
   ) {
     this.assignForm = new FormGroup({
       assignment_message: new FormControl('', Validators.required),
       // diagnosis: new FormControl('', Validators.required)
     })
+    this.medicalRecordForm = this.fb.group({
+      record_number: ['', Validators.required],
+      diagnosis: ['', Validators.required],
+      past_diagnosis: [''],
+      allergies: [''],
+      treatment: ['']
+    });
   }
 
   ngOnInit(): void {
     this.getSingleClient(this.id);
     this.user_id = localStorage.getItem('id');
     this.getUser();
+    this.getMedicalRecord();
 
   }
   openChat() {
     this.chatDialogService.openChat('sender123', 'receiver456');
   }
+  
 
   successAlert(message: any) {
 
@@ -107,6 +122,65 @@ export class ClientProfileComponent implements OnInit {
     this.visibleMsg = true;
     console.log('reached');
 
+  }
+  showMedRecDialog() {
+    // Generate a unique record number (timestamp + random string)
+    const timestamp = new Date().getTime();
+    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const recordNumber = `MR-${timestamp}-${randomStr}`;
+    
+    // Set the hidden fields
+    this.medicalRecordForm.patchValue({
+      client_id: this.singleClient.id, // Set from the current client
+      assigned_doctor_id: this.user_id, // Set from logged in user
+      record_number: recordNumber // Set the generated record number
+    });
+    
+    this.display = true;
+  }
+
+  getMedicalRecord(){
+    this.medicalEndpoint.getDoc(this.user.doctors.id).subscribe({
+      next: (response: any) => {
+        this.medicalRecords = response.record;
+        console.table(this.medicalRecords)
+      },
+    error:(error:any)=>{
+      this.dangerAlert('Failed to get medical record');
+    }})
+  }
+  
+  onSubmit() {
+    if (this.medicalRecordForm.valid) {
+      // Log form values for debugging
+      console.log('Medical Record Data:', this.medicalRecordForm.value);
+      const formData = {
+        client_id:this.singleClient.id,
+        assigned_doctor_id:this.user.doctors.id,
+        record_number:this.medicalRecordForm.value.record_number,
+        diagnosis:this.medicalRecordForm.value.diagnosis,
+        past_diagnosis:this.medicalRecordForm.value.past_diagnosis,
+        allergies:this.medicalRecordForm.value.allergies,
+        treatment:this.medicalRecordForm.value.treatment,
+        
+      }
+      // Send to your medical records service
+      this.medicalEndpoint.create(formData).subscribe({
+        next: (response: any) => {
+          console.log('Medical record created:', response);
+          this.successAlert('Medical record created successfully');
+          this.display = false; // Close dialog after submission
+          // Optionally refresh medical records list
+        },
+        error: (error: any) => {
+          console.error('Error creating medical record:', error);
+          this.dangerAlert('Failed to create medical record');
+        }
+      });
+    } else {
+      // Mark fields as touched to show validation errors
+      this.medicalRecordForm.markAllAsTouched();
+    }
   }
   sendMessage() {
     if (this.newMessage.trim()) {
@@ -255,8 +329,26 @@ export class ClientProfileComponent implements OnInit {
 
   }
 
+  openMedRecordView(record: any) {
+    this.selectedMedRecord = record;
+    this.viewMedRecordDialog = true;
+  }
 
-
+  printMedRecord() {
+    const printContents = document.getElementById('printable-med-record')?.innerHTML;
+    if (printContents) {
+      const printWindow = window.open('', '', 'height=600,width=800');
+      if (printWindow) {
+        printWindow.document.write('<html><head><title>Print Medical Record</title>');
+        printWindow.document.write('<style>body{font-family:sans-serif;} .print-header{background:#6366f1;color:white;padding:1rem;} .print-section{margin:1rem 0;} .print-label{font-weight:bold;} .print-value{margin-left:0.5rem;} .print-footer{margin-top:2rem;}</style>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(printContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
+  }
 
 }
 
