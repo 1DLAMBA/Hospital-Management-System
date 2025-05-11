@@ -45,9 +45,10 @@
                   placeholder="Type your medical question here..."
                   class="message-input"></textarea>
         <p-button 
-          icon="pi pi-send" 
           (onClick)="sendMessage()" 
-          severity="info" label="Send"><i></i></p-button>
+          [rounded]="true"
+          styleClass="p-button-rounded p-button-primary send-button"
+          severity="info"  ><i class="bi bi-send"></i></p-button>
           <!-- <p-button icon="pi pi-search" severity="success" label="Search"/> -->
       </div>
       <div class="suggestions" *ngIf="messages.length === 1">

@@ -6,6 +6,7 @@ import { DoctorResource } from '../../../../../resources/doctor.model';
 import { ClientsService } from '../../../../endpoints/clients.service';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
 import moment from 'moment';
+import { DoctorsService } from '../../../../endpoints/doctors.service';
 
 @Component({
   selector: 'app-client-panel',
@@ -30,13 +31,14 @@ export class ClientPanelComponent implements OnInit {
   today!: Date;
   previousAppointment!: AppointmentResource[];
   ThisMonth: any;
+  doctorResource:DoctorResource[]=[];
+   
 
   constructor(
     private userEndpoint: UserService,
     private appointmentEndpoint: AppointmentsService,
     private clientEndpoint: ClientsService,
-
-
+    private doctorEnpoint: DoctorsService
   ){
     this.upc_appt =[
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
@@ -88,34 +90,24 @@ export class ClientPanelComponent implements OnInit {
 
         }
     };
-    this.products = [
-      {
-        name: 'John Doe',
-        serial: '1',
-        category: 'gyan',
-        patient: 'good'
-      },
-      {
-        name: 'Samuel Larry',
-        serial: '2',
-        category: 'gyan',
-        patient: 'good'
-      },
-      {
-        name: 'Gideon Oj',
-        serial: '3',
-        category: 'Dark',
-        patient: 'good'
-      },
-    ]
+
     this.id=localStorage.getItem('id')
     this.getUser();
+    this.getDoctor();
   }
   splitComplaint(complaint: string) {
     const words = complaint.split(' ');
     return words.slice(0, 2).join(' ');
 
   }
+getDoctor(){
+  this.doctorEnpoint.get().subscribe({
+    next:(response:any)=>{
+      this.doctorResource=response.doctor;
+    }
+  })
+}
+
   
   getUser() {
     this.userEndpoint.get(this.id).subscribe({

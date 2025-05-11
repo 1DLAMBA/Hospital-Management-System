@@ -47,8 +47,7 @@
         <!-- Form Body -->
         <div class="med-record-body">
           <!-- Hidden fields -->
-          <input type="hidden" formControlName="client_id">
-          <input type="hidden" formControlName="assigned_doctor_id">
+        
           <input type="hidden" formControlName="record_number">
           
           <div class="form-field">
@@ -327,7 +326,7 @@
             <div class="m-2">
                 <h1 class="primary-color">Medical Records</h1>
                 <p-table #dt1 dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
-                    [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']">
+                  [value]="medicalRecords"  [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']">
 
 
                     <ng-template pTemplate="caption">
@@ -366,20 +365,23 @@
 
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-client>
+                    <ng-template pTemplate="body" let-medicalRecords>
                         <tr>
                             <td>
-                                <!-- <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/> -->
+                                <p-button label="View" severity="info" [raised]="true"  [rounded]="true" (click)="openMedRecordView(medicalRecords)" />
                             </td>
                             <td class="d-flex">
-
+                                {{medicalRecords?.diagnosis}}
                             </td>
                             <td>
+                                {{medicalRecords?.treatment}}
+
                                 <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
                                 <!-- <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span> -->
                             </td>
 
                             <td>
+                                {{medicalRecords?.doctor.user.name}}
 
                             </td>
 
@@ -405,3 +407,75 @@
         </div>
     </section>
 </main>
+
+<!-- Medical Record View Dialog -->
+<p-dialog [(visible)]="viewMedRecordDialog" [modal]="true" [closable]="true" [style]="{width: '700px'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog" [showHeader]="false">
+  <div id="printable-med-record">
+    <div class="print-header flex-header">
+      <div class="passport-block">
+        <img *ngIf="singleClient?.user?.passport" [src]="avatar_file + singleClient.user.passport" alt="Patient Passport" class="passport-img" />
+      </div>
+      <div class="header-info-block">
+        <h2 class="mb-3">Medical Record</h2>
+        <div class="record-row">
+          <i class="bi bi-person me-1"></i>
+          <span class="print-label">Patient:</span>
+          <span class="print-value">{{singleClient?.user?.name}}</span>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-person-badge me-1"></i>
+          <span class="print-label">Doctor:</span>
+          <span class="print-value">{{selectedMedRecord?.doctor?.user?.name}}</span>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-hash me-1"></i>
+          <span class="print-label">Record #:</span>
+          <b>{{selectedMedRecord?.record_number}}</b>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-calendar me-1"></i>
+          <span class="print-label">Date:</span>
+          <b>{{selectedMedRecord?.created_at | date:'medium'}}</b>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-briefcase me-1"></i>
+          <span class="print-label">Specialization:</span>
+          <span class="print-value">{{selectedMedRecord?.doctor?.specialization}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex-sections">
+      <div class="section-half">
+        <div class="print-section">
+          <div class="print-label">Diagnosis:</div>
+          <div class="print-value">{{selectedMedRecord?.diagnosis}}</div>
+        </div>
+        <div class="print-section">
+          <div class="print-label">Past Diagnosis:</div>
+          <div class="print-value">{{selectedMedRecord?.past_diagnosis}}</div>
+        </div>
+      </div>
+      <div class="section-half">
+        <div class="print-section">
+          <div class="print-label">Prescription/Treatment:</div>
+          <div class="print-value">{{selectedMedRecord?.treatment}}</div>
+        </div>
+        <div class="print-section">
+          <div class="print-label">Allergies:</div>
+          <div class="print-value">{{selectedMedRecord?.allergies}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="print-footer">
+      <small>Generated by HMS | {{selectedMedRecord?.updated_at | date:'medium'}}</small>
+    </div>
+  </div>
+  <div class="med-record-footer" style="justify-content: flex-end;">
+    <button type="button" class="save-btn" (click)="printMedRecord()">
+      <i class="pi pi-print"></i> Print
+    </button>
+    <button type="button" class="cancel-btn" (click)="viewMedRecordDialog=false">
+      Close
+    </button>
+  </div>
+</p-dialog>
