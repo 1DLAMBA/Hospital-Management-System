@@ -7,14 +7,27 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class MedicalAIService {
-  private baseUrl = environment.apiUrl + '/medical-ai';
-  private groqApiKey = environment.groqApiKey;
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
-  getAIResponse(question: string): Observable<any> {
+
+  getConversations(userId: number) {
+    return this.http.get(`${this.baseUrl}/ai/conversations?user_id=${userId}`);
+  }
+  createConversation(userId: number, payload: { title?: string; system_prompt?: string; model?: string } = {}) {
+    return this.http.post(`${this.baseUrl}/ai/conversations`, { user_id: userId, ...payload });
+  }
+  getMessages(convoId: number) {
+    return this.http.get(`${this.baseUrl}/ai/conversations/${convoId}/messages`);
+  }
+  send(convoId: number, userId: number, content: string) {
+    return this.http.post(`${this.baseUrl}/ai/conversations/${convoId}/send`, { user_id: userId, content });
+  }
+
+  getAIResponse(question: string, key: string): Observable<any> {
     const headers = {
-      'Authorization': `Bearer ${this.groqApiKey}`,
+      'Authorization': `Bearer ${key}`,
       'Content-Type': 'application/json'
     };
 

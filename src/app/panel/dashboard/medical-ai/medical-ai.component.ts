@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 
 const STORAGE_KEY = 'medical_ai_conversation';
 
+
+
 @Component({
   selector: 'app-medical-ai',
   templateUrl: './medical-ai.component.html',
@@ -26,10 +28,12 @@ const STORAGE_KEY = 'medical_ai_conversation';
 })
 export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('messageContainer') messageContainer!: ElementRef;
-  
+
   messages: any[] = [];
   userInput: string = '';
   isLoading: boolean = false;
+  conversationId?: number;
+  userId!: any;
 
   constructor(
     private medicalAIService: MedicalAIService,
@@ -37,17 +41,20 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadConversation();
-    
-    // Add welcome message only if there's no existing conversation
-    if (this.messages.length === 0) {
-      this.messages.push({
-        type: 'ai',
-        content: 'Hello! I am your medical AI assistant. How can I help you today?',
-        timestamp: new Date()
-      });
-      this.saveConversation();
-    }
+    this.userId = localStorage.getItem('id');
+    this.medicalAIService.getConversations(this.userId).subscribe({
+      next: (res: any) => {
+        const convos = res?.data || [];
+        if (convos.length === 0) {
+          this.medicalAIService.createConversation(this.userId).subscribe({
+            next: (r: any) => { this.conversationId = r?.data?.id; this.loadMessages(); }
+          });
+        } else {
+          this.conversationId = convos[0].id;
+          this.loadMessages();
+        }
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -56,108 +63,125 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
       this.scrollToBottom();
     }, 0);
   }
+  ngOnDestroy(): void {}
 
-  ngOnDestroy(): void {
-    this.saveConversation();
-  }
-
-  private loadConversation(): void {
+  private getCurrentUserId(): number {
     try {
-      const storedConversation = localStorage.getItem(STORAGE_KEY);
-      if (storedConversation) {
-        const parsedMessages = JSON.parse(storedConversation);
-        // Convert string timestamps back to Date objects
-        this.messages = parsedMessages.map((msg: any) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp)
-        }));
+      const u = localStorage.getItem('user');
+      if (u) {
+        const parsed = JSON.parse(u);
+        if (parsed && parsed.id) return Number(parsed.id);
       }
-    } catch (error) {
-      console.error('Error loading conversation:', error);
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to load conversation history'
-      });
-    }
+      const direct = localStorage.getItem('id');
+      if (direct) return Number(direct);
+      return 0;
+    } catch { return 0; }
   }
 
-  private saveConversation(): void {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.messages));
-    } catch (error) {
-      console.error('Error saving conversation:', error);
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to save conversation history'
-      });
-    }
+  private loadMessages(): void {
+    if (!this.conversationId) return;
+    this.medicalAIService.getMessages(this.conversationId).subscribe({
+      next: (r: any) => {
+        const data = r?.data || [];
+        this.messages = data.map((m: any) => ({
+          type: m.role === 'assistant' ? 'ai' : 'user',
+          content: m.content,
+          timestamp: new Date(m.created_at)
+        }));
+        if (this.messages.length === 0) {
+          // Fallback: try showing any locally cached conversation from before backend persistence
+          try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              this.messages = (parsed || []).map((msg: any) => ({
+                type: msg.type,
+                content: msg.content,
+                timestamp: new Date(msg.timestamp)
+              }));
+            }
+          } catch {}
+          if (this.messages.length === 0) {
+            this.messages.push({
+              type: 'ai',
+              content: 'Hello! I am your medical AI assistant. How can I help you today?',
+              timestamp: new Date()
+            });
+          }
+        }
+        setTimeout(() => this.scrollToBottom(), 0);
+      }
+    });
   }
 
   clearConversation(): void {
+    // Just reset messages UI; backend history remains. Optional: create a new conversation instead
     this.messages = [{
       type: 'ai',
       content: 'Hello! I am your medical AI assistant. How can I help you today?',
       timestamp: new Date()
     }];
-    this.saveConversation();
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Conversation cleared'
+      detail: 'Conversation cleared (local view)'
     });
-    // Scroll to bottom after clearing
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 0);
+    setTimeout(() => this.scrollToBottom(), 0);
+  }
+
+
+  onEnter(event: Event): void {
+    event.preventDefault();
+    this.sendMessage();
   }
 
   sendMessage(): void {
-    if (this.userInput.trim()) {
-      // Add user message
-      this.messages.push({
-        type: 'user',
-        content: this.userInput,
-        timestamp: new Date()
+
+
+    const content = this.userInput.trim();
+    if (!content) return;
+    if (!this.conversationId) {
+      // Create a conversation on-the-fly then send
+      this.medicalAIService.createConversation(this.userId).subscribe({
+        next: (r: any) => { this.conversationId = r?.data?.id; this.sendMessage(); },
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not create conversation' })
       });
-      this.saveConversation();
-      this.scrollToBottom();
-
-      this.isLoading = true;
-
-      // Get AI response
-      this.medicalAIService.getAIResponse(this.userInput).subscribe({
-        next: (response: any) => {
-          const aiResponse = response.choices[0].message.content;
-          this.messages.push({
-            type: 'ai',
-            content: aiResponse,
-            timestamp: new Date()
-          });
-          this.saveConversation();
-          this.isLoading = false;
-          this.scrollToBottom();
-        },
-        error: (error: any) => {
-          console.error('Error getting AI response:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to get AI response. Please try again.'
-          });
-          this.isLoading = false;
-        }
-      });
-
-      this.userInput = '';
+      return;
     }
+
+
+
+    // Optimistically render user message
+    this.messages.push({ type: 'user', content, timestamp: new Date() });
+    this.userInput = '';
+    this.isLoading = true;
+    this.scrollToBottom();
+
+    this.medicalAIService.send(this.conversationId, this.userId, content).subscribe({
+      next: (res: any) => {
+        const ai = res?.assistant ?? res?.raw?.choices?.[0]?.message?.content ?? '...';
+
+
+        this.messages.push({ type: 'ai', content: ai, timestamp: new Date() });
+        this.isLoading = false;
+        this.scrollToBottom();
+      },
+      error: (err: any) => {
+        console.error('Error getting AI response:', err);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to get AI response. Please try again.' });
+        this.isLoading = false;
+      }
+    });
   }
 
   scrollToBottom(): void {
     if (this.messageContainer) {
       const container = this.messageContainer.nativeElement;
+
+
+
+
       container.scrollTop = container.scrollHeight;
     }
   }
-} 
+}

@@ -37,10 +37,10 @@
     
     <div class="input-container">
       <div class="input-wrapper">
-        <textarea pInputTextarea 
-                  [(ngModel)]="userInput" 
-                  (keydown.enter)="sendMessage()" 
-                  [rows]="1" 
+        <textarea pInputTextarea
+                  [(ngModel)]="userInput"
+                  (keydown.enter)="onEnter($event)"
+                  [rows]="1"
                   [autoResize]="true"
                   placeholder="Type your medical question here..."
                   class="message-input"></textarea>
