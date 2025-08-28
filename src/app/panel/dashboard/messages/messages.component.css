@@ -1,162 +1,276 @@
 @import 'stream-chat-angular/src/assets/styles/css/index.css';
-html {
-  height: 100%;
-}
 
-body {
+/* Base Layout */
+body, html {
+  height: 100%;
   margin: 0;
-  height: 100%;
 }
 
-#root {
-  display: flex;
-  height: 100%;
+/* Page-scoped loader container for reusable component */
+.messages-container { position: relative; min-height: 60vh; }
 
-  stream-channel-list {
-    width: 30%;
-  }
-
-  stream-channel {
-    width: 100%;
-  }
-
-  stream-thread {
-    width: 45%;
-  }
-}
-
-ul:hover{
-  text-decoration: none;
-  background-color: aliceblue;
-}
-ul{
-  border-radius: 5px;
-}
-
-.passport {
-    padding: 5px;
-    border: 1px solid #17224d;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-}
-
-.passport img{
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.list-hold{
-  margin: 0;
-  width: 70%;
-
-}
-.convo-list{
+/* Conversation List Styling */
+.convo-list {
   width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
 }
+
+.list-hold {
+  width: 100%;
+  max-width: 800px;
+  margin: 0.5rem auto;
+}
+
+ul {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+ul:hover {
+  background-color: #f0f7ff;
+  transform: translateY(-2px);
+}
+
+.opened {
+  background-color: #17224d !important;
+  color: white !important;
+}
+
+/* User Avatar Styling */
+.passport {
+  padding: 2px;
+  border: 2px solid #17224d;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 12px;
+  overflow: hidden;
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+.passport img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Small avatar variant for chat header */
+.passport.sm {
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
+}
+
+.conversation-preview {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 60px);
+}
+
+.message-preview {
+  color: #666;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Chat Dialog Styling */
+.head {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 15px;
+  background-color: #17224d;
+  color: white;
+  border-radius: 6px 6px 0 0;
+  z-index: 5;
+}
+
+/* Custom chat header inside dialog content */
+.chat-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+}
+
 .chat-container {
   display: flex;
   flex-direction: column;
-  /* height: 80vh; */
-  max-width: 600px;
-  margin: 30% auto;
-}
-
-.chat-window {
-  flex-grow: 1;
+  height: 60vh;
+  width: 100%;
   overflow-y: auto;
-  padding: 16px;
-}
-.head{
-  position: fixed;
-  top:0px;
-  width: 90%;
-  z-index: 2;
-  padding: 1%;
-  background-color: #17224d;
-  color: white;
+  padding: 20px 15px 80px 15px;
+  background-color: #f8f9fa;
+  margin: 0;
 }
 
+/* Message Styling */
 .message-container {
-  margin-bottom: 10px;
-  
+  margin-bottom: 15px;
+  width: 100%;
   display: flex;
 }
 
-.user-message .message-bubble {
-  background-color: #e0f7fa;
-  text-align: right;
-
-
-}
-.user-message{
-  margin-left: auto !important
-
+.user-message {
+  margin-left: auto;
+  max-width: 80%;
 }
 
-.bot-message .message-bubble {
-  background-color: #f1f1f1;
+.bot-message {
+  margin-right: auto;
+  max-width: 80%;
 }
 
 .message-bubble {
-  padding: 10px;
-  border-radius: 15px;
-  display: inline-block;
-  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 18px;
   position: relative;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.user-message .message-bubble {
+  background-color: #17224d;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.bot-message .message-bubble {
+  background-color: white;
+  border: 1px solid #e6e6e6;
+  border-bottom-left-radius: 4px;
 }
 
 .message-time {
-  font-size: 12px;
-  color: gray;
+  font-size: 11px;
+  color: #777;
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
+  text-align: right;
 }
 
+.bot-message .message-time {
+  text-align: left;
+}
+
+/* Input Area Styling */
 .input-container {
   display: flex;
   align-items: center;
-  padding: 16px;
-  background-color: #f9f9f9;
-  position: fixed;
-  bottom: 0px;
-  width: 80%;
-}
-
-.input-container input{
+  padding: 15px;
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
+  border-top: 1px solid #e6e6e6;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  z-index: 4;
+  border-radius: 0 0 6px 6px;
 }
 
-input[pInputTextarea] {
+.input-container input {
   flex-grow: 1;
-  margin-right: 8px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  margin-right: 10px;
+  transition: all 0.2s ease;
+}
+
+.input-container input:focus {
+  outline: none;
+  border-color: #17224d;
+  box-shadow: 0 0 0 2px rgba(23, 34, 77, 0.2);
 }
 
 .input-container button {
-  flex-shrink: 0;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-
+/* Custom PrimeNG Dialog Styling */
 :host {
+  ::ng-deep .p-dialog {
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  }
+  
+  ::ng-deep .p-dialog .p-dialog-content {
+    padding: 0 !important;
+    background: #ffffff;
+    color: #4b5563;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    overflow: hidden;
+  }
+  
+  ::ng-deep .p-dialog .p-dialog-header {
+    display: none;
+  }
+  
   ::ng-deep .p-button {
-      background-color: #17224d !important;
-      color: white !important;
-      border: 0;
-      border-radius: 5px;
-      
-  } 
-  ::ng-deep  .message-button {
-      background-color: #145a57 !important;
-      color: white !important;
-      border: 0;
-      border-radius: 5px;
-      
-  } 
-  ::ng-deep .p-dialog{
-      flex-direction: column;
+    background-color: #17224d !important;
+    color: white !important;
+    border: 0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  ::ng-deep .p-button:hover {
+    background-color: #253681 !important;
+    transform: scale(1.05);
+  }
+  
+  ::ng-deep .p-toast .p-toast-message {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  ::ng-deep .p-inputtext:focus {
+    box-shadow: 0 0 0 2px rgba(23, 34, 77, 0.2);
+    border-color: #17224d;
+  }
+  
+  /* Fix for dialog content padding */
+  ::ng-deep .p-dialog .p-dialog-content:last-of-type {
+    padding: 0 !important;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .list-hold {
+    width: 100%;
+  }
+  
+  ::ng-deep .p-dialog {
+    width: 95vw !important;
+    height: 90vh !important;
+  }
+  
+  .chat-container {
+    height: calc(90vh - 130px);
   }
 }

@@ -30,6 +30,7 @@ import { NurseProfileComponent } from './panel/dashboard/my-profile/nurse-profil
 import { ProfileNurseComponent } from './panel/dashboard/nurses/profile-nurse/profile-nurse.component';
 import { ProfilePageComponent } from './panel/dashboard/my-profile/profile-page/profile-page.component';
 import { AssignmentsComponent } from './panel/dashboard/assignments/assignments.component';
+import { MedicalAIComponent } from './panel/dashboard/medical-ai/medical-ai.component';
 
 export const routes: Routes = [
     {
@@ -67,11 +68,14 @@ export const routes: Routes = [
         // resolve: {user: PanelResolver},
         data: { hideNavbarAndFooter: true },
         children: [
-          {
-          path: 'doctor-panel',
-          component: DoctorPanelComponent,
+          
+            {
+              path: 'doctor-panel/:id',
+              component: DoctorPanelComponent,
+              runGuardsAndResolvers: 'always'
+            },
           // resolve: {user: PanelResolver}
-        },
+        
           {
           path: 'nurse-panel',
           component: NursePanelComponent,
@@ -79,6 +83,10 @@ export const routes: Routes = [
           {
           path: 'client-panel',
           component: ClientPanelComponent,
+        },
+        {
+          path: 'medical-ai',
+          component: MedicalAIComponent
         },
         // {
         //   path: 'appointment',

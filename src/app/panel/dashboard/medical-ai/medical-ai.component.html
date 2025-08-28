@@ -1,0 +1,73 @@
+<div class="medical-ai-container">
+  <div class="chat-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h2><i class="pi pi-heart-fill"></i> Medical AI Assistant</h2>
+        <p-button 
+          icon="pi pi-trash" 
+          styleClass="p-button-text p-button-rounded clear-button"
+          (onClick)="clearConversation()"
+          tooltip="Clear conversation"
+          tooltipPosition="bottom"></p-button>
+      </div>
+      <p>Ask me anything about medical conditions, treatments, or general health advice.</p>
+    </div>
+  </div>
+  
+  <div class="chat-container">
+    <div class="messages" #messageContainer>
+      <div *ngFor="let message of messages" 
+           [class]="'message ' + (message.type === 'user' ? 'user-message' : 'ai-message')">
+        <div class="message-icon">
+          <i [class]="message.type === 'user' ? 'pi pi-user' : 'pi pi-robot'"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-text">{{ message.content }}</div>
+          <div class="message-time">{{ message.timestamp | date:'shortTime' }}</div>
+        </div>
+      </div>
+      <div *ngIf="isLoading" class="loading-indicator">
+        <div class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="input-container">
+      <div class="input-wrapper">
+        <textarea pInputTextarea
+                  [(ngModel)]="userInput"
+                  (keydown.enter)="onEnter($event)"
+                  [rows]="1"
+                  [autoResize]="true"
+                  placeholder="Type your medical question here..."
+                  class="message-input"></textarea>
+        <p-button 
+          (onClick)="sendMessage()" 
+          [rounded]="true"
+          styleClass="p-button-rounded p-button-primary send-button"
+          severity="info"  ><i class="bi bi-send"></i></p-button>
+          <!-- <p-button icon="pi pi-search" severity="success" label="Search"/> -->
+      </div>
+      <div class="suggestions" *ngIf="messages.length === 1">
+        <p>Try asking me about:</p>
+        <div class="suggestion-buttons">
+          <p-button 
+            label="Common symptoms of flu" 
+            styleClass="p-button-text p-button-rounded"
+            (onClick)="userInput = 'What are common symptoms of flu?'; sendMessage()"></p-button>
+          <p-button 
+            label="Healthy diet tips" 
+            styleClass="p-button-text p-button-rounded"
+            (onClick)="userInput = 'What are some healthy diet tips?'; sendMessage()"></p-button>
+          <p-button 
+            label="Exercise recommendations" 
+            styleClass="p-button-text p-button-rounded"
+            (onClick)="userInput = 'What are some good exercise recommendations?'; sendMessage()"></p-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

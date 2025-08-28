@@ -1,45 +1,47 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core'; import {
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
   ChatClientService,
   ChannelService,
   StreamI18nService,
-
 } from 'stream-chat-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { MessagesService } from '../../../endpoints/messages.service';
-import { error } from 'console';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StreamAutocompleteTextareaModule, StreamChatModule } from 'stream-chat-angular';
 import { ConversationService } from '../../../endpoints/conversation.service';
-import { response } from 'express';
 import { environment } from '../../../../environments/environment';
 import Pusher from 'pusher-js';
 import { MessageService } from 'primeng/api';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, Subscription, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrl: './messages.component.css',
+  styleUrls: ['./messages.component.css'],
   providers: [MessageService]
-
-
 })
-export class MessagesComponent implements OnInit {
-  id?: any = localStorage.getItem('id');
+export class MessagesComponent implements OnInit, OnDestroy {
+  id?: number = Number(localStorage.getItem('id'));
   message_form: FormGroup;
   conversations?: any;
   visible: boolean = false;
   position: string = 'center';
-  avatar_file!:string;
-  messages:any[] =[] ;
+  avatar_file: string = environment.apiUrl + '/file/get/';
+  messages: any[] = [];
   newMessage: string = '';
   receiver_id: any;
   chatDp: any;
   chatName: any;
   pusher: any;
   channel: any;
-  messageReceived: boolean = false ;
+  newMessageStyle: boolean = false;
+  messageReceived: boolean = false;
+  private routerSubscription: Subscription;
   @ViewChild('messageContainer') messageContainer!: ElementRef;
-
+  loading$!: Observable<boolean>;
 
   constructor(
     private chatService: ChatClientService,
@@ -47,13 +49,14 @@ export class MessagesComponent implements OnInit {
     private streamI18nService: StreamI18nService,
     private messagesEndpoint: MessagesService,
     private conversationEndpoint: ConversationService,
-    // private pusher: Pusher,
     private messageService: MessageService,
-
     private fb: FormBuilder,
-
-
+    private router: Router,
+    private http: HttpClient,
+    private loadingService: LoadingService
   ) {
+    this.loading$ = this.loadingService.loading$;
+
     const apiKey = 'ahhwc6pvafxh';
     const userId = '1335351';
     const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGlueS10cmVlLTMiLCJleHAiOjE3MjU1NDcwNzd9.hOQnA6GOPAU_x9bMVYtzkSJBJGZlnKbg4pEvBEVrC9Y';
@@ -63,125 +66,251 @@ export class MessagesComponent implements OnInit {
     this.streamI18nService.setTranslation();
     this.message_form = this.fb.group({
       message: this.fb.control('', [Validators.required])
-    })
+    });
 
+    
+
+    // Subscribe to router events to detect navigation to this component
+    this.routerSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects || event.url;
+        // Check if the current route is the messages component route
+        if (url.includes('/panel/messages')) {
+          console.log('Navigated back to messages component, refreshing conversations');
+          this.loadingService.startLoading();
+          this.getConversation();
+        }
+      });
+
+    this.initializePusher();
+  
+  }
+  
+
+  // Removed convogetter method as duplicate call to getConversation
+  getConversation() {
+    console.log('Fetching conversations for user:', Number(this.id));
+    // Use conversation service method with cache-busting timestamp query param
+    this.conversationEndpoint.getConversations(this.id + '?_=' + new Date().getTime()).subscribe({
+      next: (response: any) => {
+        console.log('Conversations received:', response);
+        // Sort conversations by updated_at in descending order (most recent first)
+        this.conversations = response.data.sort((a: any, b: any) => 
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+        );
+        this.loadingService.stopLoading();
+      },
+      error: (error: any) => {
+        console.error('Error fetching conversations:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load conversations'
+        });
+        this.loadingService.stopLoading();
+      }
+    });
+  }
+  
+  // TrackBy for message ngFor to avoid re-render flicker
+  trackByMessage(index: number, item: any) {
+    // Prefer a stable id if backend provides; fallback to timestamp+index
+    return item?.id ?? `${item?.created_at?.getTime?.() || item?.created_at || ''}-${index}`;
+  }
+  ngOnInit(): void {
+    // Initial data load
+    this.loadingService.startLoading();
+
+    this.getConversation();
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscriptions when component is destroyed
+    if (this.channel) {
+      this.channel.unbind_all();
+      this.pusher.unsubscribe('messaging-channel');
+    }
+    
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  initializePusher(): void {
+    // Enable verbose logging in non-production for troubleshooting
+    if (!environment.production) {
+      Pusher.logToConsole = true;
+    }
+
+    // Basic Pusher configuration (cloud). If you move to self-hosted websockets,
+    // adjust options (wsHost/wsPort/forceTLS) here.
     this.pusher = new Pusher('45cde359e2dec89841a7', {
       cluster: 'mt1',
-      // forceTLS: true,
+      forceTLS: true,
+      // reconnect options
+      enabledTransports: ['ws', 'wss'],
+    });
+
+    // Connection state logging
+    this.pusher.connection.bind('state_change', (states: any) => {
+      console.log('Pusher state change:', states.previous, '->', states.current);
+    });
+    this.pusher.connection.bind('connected', () => {
+      console.log('Pusher connected');
+    });
+    this.pusher.connection.bind('error', (err: any) => {
+      console.error('Pusher connection error:', err);
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Realtime offline',
+        detail: 'Live updates unavailable; will still poll conversations.'
+      });
     });
 
     this.channel = this.pusher.subscribe('messaging-channel');
+
+    // Channel subscription diagnostics
+    this.channel.bind('pusher:subscription_succeeded', () => {
+      console.log('Subscribed to messaging-channel');
+    });
+    this.channel.bind('pusher:subscription_error', (status: any) => {
+      console.error('Subscription error:', status);
+    });
     
+    // App event from Laravel
     this.channel.bind('MessageSent', (data: any) => {
       console.log('Message received:', data.message);
-      console.log(this.id, data.message.receiver_id )
-      if(this.id == data.message.receiver_id){
-        this.messageService.add({severity: 'info', summary: 'new message', detail: data.message.message})
+      
+      if (this.id == data.message.receiver_id) {
+        this.messageService.add({
+          severity: 'info', 
+          summary: 'New message', 
+          detail: data.message.message
+        });
+        
+        // Update current chat if it's from the same sender
+        this.messages.push({
+          sender_id: data.message.sender_id,
+          message: data.message.message,
+          created_at: new Date(),
+        });
+        this.scrollToBottom();
+        this.getConversation();
       }
-      // Handle incoming message
-      this.getConversation();
     });
-  }
-
- ngOnInit() {
-
-    this.avatar_file = environment.apiUrl + '/file/get/';        
-    this.getConversation();
-
-  }
+    
+    // Always refresh the conversation list to show the latest message
+  };
+  
 
   ngAfterViewChecked() {
-    // Always scroll to the bottom after Angular finishes checking the view
+    // Scroll to bottom after Angular finishes checking the view
     this.scrollToBottom();
   }
+  
   scrollToBottom(): void {
     try {
-      this.messageContainer.nativeElement.scrollTop = 
-        this.messageContainer.nativeElement.scrollHeight;
+      if (this.messageContainer && this.messageContainer.nativeElement) {
+        this.messageContainer.nativeElement.scrollTop = 
+          this.messageContainer.nativeElement.scrollHeight;
+      }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
   }
 
-  getConversation(){
-    this.conversationEndpoint.getConversations(this.id).subscribe({
-      next: (response: any) => {
-        console.log('CONVO',response)
-        this.conversations = response.data
-      }, error: (error: any) => {
-        console.error(error);
+  
 
-      }
-    })
-  }
-
-
- sendMessage() {
+  sendMessage() {
     if (this.newMessage.trim()) {
+      const timestamp = new Date();
+      
+      // Add message to local display immediately
       this.messages.push({
-        sender_id: this.id,
+        sender_id: Number(this.id),
         message: this.newMessage,
-        created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        created_at: timestamp,
       });
+      
       const formData = {
         sender_id: this.id,
         receiver_id: this.receiver_id,
         message: this.newMessage
-      }
+      };
+      
       this.messagesEndpoint.sendMessage(formData).subscribe({
         next: (response: any) => {
-          console.log(response);
-        },error:(error: any)=>{
-          console.log(error)
+          console.log('Message sent successfully:', response);
+          // Refresh conversation list after sending a message
+          this.getConversation();
+        },
+        error: (error: any) => {
+          console.error('Error sending message:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to send message'
+          });
         }
-      })
+      });
 
       this.newMessage = '';
+      this.scrollToBottom();
     }
   }
+  
   showDialog(conversation: any) {
-    // this.position = position;
-    
+    this.loadingService.startLoading();
     if (conversation.user_one.id == this.id) {
-
       const formData = {
         user_id: this.id,
         receiver_id: conversation.user_two.id
-      }
+      };
       this.receiver_id = conversation.user_two.id;
       this.chatDp = conversation.user_two.passport;
       this.chatName = conversation.user_two.name;
-      this.messagesEndpoint.getMessageHistory(formData).subscribe({
-        next: (response: any) => {
-          console.log(response)
-          this.messages = response.data;
-          this.visible = true;
-        }
-        
-      })
-    } else if (conversation.user_two.id  == this.id) {
+      this.loadMessageHistory(formData);
+      this.loadingService.stopLoading();
+    } else if (conversation.user_two.id == this.id) {
       const formData = {
         user_id: this.id,
         receiver_id: conversation.user_one.id
-
-      }
-      this.receiver_id = conversation.user_one.id
-      this.chatDp= conversation.user_one.passport;
+      };
+      this.receiver_id = conversation.user_one.id;
+      this.chatDp = conversation.user_one.passport;
       this.chatName = conversation.user_one.name;
-      this.messagesEndpoint.getMessageHistory(formData).subscribe({
-        next: (response: any) => {
-          console.log(response)
-          this.messages = response.data;
-          this.visible = true;
-        }
-
-      })
+      this.loadMessageHistory(formData);
+      this.loadingService.stopLoading();
     }
-
-  }
-  close(){
-    this.visible = false
   }
 
+  loadMessageHistory(formData: any) {
+    this.messagesEndpoint.getMessageHistory(formData).subscribe({
+      next: (response: any) => {
+        console.log('Message history loaded:', response);
+        this.messages = (response.data || []).map((m: any, idx: number) => ({
+          ...m,
+          // Normalize timestamp to Date for the date pipe
+          created_at: m?.created_at ? new Date(m.created_at) : new Date(),
+          // Ensure sender_id is numeric to match current id type
+          sender_id: typeof m?.sender_id === 'string' ? Number(m.sender_id) : m?.sender_id
+        }));
+        this.visible = true;
+        setTimeout(() => this.scrollToBottom(), 100); // Ensure scroll happens after DOM update
+      },
+      error: (error: any) => {
+        console.error('Error loading message history:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to load message history'
+        });
+      }
+    });
+  }
   
+  close() {
+    this.visible = false;
+  }
 }

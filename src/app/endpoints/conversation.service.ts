@@ -14,7 +14,8 @@ export class ConversationService {
   constructor(private http: HttpClient) {}
 
   // Fetch all conversations for the logged-in user
-  getConversations(id:any): Observable<any> {
+  getConversations(id:any) {
+    console.log('Service method called with ID:', id);
     return this.http.get(`${this.baseUrl}/getConvo/${id}`);
   }
 

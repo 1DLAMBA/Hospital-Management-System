@@ -23,22 +23,73 @@ header="Edit Profile"
             <h4>Dashboard Overview</h4>
             <div class="d-flex">
                 <div class="passport">
-                    <img  src="{{ avatar_file + user.passport }}">
+                    <img  src="{{ avatar_file + (user?.passport || '') }}" *ngIf="user">
                 </div>
-                <div>
+                <div *ngIf="user">
 
-                    <p><b>{{user.name}}</b></p>
-                    <small>{{user.user_type}}</small>
+                    <p><b>{{user?.name}}</b></p>
+                    <div class="d-flex gap-5">
+                        <small>{{user?.user_type}}</small>
+                        <div class="d-flex ">
+                            <!-- Bell button toggles the notification tray -->
+                            <button style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)" pBadge [value]="newNotificationBatch ? '1' : ''">
+                                <i class="bi bi-bell text-3xl"></i>
+                            </button>
+                            
+                            <!-- Notification Tray -->
+                            <p-overlayPanel #notifPanel [showCloseIcon]="true" [dismissable]="true" [style]="{width: '340px'}">
+                                <div class="p-3" style="max-height: 60vh; overflow-y: auto;">
+                                    <h6 class="mb-3">Notifications</h6>
+                                    <ng-container *ngIf="notifications?.length; else noNotifs">
+                                        <ul class="list-unstyled m-0">
+                                            <li *ngFor="let n of notifications" class="mb-3">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <div class="fw-semibold">{{ n.title }}</div>
+                                                        <div class="text-muted" style="font-size: 0.85rem;">{{ n.message }}</div>
+                                                    </div>
+                                                    <small class="text-secondary ms-3">{{ n.time | date:'MMM d, h:mm a' }}</small>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </ng-container>
+                                    <ng-template #noNotifs>
+                                        <div class="text-center text-muted">No notifications</div>
+                                    </ng-template>
+                                </div>
+                            </p-overlayPanel>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex mob-head  justify-content-between p-1">
-            <button (onClick)="showDialog()" class="navi d-flex p-2">
-                
-                <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
-                <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+        <div *ngIf="user?.user_type=='doctor'" class="d-flex mob-head  justify-content-between p-1">
+            <a routerLink="my-profile/doctor/{{this.id}}" class="text-decoration-none">
 
-            </button>
+                <button class="navi d-flex p-2">
+                    
+                    <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                    <p class="m-auto" style="font-size: smaller;"  ><b>{{user?.name}}</b></p>
+    
+                </button>
+            </a>
+            <div class="d-flex">
+                <div class="passport">
+                    <img  src="{{ avatar_file + (user?.passport || '') }}">
+                </div>
+                
+            </div>
+        </div>
+        <div *ngIf="user?.user_type=='client'" class="d-flex mob-head  justify-content-between p-1">
+            <a routerLink="my-profile/client/{{this.id}}" class="text-decoration-none">
+
+                <button class="navi d-flex p-2">
+                    
+                    <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                    <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+    
+                </button>
+            </a>
             <div class="d-flex">
                 <div class="passport">
                     <img  src="{{ avatar_file + user.passport }}">
@@ -46,12 +97,31 @@ header="Edit Profile"
                 
             </div>
         </div>
-        
-        <router-outlet></router-outlet>
+        <div *ngIf="user?.user_type=='nurse'" class="d-flex mob-head  justify-content-between p-1">
+            <a routerLink="my-profile/nurse/{{this.id}}" class="text-decoration-none">
+
+                <button class="navi d-flex p-2">
+                    
+                    <p class="m-1 fw-bold bi bi-activity" style="font-size:xx-large;"></p>
+                    <p class="m-auto" style="font-size: smaller;"  ><b>{{user.name}}</b></p>
+    
+                </button>
+            </a>
+            <div class="d-flex">
+                <div class="passport">
+                    <img  src="{{ avatar_file + user.passport }}">
+                </div>
+                
+            </div>
+        </div>
+        <div class="mb-5">
+
+            <router-outlet></router-outlet>
+        </div>
     </div>   
     <!-- ADD NG IF HERE TO CHECK USER TYPE BEFORE RENDERING MOBILE NAV -->
-    <div *ngIf="user.user_type=='doctor'" class="mob-nav">
-        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel">
+    <div *ngIf="user?.user_type=='doctor'" class="mob-nav">
+        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel/:id">
             
         </a>
         <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="doctor-appointment">
@@ -63,8 +133,11 @@ header="Edit Profile"
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
         </a>
+        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
+            <span>AI</span>
+        </a>
     </div>
-    <div *ngIf="user.user_type=='nurse'" class="mob-nav">
+    <div *ngIf="user?.user_type=='nurse'" class="mob-nav">
         <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="nurse-panel">
             
         </a>
@@ -75,19 +148,25 @@ header="Edit Profile"
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
         </a>
+        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
+            <span>AI</span>
+        </a>
     </div>
-    <div *ngIf="user.user_type=='client'" class="mob-nav">
+    <div *ngIf="user?.user_type=='client'" class="mob-nav">
         <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="client-panel">
             
         </a>
         <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="client-appointment">
 
         </a>
-        <a routerLinkActive="active"  class=" bi bi-heart-pulse-fill" routerLink="nurses">
+        <a routerLinkActive="active"  class=" bi bi-heart-pulse-fill" routerLink="doctors">
 
         </a>
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
+        </a>
+        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
+            <span>AI</span>
         </a>
     </div>
 </div>

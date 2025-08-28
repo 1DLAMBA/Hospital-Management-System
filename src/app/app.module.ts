@@ -1,4 +1,3 @@
-
 import { AppRoutingModule, routes } from "./app.routes";
 import { MessageComponent, StreamAutocompleteTextareaModule, StreamChatModule } from 'stream-chat-angular';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, ApplicationConfig, importProvidersFrom } from '@angular/core';
@@ -7,7 +6,7 @@ import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingComponent } from "./landing/landing.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { AppComponent } from "./app.component";
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, RouteReuseStrategy } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from "@angular/common";
 import { FormGroup, FormControl } from '@angular/forms';
@@ -48,10 +47,16 @@ import { ChatDialogComponent } from "./panel/chat-dialog/chat-dialog.component";
 import { ChatDialogService } from "./panel/chat-dialog.service";
 import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
 
-
+// Custom route reuse strategy
+export class CustomRouteReuseStrategy implements RouteReuseStrategy {
+  shouldDetach() { return false; }
+  store() { }
+  shouldAttach() { return false; }
+  retrieve() { return null; }
+  shouldReuseRoute() { return false; }
+}
 
 @NgModule({
-
     declarations: [
         LandingComponent,
         NavBarComponent,
@@ -61,10 +66,8 @@ import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
         AboutComponent,
         ServicesComponent,
         ContactComponent,
-        MessagesComponent,
-      //   ChatDialogComponent
-
-         ],
+        //   ChatDialogComponent
+    ],
     imports: [ 
         NgbModule,
         CommonModule,
@@ -86,37 +89,34 @@ import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
         ToastsContainer,
         AnimateOnScrollModule,
         NgxSpinnerModule,
-        DynamicDialogModule
-      
-              ],
-         exports:[
-            NavBarComponent,
-            FooterComponent,
-            LandingComponent,
-            LoginComponent,
-            RegisterComponent,
-            AboutComponent,
-            
-         ],
-         providers:[
-            UserService,
-            DoctorsService,
-            ClientsService,
-            NursesService,
-            ServicesComponent,
-            ContactComponent,
-            PanelModule,
-            AppointmentsService,
-            AssignmentsService,
-            MedicalService,
-            MessagesService,
-            ConversationService,
-            TranslateService,
-            ChatDialogService,
-            DialogService,
-            importProvidersFrom(TranslateModule.forRoot())
-         ],
-         schemas: [CUSTOM_ELEMENTS_SCHEMA],
-         
+        DynamicDialogModule,
+        PanelModule
+    ],
+    exports:[
+        NavBarComponent,
+        FooterComponent,
+        LandingComponent,
+        LoginComponent,
+        RegisterComponent,
+        AboutComponent,
+    ],
+    providers:[
+        UserService,
+        DoctorsService,
+        ClientsService,
+        NursesService,
+        ServicesComponent,
+        ContactComponent,
+        PanelModule,
+        AppointmentsService,
+        AssignmentsService,
+        MedicalService,
+        TranslateService,
+        ChatDialogService,
+        DialogService,
+        importProvidersFrom(TranslateModule.forRoot()),
+        { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy }
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }

@@ -45,9 +45,19 @@ import { AssignmentsComponent } from './dashboard/assignments/assignments.compon
 import { ChatDialogComponent } from './chat-dialog/chat-dialog.component';
 import { ChatDialogService } from './chat-dialog.service';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
-
-
-
+import { BadgeModule } from 'primeng/badge';
+import { InputNumber, InputNumberModule } from 'primeng/inputnumber';
+import { MessagesComponent } from './dashboard/messages/messages.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SkeletonModule } from 'primeng/skeleton';
+import { MessagesService } from '../endpoints/messages.service';
+import { ConversationService } from '../endpoints/conversation.service';
+import { LoaderComponent } from '../components/loader/loader.component';
+import { PanelLoaderComponent } from '../components/panel-loader/panel-loader.component';
+import { PanelSkeletonComponent } from '../shared/components/panel-skeleton/panel-skeleton.component';
+import { OverlayModule } from 'primeng/overlay';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -75,7 +85,11 @@ import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
     NurseListComponent,
     NurseProfileComponent,
     AssignmentsComponent,
-    ChatDialogComponent
+    ChatDialogComponent,
+    MessagesComponent,
+    LoaderComponent,
+    PanelLoaderComponent,
+    PanelSkeletonComponent
   ],
   imports: [
     CommonModule,
@@ -99,9 +113,18 @@ import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
     NgxSpinnerModule,
     InputSwitchModule,
     DynamicDialogModule, 
+    BadgeModule,
+    InputNumberModule,
+    InputTextModule,
+    InputTextareaModule,
+    ProgressSpinnerModule,
+    SkeletonModule,
+    OverlayModule,
+    OverlayPanelModule,
     
   ],
+  exports: [PanelLoaderComponent],
   bootstrap: [DashboardComponent],
-  providers:[ChatDialogService, DialogService]
+  providers:[ChatDialogService, DialogService,MessagesService,ConversationService]
 })
 export class PanelModule { }

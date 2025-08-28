@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../../../endpoints/user.service';
 import { UserResource } from '../../../../../resources/user.model';
 import { AssignmentsService } from '../../../../endpoints/assignments.service';
@@ -7,15 +7,17 @@ import { DoctorResource } from '../../../../../resources/doctor.model';
 import { NurseResource } from '../../../../../resources/nurse.model';
 import { NursesComponent } from '../../nurses/nurses.component';
 import { NursesService } from '../../../../endpoints/nurses.service';
+import { Subscription, filter } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 
 
 @Component({
   selector: 'app-nurse-panel',
   templateUrl: './nurse-panel.component.html',
-  styleUrl: './nurse-panel.component.css'
+  styleUrls: ['./nurse-panel.component.css']
 })
-export class NursePanelComponent  implements OnInit {
+export class NursePanelComponent implements OnInit, OnDestroy {
   id: any;
   user!: any
   data: any;
@@ -33,90 +35,126 @@ export class NursePanelComponent  implements OnInit {
   today!: Date;
   previousAppointment!: AssigmentResourse[];
   ThisMonth: any;
+  loading: boolean = true;
+  private routerSubscription: Subscription | undefined;
 
-  constructor(private userEndpoint: UserService,
+  constructor(
+    private userEndpoint: UserService,
     private appointmentEndpoint: AssignmentsService,
     private clientEndpoint: NursesService,
-
+    private route: ActivatedRoute,
+    private router: Router,
   ){
-   
-
     this.appointment = [];
+    this.upc_appt = [];
+    this.previousAppointment = [] as any;
   }
   ngOnInit(): void {
-    const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-      
+    this.loading = true;
+    this.setupChartOptions();
+    this.id = localStorage.getItem('id');
+    this.loadAllData();
 
-      this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: {
-                labels: {
-                    color: 'black'
-                }
+    this.routerSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects || event.url;
+        if (url.includes('/panel/nurse-panel')) {
+          this.loading = true;
+          this.loadAllData();
+        }
+      });
+  }
+
+  loadAllData(): void {
+    if (!this.id) {
+      this.id = localStorage.getItem('id');
+    }
+    if (!this.id) {
+      this.loading = false;
+      return;
+    }
+    // Delegate to existing getUser chain
+    this.getUser();
+  }
+
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+  
+  setupChartOptions(): void {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  
+
+  this.options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.8,
+    plugins: {
+        legend: {
+            labels: {
+                color: 'black'
             }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: 'black',
-                    font: {
-                        weight: 500
-                    }
-                },
-                grid: {
-                    color: '#31385261',
-                    drawBorder: false
+        }
+    },
+    scales: {
+        x: {
+            ticks: {
+                color: 'black',
+                font: {
+                    weight: 500
                 }
             },
-            y: {
-                ticks: {
-                    color: 'black'
-                },
-                grid: {
-                    color: '#31385261',
-                    drawBorder: false
-                }
+            grid: {
+                color: '#31385261',
+                drawBorder: false
             }
-
+        },
+        y: {
+            ticks: {
+                color: 'black'
+            },
+            grid: {
+                color: '#31385261',
+                drawBorder: false
+            }
         }
-    };
-    this.products = [
-      {
-        name: 'John Doe',
-        serial: '1',
-        category: 'gyan',
-        patient: 'good'
-      },
-      {
-        name: 'Samuel Larry',
-        serial: '2',
-        category: 'gyan',
-        patient: 'good'
-      },
-      {
-        name: 'Gideon Oj',
-        serial: '3',
-        category: 'Dark',
-        patient: 'good'
-      },
-    ]
-    this.id=localStorage.getItem('id')
-    this.getUser();
+
+    }
+};
+this.products = [
+  {
+    name: 'John Doe',
+    serial: '1',
+    category: 'gyan',
+    patient: 'good'
+  },
+  {
+    name: 'Samuel Larry',
+    serial: '2',
+    category: 'gyan',
+    patient: 'good'
+  },
+  {
+    name: 'Gideon Oj',
+    serial: '3',
+    category: 'Dark',
+    patient: 'good'
+  },
+]
+this.id=localStorage.getItem('id')
+this.getUser();
   }
   
   
   getUser() {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
-       
         this.user = response.user;
-        console.log('USER', this.user);
-        
         this.appointmentEndpoint.get(this.user.nurses.id).subscribe({
           next: (response: any) => {
             if(response.assignment){
@@ -304,6 +342,7 @@ export class NursePanelComponent  implements OnInit {
                 ]
               };
             } else {
+              this.loading = false;
               return;
             }
             
@@ -324,24 +363,22 @@ export class NursePanelComponent  implements OnInit {
               return user.status ==='pending';
             });
             this.recentAppt = this.acceptedAppointment[0];
-            console.log("MONTH", this.recentAppt);
 
             // this.complaint = this.splitComplaint(this.recentAppt.symptoms)
             this.pendingAppointment = this.appointment.filter((user: any) => user.status == 'pending').length;
 
+          },
+          error: (err: any) => {
+            console.error('Error loading assignments:', err);
+            this.loading = false;
           }
         })
 
+      },
+      error: (err: any) => {
+        console.error('Error loading nurse user:', err);
+        this.loading = false;
       }
     })
-
-
   }
-
-  splitComplaint(complaint: string) {
-    const words = complaint.split(' ');
-    return words.slice(0, 2).join(' ');
-
-  }
-
 }

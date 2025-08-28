@@ -1,26 +1,116 @@
 <!-- ////DIALOG -->
 <div class="card flex flex-column align-items-center gap-2">
 
-    <p-dialog [modal]="true" [(visible)]="visibleMsg" [style]="{ width: '50rem' }">
+    <p-dialog [modal]="true" [blockScroll]="true" [showHeader]="true" [closable]="true" [dismissableMask]="true" [closeOnEscape]="true" [(visible)]="visibleMsg" [style]="{ width: '50rem', height: '30rem' }" [contentStyle]="{ overflow: 'hidden', padding: '0' }">
         <div class="chat-container">
+            <div #messageContainer class="chat-window">
                 <div class="message-container" *ngFor="let message of messages">
-                    <div [ngClass]="{ 'user-message': message.from === 'user', 'bot-message': message.from === 'bot' }">
+                    <div [ngClass]="{ 'user-message': message.sender_id === user_id, 'bot-message': message.sender_id !== user_id }">
                         <div class="message-bubble">
-                            <p>{{ message.text }}</p>
-                            <span class="message-time">{{ message.time }}</span>
+                            <p>{{ message.message }}</p>
+                            <span class="message-time">{{ message.created_at | date:'MMM d, yyyy, h:mm:ss a' }}</span>
                         </div>
                     </div>
                 </div>
+            </div>
 
             <div class="input-container">
-                <input pInputText [(ngModel)]="newMessage" rows="3" placeholder="Type your message..."/>
-                <button pButton type="button"  class="bi" icon="bi bi-send" (click)="sendMessage()"></button>
+                <input pInputText [(ngModel)]="newMessage" placeholder="Type your message..." (keyup.enter)="sendMessage()" />
+                <button pButton type="button" class="bi" icon="bi bi-send" (click)="sendMessage()"></button>
             </div>
         </div>
 
     </p-dialog>
 </div>
- 
+
+<!-- Medical Record Creation Dialog -->
+<p-dialog [(visible)]="display" [modal]="true" [closable]="true" 
+    [style]="{width: '550px'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog"
+    [showHeader]="false">
+    
+    <form [formGroup]="medicalRecordForm" (ngSubmit)="onSubmit()">
+      <div class="med-record-container">
+        <!-- Header -->
+        <div class="med-record-header">
+          <div class="header-content">
+            <div class="header-icon">
+              <i class="pi pi-file-medical"></i>
+            </div>
+            <div class="header-text">
+              <h3>Medical Record</h3>
+              <p>{{singleClient?.user?.name}}</p>
+            </div>
+          </div>
+          <button type="button" class="close-btn" (click)="display=false">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        
+        <!-- Form Body -->
+        <div class="med-record-body">
+          <!-- Hidden fields -->
+        
+          <input type="hidden" formControlName="record_number">
+          
+          <div class="form-field">
+            <label for="diagnosis">Diagnosis <span class="required">*</span></label>
+            <textarea 
+              id="diagnosis" 
+              formControlName="diagnosis" 
+              rows="3"
+              placeholder="Enter patient diagnosis"></textarea>
+            <small *ngIf="medicalRecordForm.get('diagnosis')?.touched && medicalRecordForm.get('diagnosis')?.hasError('required')" 
+              class="error-message">
+              Diagnosis is required
+            </small>
+          </div>
+          
+          <div class="form-field">
+            <label for="treatment">Treatment <span class="required">*</span></label>
+            <textarea 
+              id="treatment" 
+              formControlName="treatment" 
+              rows="3"
+              placeholder="Enter prescribed treatment plan"></textarea>
+            <small *ngIf="medicalRecordForm.get('treatment')?.touched && medicalRecordForm.get('treatment')?.hasError('required')" 
+              class="error-message">
+              Treatment is required
+            </small>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-field">
+              <label for="past_diagnosis">Past Diagnosis</label>
+              <textarea 
+                id="past_diagnosis" 
+                formControlName="past_diagnosis" 
+                rows="2"
+                placeholder="Enter any past diagnoses"></textarea>
+            </div>
+            
+            <div class="form-field">
+              <label for="allergies">Allergies</label>
+              <textarea 
+                id="allergies" 
+                formControlName="allergies" 
+                rows="2"
+                placeholder="List any known allergies"></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="med-record-footer">
+          <button type="button" class="cancel-btn" (click)="display=false">
+            Cancel
+          </button>
+          <button type="submit" class="save-btn" [disabled]="medicalRecordForm.invalid">
+            Save Record
+          </button>
+        </div>
+      </div>
+    </form>
+</p-dialog>
 <p-dialog header="Assign Nurse" [(visible)]="createAssignDiag" [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '40vw', display: 'flex'}"
     [draggable]="false" [resizable]="false">
@@ -37,13 +127,14 @@
                 </small><br> -->
 
             <label for="assignment_message">Provide assignment message</label><br>
-                <textarea formControlName="assignment_message" placeholder="Provide Task for nurse" name="assignment_message"
-                    type="name" pInputText id="name" aria-describedby="username-help"></textarea>
-                <small *ngIf="assignForm.get('assignment_message')?.touched && assignForm.get('name')?.hasError('required')"
-                    class="text-danger">
-                    Field Required
-                </small><br>
-            <p-button [disabled]="this.assignForm.invalid" label="Proceed"  (click)="createAssign()" severity="info" [raised]="true" [rounded]="true" />     
+            <textarea formControlName="assignment_message" placeholder="Provide Task for nurse"
+                name="assignment_message" type="name" pInputText id="name" aria-describedby="username-help"></textarea>
+            <small *ngIf="assignForm.get('assignment_message')?.touched && assignForm.get('name')?.hasError('required')"
+                class="text-danger">
+                Field Required
+            </small><br>
+            <p-button [disabled]="this.assignForm.invalid" label="Proceed" (click)="createAssign()" severity="info"
+                [raised]="true" [rounded]="true" />
         </form>
     </div>
 
@@ -54,25 +145,19 @@
 <p-dialog header="Select Client" [(visible)]="assignDialog" [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
     [draggable]="false" [resizable]="false">
-<p-table
-                
-            #dt1
-            [value]="nurses"
-            dataKey="id"
-            [rows]="10"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            [paginator]="true"
-            [globalFilterFields]="['client.user.name', 'client.user.gender', 'client.date_of_birth']"
-        >
-        
-        
+    <p-table #dt1 [value]="nurses" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+        [globalFilterFields]="['client.user.name', 'client.user.gender', 'client.date_of_birth']">
+
+
         <ng-template pTemplate="caption">
             <div class="flex">
-                <p-button pRipple size="small" label="Clear" [outlined]="true" icon="pi pi-filter-slash"  />
+                <p-button pRipple size="small" label="Clear" [outlined]="true" icon="pi pi-filter-slash" />
                 <span class="p-input-icon-left ml-auto">
                     <i class="pi pi-search"></i>
                     <!-- <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" /> -->
                 </span>
+                <!-- <p-button pRipple size="small" label="Create Medical Record" severity="success" [outlined]="true" icon="pi pi-filter-slash" /> -->
+
             </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -83,7 +168,7 @@
                         <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
                     </div>
                 </th>
-               
+
                 <th style="min-width:15rem">
                     <div class="flex align-items-center">
                         Availability
@@ -101,34 +186,35 @@
                         Assign
                     </div>
                 </th>
-                
-                
-                
+
+
+
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-nurse>
-            <tr >
+            <tr>
                 <td>
-                <!-- <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/> -->
-                 {{nurse.user.name}}
+                    <!-- <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/> -->
+                    {{nurse.user.name}}
                 </td>
                 <td class="d-flex">
-                 {{nurse.availability}}
-                    
+                    {{nurse.availability}}
+
                 </td>
                 <td>
                     {{nurse.user.phoneno}}
-               
+
                 </td>
                 <td>
-                <p-button pRipple size="small" [disabled]="disableAssignBtn" [outlined]="true" icon="bi bi-calendar-plus" (click)="nurseSelect(nurse.id)" />
-                    
-               
+                    <p-button pRipple size="small" [disabled]="disableAssignBtn" [outlined]="true"
+                        icon="bi bi-calendar-plus" (click)="nurseSelect(nurse.id)" />
+
+
                 </td>
-               
-                
-               
-               
+
+
+
+
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
@@ -136,11 +222,11 @@
                 <td colspan="7">No Assignments found.</td>
             </tr>
         </ng-template>
-        
-        
-        </p-table>
 
- </p-dialog>
+
+    </p-table>
+
+</p-dialog>
 
 <main class="d-flex flex-column">
 
@@ -149,12 +235,12 @@
         <!-- <p>{{singleClient.user.name}}</p> -->
     </section>
 
-    <section class="main mx-auto d-flex justify-content-between">
+    <section class="main mx-auto d-flex flex-wrap justify-content-between">
         <div class="left-profile ">
             <div class="inner-profile pb-2">
                 <img src="{{ avatar_file + singleClient.user.passport }}">
                 <h1 class="m-2">{{singleClient.user.name}}</h1>
-                
+
             </div>
             <b>Patient Details</b>
             <div class="d-flex subs mt-2 justify-content-between">
@@ -177,149 +263,221 @@
             </div>
             <div class="d-flex justify-content-between">
 
-                <button pButton label="Message" class="message-button" icon="bi bi-chat-left-text-fill" (click)="showMsgDialog('left')" severity="info" ></button>
+                <button pButton label="Message" class="message-button" icon="bi bi-chat-left-text-fill"
+                    (click)="showMsgDialog('left')" severity="info"></button>
 
-                <button *ngIf="user.user_type != 'nurse'" pButton label="Assign" class="blue-button" icon="bi bi-calendar-plus" severity="info" (click)="assign()"></button>
+                <button *ngIf="user.user_type != 'nurse'" pButton label="Assign" class="blue-button"
+                    icon="bi bi-calendar-plus" severity="info" (click)="assign()"></button>
             </div>
 
 
         </div>
         <div class="right-profile">
-            <div class="p-2 subs-holder" *ngIf="singleClient.appointments" >
+            <div class="p-2 subs-holder" *ngIf="singleClient.appointments">
                 <div *ngIf="singleClient.appointments.status=='Accepted'" class="">
-                    <b>Current Appointment</b>
-                   
-                    <div class="d-flex justify-content-between m-1">
-                        <div class="">
-    
-                            <span >Patient Complaints:</span> <p class="text-secondary">{{singleClient.appointments.symptoms}}</p>
+                    <b>Last Appointment</b>
+
+                    <div class="d-flex  appointment-container justify-content-between m-1">
+                        <div class="d-flex">
+
+                            <span>Patient Complaints:</span>
+                            <p class="text-secondary">{{singleClient.appointments.symptoms}}</p>
+                        
+                            <span>Date:</span>
+                            <p class="text-secondary">{{singleClient.appointments.date_time | date}}</p>
                         </div>
-                        <div class="">
-                            <span >Date:</span> <p class="text-secondary">{{singleClient.appointments.date_time | date}}</p>
-                        </div>
-                        <div class="">
-                            <span >Doctor:</span> <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
-                        </div>
-                        <div class=" hold3">
-                            <span class="fs-6" >Status:</span> 
-                            <p-tag [rounded]="true" severity="success" value="{{singleClient.appointments.status}}"></p-tag>
+                        <div class="d-flex">
+                            <span>Doctor:</span>
+                            <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
+                        
+                            <span class="fs-6">Status:</span>
+                            <p-tag [rounded]="true" severity="success"
+                                value="{{singleClient.appointments.status}}"></p-tag>
 
                         </div>
                     </div>
                 </div>
-                <div *ngIf="singleClient.appointments.status=='pending'" >
+                <div *ngIf="singleClient.appointments.status=='pending'">
                     <b>Current Appointment</b>
-                   
+
                     <div class="d-flex justify-content-between m-1">
                         <div class="">
-    
-                            <span >Patient Complaints:</span> <p class="text-secondary">{{singleClient.appointments.symptoms}}</p>
+
+                            <span>Patient Complaints:</span>
+                            <p class="text-secondary">{{singleClient.appointments.symptoms}}</p>
                         </div>
                         <div class="">
-                            <span >Date:</span> <p class="text-secondary">{{singleClient.appointments.date_time | date}}</p>
+                            <span>Date:</span>
+                            <p class="text-secondary">{{singleClient.appointments.date_time | date}}</p>
                         </div>
                         <div class="">
-                            <span >Doctor:</span> <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
+                            <span>Doctor:</span>
+                            <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
                         </div>
                         <div class=" hold3">
-                            <span class="fs-6" >Status:</span> 
-                            <p-tag [rounded]="true" severity="warning" value="{{singleClient.appointments.status}}"></p-tag>
+                            <span class="fs-6">Status:</span>
+                            <p-tag [rounded]="true" severity="warning"
+                                value="{{singleClient.appointments.status}}"></p-tag>
 
                         </div>
                     </div>
-                   
+
                 </div>
-               
+
             </div>
             <div class="m-2">
                 <h1 class="primary-color">Medical Records</h1>
-                <p-table
-                
-            #dt1
-            
-            dataKey="id"
-            [rows]="10"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            [paginator]="true"
-            [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']"
-        >
-        
-        
-        <ng-template pTemplate="caption">
-            <div class="flex">
-                <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash"  />
-                <span class="p-input-icon-left ml-auto">
-                    <i class="pi pi-search"></i>
-                    <!-- <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" /> -->
-                </span>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="min-width:7rem">
-                    <div class="flex align-items-center">
-                        View
-                        <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
-                    </div>
-                </th>
-                <th style="min-width:15rem">
-                    <div class="flex align-items-center">
-                        Record Number
-                        <p-columnFilter type="text" field="name" display="menu" />
-                    </div>
-                </th>
-                <th style="min-width:10rem">
-                    <div class="flex align-items-center">
-                        Diagnosis
-                        <p-columnFilter type="text" field="country.name" display="menu" />
-                    </div>
-                </th>
-                
-                <th style="min-width:10rem">
-                    <div class="flex align-items-center">
-                        Doctor
-                        <p-columnFilter type="date" field="date" display="menu" />
-                    </div>
-                </th>
-                
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-client>
-            <tr >
-                <td>
-                <!-- <p-button label="View" severity="info" [raised]="true"  [rounded]="true" routerLink="profile/{{client.id}}"/> -->
-                </td>
-                <td class="d-flex">
-                    
-                </td>
-                <td>
-                    <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
-                    <!-- <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span> -->
-                </td>
-               
-                <td>
-                  
-                </td>
-               
-               
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7">No medical records found.</td>
-            </tr>
-        </ng-template>
-        
-        
-        </p-table>
+                <p-table #dt1 dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+                  [value]="medicalRecords"  [globalFilterFields]="['nurse.user.name', 'nurses.specialization', 'representative.name', 'status']">
+
+
+                    <ng-template pTemplate="caption">
+                        <div class="d-flex justify-content-between">
+                            <p-button pRipple label="Clear" size="small" [outlined]="true" icon="pi pi-filter-slash" />
+                            
+                <p-button pRipple size="small" label="Create Medical Record" (click)="showMedRecDialog()" severity="success" [outlined]="true" icon="pi pi-filter-slash" />
+
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="min-width:7rem">
+                                <div class="flex align-items-center">
+                                    View
+                                    <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+                                </div>
+                            </th>
+
+                            <th style="min-width:10rem">
+                                <div class="flex align-items-center">
+                                    Diagnosis
+                                </div>
+                            </th>
+                            <th style="min-width:15rem">
+                                <div class="flex align-items-center">
+                                    Treatment
+                                </div>
+                            </th>
+
+                            <th style="min-width:10rem">
+                                <div class="flex align-items-center">
+                                    Doctor
+                                </div>
+                            </th>
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-medicalRecords>
+                        <tr>
+                            <td>
+                                <p-button label="View" severity="info" [raised]="true"  [rounded]="true" (click)="openMedRecordView(medicalRecords)" />
+                            </td>
+                            <td class="d-flex">
+                                {{medicalRecords?.diagnosis}}
+                            </td>
+                            <td>
+                                {{medicalRecords?.treatment}}
+
+                                <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->
+                                <!-- <span class="ml-1 vertical-align-middle">{{ client.user.phoneno }}</span> -->
+                            </td>
+
+                            <td>
+                                {{medicalRecords?.doctor.user.name}}
+
+                            </td>
+
+
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7">No medical records found.</td>
+                        </tr>
+                    </ng-template>
+
+
+                </p-table>
 
             </div>
-            
-            
 
-           
-           
+
+
+
+
 
         </div>
     </section>
 </main>
+
+<!-- Medical Record View Dialog -->
+<p-dialog [(visible)]="viewMedRecordDialog" [modal]="true" [closable]="true" [style]="{width: '700px'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog" [showHeader]="false">
+  <div id="printable-med-record">
+    <div class="print-header flex-header">
+      <div class="passport-block">
+        <img *ngIf="singleClient?.user?.passport" [src]="avatar_file + singleClient.user.passport" alt="Patient Passport" class="passport-img" />
+      </div>
+      <div class="header-info-block">
+        <h2 class="mb-3">Medical Record</h2>
+        <div class="record-row">
+          <i class="bi bi-person me-1"></i>
+          <span class="print-label">Patient:</span>
+          <span class="print-value">{{singleClient?.user?.name}}</span>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-person-badge me-1"></i>
+          <span class="print-label">Doctor:</span>
+          <span class="print-value">{{selectedMedRecord?.doctor?.user?.name}}</span>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-hash me-1"></i>
+          <span class="print-label">Record #:</span>
+          <b>{{selectedMedRecord?.record_number}}</b>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-calendar me-1"></i>
+          <span class="print-label">Date:</span>
+          <b>{{selectedMedRecord?.created_at | date:'medium'}}</b>
+        </div>
+        <div class="record-row">
+          <i class="bi bi-briefcase me-1"></i>
+          <span class="print-label">Specialization:</span>
+          <span class="print-value">{{selectedMedRecord?.doctor?.specialization}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex-sections">
+      <div class="section-half">
+        <div class="print-section">
+          <div class="print-label">Diagnosis:</div>
+          <div class="print-value">{{selectedMedRecord?.diagnosis}}</div>
+        </div>
+        <div class="print-section">
+          <div class="print-label">Past Diagnosis:</div>
+          <div class="print-value">{{selectedMedRecord?.past_diagnosis}}</div>
+        </div>
+      </div>
+      <div class="section-half">
+        <div class="print-section">
+          <div class="print-label">Prescription/Treatment:</div>
+          <div class="print-value">{{selectedMedRecord?.treatment}}</div>
+        </div>
+        <div class="print-section">
+          <div class="print-label">Allergies:</div>
+          <div class="print-value">{{selectedMedRecord?.allergies}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="print-footer">
+      <small>Generated by HMS | {{selectedMedRecord?.updated_at | date:'medium'}}</small>
+    </div>
+  </div>
+  <div class="med-record-footer" style="justify-content: flex-end;">
+    <button type="button" class="save-btn" (click)="printMedRecord()">
+      <i class="pi pi-print"></i> Print
+    </button>
+    <button type="button" class="cancel-btn" (click)="viewMedRecordDialog=false">
+      Close
+    </button>
+  </div>
+</p-dialog>
