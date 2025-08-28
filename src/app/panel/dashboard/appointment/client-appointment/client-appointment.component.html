@@ -59,23 +59,20 @@
 </p-dialog> -->
 
 <section>
-    <div class="d-flex active bg-blue p-2 m-2" *ngIf="futureAppointment">
-        <div *ngFor="let appi of futureAppointment" class="active">
-            <div *ngIf="appi.status=='Accepted' || appi.status=='pending'" class="  mx-4">
-                <b>Last Appointment</b>
-                <div class=" d-flex sub justify-content-between ">
-                    <p><span class="text-secondary">Doctor:</span><br>{{appi.doctor.user.name}}</p>
-                    <p><span class="text-secondary">Date:</span><br>{{appi.date_time | date}}</p>
+    <div class="d-flex active bg-blue p-2 m-2" *ngIf="futureAppointment as appi">
+        <div class="active w-100" *ngIf="appi.status=='Accepted' || appi.status=='pending'">
+            <div class="mx-4">
+                <b>Next Appointment</b>
+                <div class="d-flex sub justify-content-between">
+                    <p><span class="text-secondary">Doctor:</span><br>{{ appi.doctor.user.name }}</p>
+                    <p><span class="text-secondary">Date:</span><br>{{ appi.date_time | date }}</p>
                     <div>
                         <p>Status</p>
-                        <p-tag *ngIf="appi.status=='Accepted'"  [rounded]="true" severity="success" value="{{appi.status}}"></p-tag>
-                        <p-tag *ngIf="appi.status=='pending'" [rounded]="true" severity="warning" value="{{appi.status}}"></p-tag>
-
+                        <p-tag *ngIf="appi.status=='Accepted'" [rounded]="true" severity="success" value="{{ appi.status }}"></p-tag>
+                        <p-tag *ngIf="appi.status=='pending'" [rounded]="true" severity="warning" value="{{ appi.status }}"></p-tag>
                     </div>
                 </div>
             </div>
-            
-           
         </div>
     </div>
     <div class="cards-sect my-5 d-flex justify-content-between">

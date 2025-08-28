@@ -1,19 +1,21 @@
 <!-- ////DIALOG -->
 <div class="card flex flex-column align-items-center gap-2">
 
-    <p-dialog [modal]="true" [(visible)]="visibleMsg" [style]="{ width: '50rem' }">
+    <p-dialog [modal]="true" [blockScroll]="true" [showHeader]="true" [closable]="true" [dismissableMask]="true" [closeOnEscape]="true" [(visible)]="visibleMsg" [style]="{ width: '50rem', height: '30rem' }" [contentStyle]="{ overflow: 'hidden', padding: '0' }">
         <div class="chat-container">
-            <div class="message-container" *ngFor="let message of messages">
-                <div [ngClass]="{ 'user-message': message.from === 'user', 'bot-message': message.from === 'bot' }">
-                    <div class="message-bubble">
-                        <p>{{ message.text }}</p>
-                        <span class="message-time">{{ message.time }}</span>
+            <div #messageContainer class="chat-window">
+                <div class="message-container" *ngFor="let message of messages">
+                    <div [ngClass]="{ 'user-message': message.sender_id === user_id, 'bot-message': message.sender_id !== user_id }">
+                        <div class="message-bubble">
+                            <p>{{ message.message }}</p>
+                            <span class="message-time">{{ message.created_at | date:'MMM d, yyyy, h:mm:ss a' }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="input-container">
-                <input pInputText [(ngModel)]="newMessage" rows="3" placeholder="Type your message..." />
+                <input pInputText [(ngModel)]="newMessage" placeholder="Type your message..." (keyup.enter)="sendMessage()" />
                 <button pButton type="button" class="bi" icon="bi bi-send" (click)="sendMessage()"></button>
             </div>
         </div>

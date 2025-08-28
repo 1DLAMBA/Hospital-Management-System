@@ -10,33 +10,33 @@ import { AppointmentResource } from '../../../../../resources/appointment.model'
 import moment from 'moment';
 import { filter, Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-doctor-panel',
   templateUrl: './doctor-panel.component.html',
-  styleUrl: './doctor-panel.component.css'
+  styleUrls: ['./doctor-panel.component.css']
 })
 export class DoctorPanelComponent implements OnInit, OnDestroy {
-  id: any;
+  id!: any; // Ensure this is properly initialized
   user!: any;
   data: any;
   options: any;
   products!: any;
   date: Date[] | undefined;
-  upc_appt!: any[];
+  upc_appt: any[] = [];
   doctor!: DoctorResource;
-  appointment: AppointmentResource[] | any;
-  acceptedAppointment!: AppointmentResource[];
-  pendingAppointment!: number;
+  appointment: AppointmentResource[] = [];
+  acceptedAppointment: AppointmentResource[] = [];
+  pendingAppointment: number = 0;
   recentAppt!: any;
   complaint!: string;
   acceptedAppointmentNum: any;
   today!: Date;
-  previousAppointment!: AppointmentResource[];
+  previousAppointment: AppointmentResource[] = [];
   ThisMonth: any;
   basicOptions: any;
   private routerSubscription: Subscription | undefined;
   private isDataLoaded = false;
+  loading: boolean = true;
 
   constructor(
     private userEndpoint: UserService,
@@ -44,25 +44,19 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
     private appointmentEndpoint: AppointmentsService,
     private router: Router,
     private route: ActivatedRoute
-  ) {
-    // This constructor approach ensures the component reloads data when navigated to
-    this.routerSubscription = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // Force reload data whenever this component becomes active
-        console.log('NavigationEnd event triggered');
-        if (this.router.url.includes('/panel/doctor')) {
-          console.log('Loading data from router event');
-          this.loadAllData();
-        }
-      });
-  }
+  ) {}
   
   ngOnInit(): void {
-    console.log('Doctor panel ngOnInit');
+    this.loading = true;
     this.setupChartOptions();
-    // Initial data load
-    this.loadAllData();
+    
+    // Subscribe to route params changes
+    this.routerSubscription = this.route.params.subscribe(params => {
+      this.id = params['id'];
+      if (this.id) {
+        this.loadAllData();
+      }
+    });
   }
   
   ngOnDestroy(): void {
@@ -75,9 +69,10 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
   // Single method to load all data in the correct sequence
   loadAllData(): void {
     console.log('Starting data load sequence');
-    this.id = localStorage.getItem('id');
+    this.loading = true;
     if (!this.id) {
-      console.error('No user ID found in localStorage');
+      console.error('No user ID found in route params');
+      this.loading = false;
       return;
     }
     console.log('Loading user data with ID:', this.id);
@@ -89,18 +84,27 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
         this.user = response.user;
         
         // Then load doctor data
-        this.getDocUser();
-        
-        // Then load appointments if doctor ID is available
-        if (this.user && this.user.doctors && this.user.doctors.id) {
-          console.log('Loading appointments for doctor ID:', this.user.doctors.id);
-          this.loadAppointments(this.user.doctors.id);
-        } else {
-          console.error('Doctor ID not available', this.user);
-        }
+        this.doctorEndpoint.getDocUser(this.id).subscribe({
+          next: (docResponse: any) => {
+            this.doctor = docResponse.doctor;
+            
+            // Finally load appointments
+            if (this.user?.doctors?.id) {
+              this.loadAppointments(this.user.doctors.id);
+            } else {
+              console.error('Doctor ID not available');
+              this.loading = false;
+            }
+          },
+          error: (err) => {
+            console.error('Error loading doctor data', err);
+            this.loading = false;
+          }
+        });
       },
       error: (err) => {
         console.error('Error loading user data', err);
+        this.loading = false;
       }
     });
   }
@@ -111,9 +115,11 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
         console.log('Appointments loaded:', response);
         this.appointment = response.appointments;
         this.processAppointmentData();
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error loading appointment data', err);
+        this.loading = false;
       }
     });
   }
@@ -250,15 +256,19 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
 
   getDocUser() {
     console.log('Loading doctor user data');
-    this.doctorEndpoint.getDocUser(this.id).subscribe({
-      next: (response: any) => {
-        console.log('Doctor data loaded:', response);
-        this.doctor = response.doctor;
-      },
-      error: (err) => {
-        console.error('Error loading doctor data', err);
-      }
-    });
+    if (this.id) {
+      this.doctorEndpoint.getDocUser(this.id).subscribe({
+        next: (response: any) => {
+          console.log('Doctor data loaded:', response);
+          this.doctor = response.doctor;
+        },
+        error: (err) => {
+          console.error('Error loading doctor data', err);
+        }
+      });
+    } else {
+      console.error('Doctor ID is not available');
+    }
   }
 
   getDocAppt() {

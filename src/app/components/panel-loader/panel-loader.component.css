@@ -1,0 +1,37 @@
+.panel-loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #17224d;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e6e8f0;
+  border-top-color: #17224d;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #17224d;
+}
+
+.loader-text .bi {
+  font-size: 1.1rem;
+  color: #17224d;
+}

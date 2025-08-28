@@ -6,6 +6,9 @@ body, html {
   margin: 0;
 }
 
+/* Page-scoped loader container for reusable component */
+.messages-container { position: relative; min-height: 60vh; }
+
 /* Conversation List Styling */
 .convo-list {
   width: 100%;
@@ -57,6 +60,13 @@ ul:hover {
   border-radius: 50%;
 }
 
+/* Small avatar variant for chat header */
+.passport.sm {
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
+}
+
 .conversation-preview {
   white-space: nowrap;
   overflow: hidden;
@@ -85,6 +95,12 @@ ul:hover {
   color: white;
   border-radius: 6px 6px 0 0;
   z-index: 5;
+}
+
+/* Custom chat header inside dialog content */
+.chat-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .chat-container {

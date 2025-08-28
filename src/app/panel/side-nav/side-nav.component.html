@@ -6,22 +6,23 @@
                     
             </span>
         </div>
-        <div *ngFor="let navType of nav_type"  >
-    
-            <button routerLinkActive="active" class="{{navType.navClassName}}" routerLink="{{navType.routerLink}}" [routerLinkActiveOptions]={exact:true}>
+        <div *ngFor="let navType of nav_type">
+            <button routerLinkActive="active" 
+                    class="{{navType.navClassName}}" 
+                    (click)="navType.action ? navType.action() : null"
+                    [routerLink]="navType.action ? null : navType.routerLink" 
+                    [routerLinkActiveOptions]={exact:true}>
                 &nbsp;&nbsp;{{navType.title}}
             </button>
-    
         </div>
-        
     </div>
 
-    <div class="bottom">
+    <div class="bottom" *ngIf="user">
         <p class="bi bi-chat-right">&nbsp; Support</p>
         <hr>
         <p>
-            {{user.name}}
+            {{user?.name}}
         </p>
-        <small>{{user.email}}m</small>
+        <small>{{user?.email}}</small>
     </div>
 </div>

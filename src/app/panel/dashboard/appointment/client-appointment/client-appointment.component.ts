@@ -52,14 +52,23 @@ export class ClientAppointmentComponent implements OnInit {
         this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;
         this.acceptedAppointment = this.appointment.filter((user: any) => user.status=='Accepted').length;
         this.declinedAppointment = this.appointment.filter((user: any) => user.status=='Declined').length;
-        this.today = new Date;
-        this.today.getDate();
-        this.futureAppointment = this.appointment.filter((user: any) => {
-          const appointmentDate = new Date(user.date_time);
-          // const today = new Date();
-          return appointmentDate.getDate() >= this.today.getDate() ;
-        });
-        console.log('USER', this.appointment);
+        this.today = new Date();
+        const nowTs = this.today.getTime();
+
+        // Compute the single next upcoming appointment (ignore past)
+        const upcoming = (this.appointment || [])
+          .map((appt: any) => ({ ...appt, _dt: new Date(appt.date_time) }))
+          .filter((appt: any) => {
+            const t = appt._dt?.getTime?.() || new Date(appt.date_time).getTime();
+            return (
+              t >= nowTs && (appt.status === 'Accepted' || appt.status === 'pending')
+            );
+          })
+          .sort((a: any, b: any) => a._dt.getTime() - b._dt.getTime());
+
+        this.futureAppointment = upcoming.length ? upcoming[0] : null;
+
+        console.log('Next upcoming appointment:', this.futureAppointment);
 
       }
     })

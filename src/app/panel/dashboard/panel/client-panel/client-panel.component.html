@@ -1,25 +1,87 @@
 <section class="panel-hold">
 
-    <section class="main-sect">
-    
-        <div class="d-flex justify-content-between">
-           <h3>Recent Appointment</h3>
-           <a style="cursor: pointer; text-decoration: none;" routerLink="/panel/client-appointment">View all</a>
-        </div>
-    
-        <div *ngIf="recentAppt" class="appt d-flex">
-            <p>{{recentAppt.doctor.user.name}} - {{complaint}}</p>
-            <p class="text-secondary">{{recentAppt.date_time}}</p>
-            <a style="cursor: pointer; text-decoration: none;" routerLink="/panel/client-appointment">View Details</a>
-
-        </div>
-        <div *ngFor="let doctors of doctorResource" class="p-2">
-            <div>
-               <!-- <img src="" alt="">  -->
-                {{doctor.license_number}}
+    <!-- Loading skeletons -->
+    <ng-container *ngIf="loading">
+        <section class="main-sect">
+            <div class="d-flex justify-content-between w-full">
+                <p-skeleton width="40%" height="1.5rem"></p-skeleton>
+                <p-skeleton width="80px" height="1rem"></p-skeleton>
             </div>
-        </div>
-    
+            <div class="appt d-flex my-2">
+                <p-skeleton width="60%" height="1rem" styleClass="m-auto"></p-skeleton>
+            </div>
+            <div class="cards-sect my-3 d-flex flex-wrap justify-content-between">
+                <div class="sub-card d-flex" *ngFor="let i of [1,2,3]">
+                    <div class="m-2 d-flex">
+                        <p-skeleton shape="circle" size="3rem" styleClass="my-auto p-3"></p-skeleton>
+                        <div class="m-auto">
+                            <p-skeleton width="3rem" height="2rem"></p-skeleton>
+                            <p-skeleton width="7rem" height="1rem" styleClass="mt-1"></p-skeleton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card stat-card mb-4 p-3">
+                <p-skeleton width="100%" height="250px"></p-skeleton>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p-skeleton width="30%" height="1.5rem"></p-skeleton>
+                <p-skeleton width="80px" height="1rem"></p-skeleton>
+            </div>
+            <div class="card p-3">
+                <p-skeleton width="100%" height="2rem" styleClass="mb-2"></p-skeleton>
+                <div *ngFor="let r of [1,2,3,4,5]">
+                    <p-skeleton width="100%" height="2.2rem" styleClass="mb-2"></p-skeleton>
+                </div>
+            </div>
+        </section>
+
+        <section class="appt-sect">
+            <div class="mx-auto calendar justify-content-center">
+                <p-skeleton width="100%" height="300px"></p-skeleton>
+            </div>
+            <div class="m-2">
+                <hr>
+                <p-skeleton width="40%" height="1.25rem"></p-skeleton>
+                <div class="m-1" *ngFor="let i of [1,2,3]">
+                    <p-skeleton width="70%" height="1rem"></p-skeleton>
+                    <p-skeleton width="40%" height="1rem" styleClass="mt-1"></p-skeleton>
+                </div>
+                <br>
+                <hr>
+                <p-skeleton width="40%" height="1.25rem"></p-skeleton>
+                <div class="m-1" *ngFor="let i of [1,2,3]">
+                    <p-skeleton width="70%" height="1rem"></p-skeleton>
+                    <p-skeleton width="40%" height="1rem" styleClass="mt-1"></p-skeleton>
+                </div>
+            </div>
+        </section>
+    </ng-container>
+
+    <!-- Actual content -->
+    <ng-container *ngIf="!loading">
+    <section class="main-sect">
+        <div class="d-flex justify-content-between w-full">
+            <h3>Recent Appointment</h3>
+            <a style="cursor: pointer; text-decoration: none;" routerLink="/panel/client-appointment">View all</a>
+         </div>
+    <div *ngIf="recentAppt" class="d-flex justify-content-between">
+     
+         <div  class="appt d-flex">
+             <p>{{recentAppt.doctor.user.name}} - {{complaint}}</p>
+             <p class="text-secondary">{{recentAppt.date_time}}</p>
+             <a style="cursor: pointer; text-decoration: none;" routerLink="/panel/client-appointment">View Details</a>
+ 
+         </div>
+         <div *ngFor="let doctors of doctorResource" class="p-2">
+             <div>
+                <!-- <img src="" alt="">  -->
+                 {{doctor.license_number}}
+             </div>
+         </div>
+     
+    </div>
+       
         <div class="cards-sect my-3 d-flex  flex-wrap justify-content-between">
             <div *ngIf="pendingAppointment" class="sub-card d-flex">
                 <div class="m-2 d-flex">
@@ -132,6 +194,7 @@
 
         </div>
     </section>
+    </ng-container>
 </section>
 
 

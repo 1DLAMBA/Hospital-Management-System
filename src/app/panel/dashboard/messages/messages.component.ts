@@ -13,18 +13,18 @@ import { environment } from '../../../../environments/environment';
 import Pusher from 'pusher-js';
 import { MessageService } from 'primeng/api';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { filter, Subscription, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoadingService } from '../../../services/loading.service';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrl: './messages.component.css',
+  styleUrls: ['./messages.component.css'],
   providers: [MessageService]
 })
 export class MessagesComponent implements OnInit, OnDestroy {
-  id?: any = localStorage.getItem('id');
+  id?: number = Number(localStorage.getItem('id'));
   message_form: FormGroup;
   conversations?: any;
   visible: boolean = false;
@@ -41,6 +41,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   messageReceived: boolean = false;
   private routerSubscription: Subscription;
   @ViewChild('messageContainer') messageContainer!: ElementRef;
+  loading$!: Observable<boolean>;
 
   constructor(
     private chatService: ChatClientService,
@@ -54,6 +55,8 @@ export class MessagesComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private loadingService: LoadingService
   ) {
+    this.loading$ = this.loadingService.loading$;
+
     const apiKey = 'ahhwc6pvafxh';
     const userId = '1335351';
     const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGlueS10cmVlLTMiLCJleHAiOjE3MjU1NDcwNzd9.hOQnA6GOPAU_x9bMVYtzkSJBJGZlnKbg4pEvBEVrC9Y';
@@ -68,25 +71,26 @@ export class MessagesComponent implements OnInit, OnDestroy {
     
 
     // Subscribe to router events to detect navigation to this component
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(event => {
-      // Check if the current route is the messages component route
-      if (this.router.url.includes('/messages')) {
-        console.log('Navigated back to messages component, refreshing conversations');
-        this.getConversation();
-        // Removed duplicate call to convogetter()
-      }
-    });
+    this.routerSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects || event.url;
+        // Check if the current route is the messages component route
+        if (url.includes('/panel/messages')) {
+          console.log('Navigated back to messages component, refreshing conversations');
+          this.loadingService.startLoading();
+          this.getConversation();
+        }
+      });
 
     this.initializePusher();
-    this.getConversation();
-    
+  
   }
+  
 
   // Removed convogetter method as duplicate call to getConversation
   getConversation() {
-    console.log('Fetching conversations for user:', this.id);
+    console.log('Fetching conversations for user:', Number(this.id));
     // Use conversation service method with cache-busting timestamp query param
     this.conversationEndpoint.getConversations(this.id + '?_=' + new Date().getTime()).subscribe({
       next: (response: any) => {
@@ -108,6 +112,12 @@ export class MessagesComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
+  // TrackBy for message ngFor to avoid re-render flicker
+  trackByMessage(index: number, item: any) {
+    // Prefer a stable id if backend provides; fallback to timestamp+index
+    return item?.id ?? `${item?.created_at?.getTime?.() || item?.created_at || ''}-${index}`;
+  }
   ngOnInit(): void {
     // Initial data load
     this.loadingService.startLoading();
@@ -128,12 +138,47 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   initializePusher(): void {
+    // Enable verbose logging in non-production for troubleshooting
+    if (!environment.production) {
+      Pusher.logToConsole = true;
+    }
+
+    // Basic Pusher configuration (cloud). If you move to self-hosted websockets,
+    // adjust options (wsHost/wsPort/forceTLS) here.
     this.pusher = new Pusher('45cde359e2dec89841a7', {
       cluster: 'mt1',
+      forceTLS: true,
+      // reconnect options
+      enabledTransports: ['ws', 'wss'],
+    });
+
+    // Connection state logging
+    this.pusher.connection.bind('state_change', (states: any) => {
+      console.log('Pusher state change:', states.previous, '->', states.current);
+    });
+    this.pusher.connection.bind('connected', () => {
+      console.log('Pusher connected');
+    });
+    this.pusher.connection.bind('error', (err: any) => {
+      console.error('Pusher connection error:', err);
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Realtime offline',
+        detail: 'Live updates unavailable; will still poll conversations.'
+      });
     });
 
     this.channel = this.pusher.subscribe('messaging-channel');
+
+    // Channel subscription diagnostics
+    this.channel.bind('pusher:subscription_succeeded', () => {
+      console.log('Subscribed to messaging-channel');
+    });
+    this.channel.bind('pusher:subscription_error', (status: any) => {
+      console.error('Subscription error:', status);
+    });
     
+    // App event from Laravel
     this.channel.bind('MessageSent', (data: any) => {
       console.log('Message received:', data.message);
       
@@ -145,18 +190,18 @@ export class MessagesComponent implements OnInit, OnDestroy {
         });
         
         // Update current chat if it's from the same sender
-          this.messages.push({
-            sender_id: data.message.sender_id,
-            message: data.message.message,
-            created_at: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          });
-          this.scrollToBottom();
-          this.getConversation();
-        }
-      });
-      
-      // Always refresh the conversation list to show the latest message
-    };
+        this.messages.push({
+          sender_id: data.message.sender_id,
+          message: data.message.message,
+          created_at: new Date(),
+        });
+        this.scrollToBottom();
+        this.getConversation();
+      }
+    });
+    
+    // Always refresh the conversation list to show the latest message
+  };
   
 
   ngAfterViewChecked() {
@@ -179,11 +224,11 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   sendMessage() {
     if (this.newMessage.trim()) {
-      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const timestamp = new Date();
       
       // Add message to local display immediately
       this.messages.push({
-        sender_id: this.id,
+        sender_id: Number(this.id),
         message: this.newMessage,
         created_at: timestamp,
       });
@@ -244,7 +289,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
     this.messagesEndpoint.getMessageHistory(formData).subscribe({
       next: (response: any) => {
         console.log('Message history loaded:', response);
-        this.messages = response.data;
+        this.messages = (response.data || []).map((m: any, idx: number) => ({
+          ...m,
+          // Normalize timestamp to Date for the date pipe
+          created_at: m?.created_at ? new Date(m.created_at) : new Date(),
+          // Ensure sender_id is numeric to match current id type
+          sender_id: typeof m?.sender_id === 'string' ? Number(m.sender_id) : m?.sender_id
+        }));
         this.visible = true;
         setTimeout(() => this.scrollToBottom(), 100); // Ensure scroll happens after DOM update
       },

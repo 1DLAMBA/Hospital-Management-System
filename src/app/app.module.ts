@@ -6,7 +6,7 @@ import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingComponent } from "./landing/landing.component";
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { AppComponent } from "./app.component";
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, RouteReuseStrategy } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from "@angular/common";
 import { FormGroup, FormControl } from '@angular/forms';
@@ -46,6 +46,15 @@ import { MessagesService } from "./endpoints/messages.service";
 import { ChatDialogComponent } from "./panel/chat-dialog/chat-dialog.component";
 import { ChatDialogService } from "./panel/chat-dialog.service";
 import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
+
+// Custom route reuse strategy
+export class CustomRouteReuseStrategy implements RouteReuseStrategy {
+  shouldDetach() { return false; }
+  store() { }
+  shouldAttach() { return false; }
+  retrieve() { return null; }
+  shouldReuseRoute() { return false; }
+}
 
 @NgModule({
     declarations: [
@@ -105,7 +114,8 @@ import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
         TranslateService,
         ChatDialogService,
         DialogService,
-        importProvidersFrom(TranslateModule.forRoot())
+        importProvidersFrom(TranslateModule.forRoot()),
+        { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

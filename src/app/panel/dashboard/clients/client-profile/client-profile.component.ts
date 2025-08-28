@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
@@ -29,9 +29,9 @@ import { error } from 'node:console';
 @Component({
   selector: 'app-client-profile',
   templateUrl: './client-profile.component.html',
-  styleUrl: './client-profile.component.css'
+  styleUrls: ['./client-profile.component.css']
 })
-export class ClientProfileComponent implements OnInit {
+export class ClientProfileComponent implements OnInit, AfterViewChecked {
   today = inject(NgbCalendar).getToday();
   id: string = this.route.snapshot.params['id'];
   singleClient!: ClientResource | any;
@@ -62,10 +62,10 @@ export class ClientProfileComponent implements OnInit {
 
   position: string = 'center';
 
-  messages: any = [
-   
-  ];
+  messages: any[] = [];
   newMessage: string = '';
+  receiver_id: any;
+  @ViewChild('messageContainer') messageContainer!: ElementRef;
   medicalRecords!: any[];
 
 
@@ -103,6 +103,9 @@ export class ClientProfileComponent implements OnInit {
     this.getMedicalRecord();
 
   }
+  ngAfterViewChecked(): void {
+    this.scrollToBottom();
+  }
   openChat() {
     this.chatDialogService.openChat('sender123', 'receiver456');
   }
@@ -121,7 +124,15 @@ export class ClientProfileComponent implements OnInit {
     this.position = position;
     this.visibleMsg = true;
     console.log('reached');
-
+    // prepare and load message history with this client
+    this.receiver_id = this.singleClient?.user_id;
+    if (this.user_id && this.receiver_id) {
+      const formData = {
+        user_id: this.user_id,
+        receiver_id: this.receiver_id
+      };
+      this.loadMessageHistory(formData);
+    }
   }
   showMedRecDialog() {
     // Generate a unique record number (timestamp + random string)
@@ -184,25 +195,51 @@ export class ClientProfileComponent implements OnInit {
   }
   sendMessage() {
     if (this.newMessage.trim()) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      // push to local list
       this.messages.push({
-        from: this.user_id,
-        text: this.newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        sender_id: this.user_id,
+        message: this.newMessage,
+        created_at: timestamp,
       });
       const formData = {
         sender_id: this.user_id,
-        receiver_id: this.singleClient.user_id,
+        receiver_id: this.receiver_id || this.singleClient?.user_id,
         message: this.newMessage
-      }
+      };
       this.MessagesEnpoint.sendMessage(formData).subscribe({
         next: (response: any) => {
-          console.log(response);
-        },error:(error: any)=>{
-          console.log(error)
+          console.log('Message sent', response);
+        },
+        error: (error: any) => {
+          console.error(error);
         }
-      })
-
+      });
       this.newMessage = '';
+      this.scrollToBottom();
+    }
+  }
+
+  loadMessageHistory(formData: any) {
+    this.MessagesEnpoint.getMessageHistory(formData).subscribe({
+      next: (response: any) => {
+        this.messages = response.data || [];
+        setTimeout(() => this.scrollToBottom(), 100);
+      },
+      error: (error: any) => {
+        console.error('Failed to load message history', error);
+      }
+    });
+  }
+
+  scrollToBottom(): void {
+    try {
+      if (this.messageContainer && this.messageContainer.nativeElement) {
+        this.messageContainer.nativeElement.scrollTop =
+          this.messageContainer.nativeElement.scrollHeight;
+      }
+    } catch (err) {
+      // no-op
     }
   }
 

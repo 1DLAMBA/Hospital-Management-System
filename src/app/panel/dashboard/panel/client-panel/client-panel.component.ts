@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../../../endpoints/user.service';
 import { UserResource } from '../../../../../resources/user.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
@@ -7,13 +7,15 @@ import { ClientsService } from '../../../../endpoints/clients.service';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
 import moment from 'moment';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
+import { Subscription, filter } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-panel',
   templateUrl: './client-panel.component.html',
-  styleUrl: './client-panel.component.css'
+  styleUrls: ['./client-panel.component.css']
 })
-export class ClientPanelComponent implements OnInit {
+export class ClientPanelComponent implements OnInit, OnDestroy {
   id: any;
   user!: any
   data: any;
@@ -22,7 +24,7 @@ export class ClientPanelComponent implements OnInit {
   date: Date[] | undefined;
   upc_appt: AppointmentResource[] | any;
   doctor!: DoctorResource;
-  appointment: AppointmentResource[] | any;
+  appointment: AppointmentResource[] | any = [];
   acceptedAppointment!: AppointmentResource[] | any;
   pendingAppointment!: any[];
   recentAppt!: any;
@@ -32,83 +34,125 @@ export class ClientPanelComponent implements OnInit {
   previousAppointment!: AppointmentResource[];
   ThisMonth: any;
   doctorResource:DoctorResource[]=[];
+  loading: boolean = true;
+  private routerSubscription: Subscription | undefined;
    
 
   constructor(
     private userEndpoint: UserService,
     private appointmentEndpoint: AppointmentsService,
     private clientEndpoint: ClientsService,
-    private doctorEnpoint: DoctorsService
+    private doctorEnpoint: DoctorsService,
+    private route: ActivatedRoute,
+    private router: Router
   ){
-    this.upc_appt =[
+    // Initialize collections to avoid template errors before data arrives
+    this.upc_appt = [];
+    this.pendingAppointment = [];
+    this.previousAppointment = [] as any;
+    this.data = { labels: [], datasets: [] };
+
+    // Sample placeholder (if needed later, keep commented or remove)
+    /*this.upc_appt =[
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
       {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
 
-    ]
+    ]*/
   }
   ngOnInit(): void {
-    const documentStyle = getComputedStyle(document.documentElement);
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-       
+    this.loading = true;
+    this.setupChartOptions();
+    // Load immediately using localStorage id
+    this.id = localStorage.getItem('id');
+    this.loadAllData();
 
-      this.options = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-            legend: {
-                labels: {
-                    color: 'white'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: 'white',
-                    font: {
-                        weight: 500
-                    }
-                },
-                grid: {
-                    color: '#31385261',
-                    drawBorder: false
-                }
-            },
-            y: {
-                ticks: {
-                    color: 'white'
-                },
-                grid: {
-                    color: '#31385261',
-                    drawBorder: false
-                }
-            }
-
+    // Reload when navigating back to this panel
+    this.routerSubscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const url = event.urlAfterRedirects || event.url;
+        if (url.includes('/panel/client-panel')) {
+          this.loading = true;
+          this.loadAllData();
         }
-    };
-
-    this.id=localStorage.getItem('id')
-    this.getUser();
-    this.getDoctor();
+      });
   }
+
+  loadAllData(): void {
+    if (!this.id) {
+      this.id = localStorage.getItem('id');
+    }
+    if (!this.id) {
+      this.loading = false;
+      return;
+    }
+    // Delegate to existing getUser which chains the data fetching
+    this.getUser();
+  }
+
+  ngOnDestroy(): void {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  setupChartOptions(): void {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    
+    this.options = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white'
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: 'white',
+            font: {
+              weight: 500
+            }
+          },
+          grid: {
+            color: '#31385261',
+            drawBorder: false
+          }
+        },
+        y: {
+          ticks: {
+            color: 'white'
+          },
+          grid: {
+            color: '#31385261',
+            drawBorder: false
+          }
+        }
+      }
+    };
+  }
+
   splitComplaint(complaint: string) {
     const words = complaint.split(' ');
     return words.slice(0, 2).join(' ');
-
   }
-getDoctor(){
-  this.doctorEnpoint.get().subscribe({
-    next:(response:any)=>{
-      this.doctorResource=response.doctor;
-    }
-  })
-}
 
-  
+  getDoctor(){
+    this.doctorEnpoint.get().subscribe({
+      next:(response:any)=>{
+        this.doctorResource=response.doctor;
+      }
+    })
+  }
+
   getUser() {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
@@ -118,10 +162,10 @@ getDoctor(){
             this.appointment = response.appointments;
             this.acceptedAppointment = this.appointment.filter((user: any) => user.status == 'Accepted');
             this.upc_appt = this.appointment.filter((user: any) => {
-                          const appointmentDate = new Date(user.date_time);
-                          const today = new Date();
-                          return appointmentDate.getDate() >= today.getDate();
-                        });
+              const appointmentDate = new Date(user.date_time);
+              const today = new Date();
+              return appointmentDate.getDate() >= today.getDate();
+            });
             const jan= this.appointment.filter((appointment: any) => {
               const month = moment(appointment.date_time).format('MM');
               return appointment.status === 'Accepted' && month === '01';
@@ -171,10 +215,6 @@ getDoctor(){
               return appointment.status === 'Accepted' && month === '12';
             }).length;
 
-
-
-        
-
             this.data = {
               labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
               datasets: [
@@ -196,8 +236,6 @@ getDoctor(){
               return appointmentDate < today;
             });
 
-            
-            
             console.log(this.upc_appt, this.appointment);
             
             this.recentAppt = this.acceptedAppointment[0];
@@ -208,15 +246,19 @@ getDoctor(){
               const today = new Date();
               return appointmentDate > today ;
             });
+            this.loading = false;
+          },
+          error: (err: any) => {
+            console.error('Error loading appointments:', err);
+            this.loading = false;
           }
         })
-
+      },
+      error: (err: any) => {
+        console.error('Error loading user:', err);
+        this.loading = false;
       }
     })
-
-
   }
-   
-
 }
 

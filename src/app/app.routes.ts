@@ -68,11 +68,14 @@ export const routes: Routes = [
         // resolve: {user: PanelResolver},
         data: { hideNavbarAndFooter: true },
         children: [
-          {
-          path: 'doctor-panel',
-          component: DoctorPanelComponent,
+          
+            {
+              path: 'doctor-panel/:id',
+              component: DoctorPanelComponent,
+              runGuardsAndResolvers: 'always'
+            },
           // resolve: {user: PanelResolver}
-        },
+        
           {
           path: 'nurse-panel',
           component: NursePanelComponent,

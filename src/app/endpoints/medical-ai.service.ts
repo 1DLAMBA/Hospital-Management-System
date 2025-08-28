@@ -10,7 +10,7 @@ export class MedicalAIService {
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
-
+  
 
   getConversations(userId: number) {
     return this.http.get(`${this.baseUrl}/ai/conversations?user_id=${userId}`);
