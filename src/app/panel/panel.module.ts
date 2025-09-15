@@ -58,6 +58,7 @@ import { PanelLoaderComponent } from '../components/panel-loader/panel-loader.co
 import { PanelSkeletonComponent } from '../shared/components/panel-skeleton/panel-skeleton.component';
 import { OverlayModule } from 'primeng/overlay';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ChatPageComponent } from './dashboard/messages/chat-page/chat-page.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     AssignmentsComponent,
     ChatDialogComponent,
     MessagesComponent,
+    ChatPageComponent,
     LoaderComponent,
     PanelLoaderComponent,
     PanelSkeletonComponent

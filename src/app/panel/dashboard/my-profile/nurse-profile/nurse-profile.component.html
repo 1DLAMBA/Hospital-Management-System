@@ -25,8 +25,8 @@
                 
             </div>
             
-            <span class="m-2">
-
+            <span class="m-2 d-flex gap-2">
+                <p-button label="Message" icon="pi pi-comment" severity="success" [raised]="true" [rounded]="true" (onClick)="navigateToChat()" />
                 <p-button label="Edit profile" severity="info" [raised]="true" [rounded]="true" />
             </span>
         </div>
@@ -37,7 +37,7 @@
                     <h1 class="col-3">Profile</h1>
                     <p class="col-3"> <span class="text-secondary">Primary Specialty:</span><br>
                     {{singleNurse.specialization}}</p>
-               
+              
 
                     <p class="col-3"><span class="text-secondary">License Number:</span><br>
                     {{singleNurse.license_number}}</p>

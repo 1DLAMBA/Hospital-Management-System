@@ -27,6 +27,8 @@ export class MessagesComponent implements OnInit, OnDestroy {
   id?: number = Number(localStorage.getItem('id'));
   message_form: FormGroup;
   conversations?: any;
+  filteredConversations?: any;
+  searchTerm: string = '';
   visible: boolean = false;
   position: string = 'center';
   avatar_file: string = environment.apiUrl + '/file/get/';
@@ -99,6 +101,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
         this.conversations = response.data.sort((a: any, b: any) => 
           new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
         );
+        this.filteredConversations = [...this.conversations];
         this.loadingService.stopLoading();
       },
       error: (error: any) => {
@@ -111,6 +114,44 @@ export class MessagesComponent implements OnInit, OnDestroy {
         this.loadingService.stopLoading();
       }
     });
+  }
+
+  // Filter conversations based on search term
+  filterConversations() {
+    if (!this.searchTerm.trim()) {
+      this.filteredConversations = [...(this.conversations || [])];
+      return;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase();
+    this.filteredConversations = this.conversations?.filter((conversation: any) => {
+      const otherUser = conversation.user_one_id === this.id ? conversation.user_two : conversation.user_one;
+      return otherUser.name.toLowerCase().includes(searchLower) || 
+             (conversation.last_message && conversation.last_message.toLowerCase().includes(searchLower));
+    }) || [];
+  }
+
+  // TrackBy function for performance optimization
+  trackByConversation(index: number, conversation: any): any {
+    return conversation.id || index;
+  }
+
+  // Check if user has unread messages (placeholder - implement based on your backend logic)
+  hasUnreadMessages(conversation: any): boolean {
+    // This is a placeholder - implement based on your backend's unread message tracking
+    return false;
+  }
+
+  // Check if user is online (placeholder - implement based on your backend logic)
+  isUserOnline(conversation: any): boolean {
+    // This is a placeholder - implement based on your backend's online status tracking
+    return false;
+  }
+
+  // Get user type for display
+  getUserType(conversation: any): string {
+    const otherUser = conversation.user_one_id === this.id ? conversation.user_two : conversation.user_one;
+    return otherUser.user_type || '';
   }
   
   // TrackBy for message ngFor to avoid re-render flicker
@@ -312,5 +353,33 @@ export class MessagesComponent implements OnInit, OnDestroy {
   
   close() {
     this.visible = false;
+  }
+
+  // Navigate to standalone chat page
+  openChat(conversation: any) {
+    let receiver: any | undefined;
+
+    if (conversation?.user_one_id == this.id) {
+      receiver = conversation?.user_two;
+    } else if (conversation?.user_two_id == this.id) {
+      receiver = conversation?.user_one;
+    }
+
+    const receiverId = Number(receiver?.id);
+    if (!receiverId) {
+      console.warn('Unable to determine receiver for conversation', conversation);
+      return;
+    }
+
+    this.router.navigate([`/panel/messages/${receiverId}`], {
+      queryParams: {
+        name: receiver?.name,
+        dp: receiver?.passport,
+        email: receiver?.email,
+        phoneno: receiver?.phoneno,
+        gender: receiver?.gender,
+        user_type: receiver?.user_type
+      }
+    });
   }
 }

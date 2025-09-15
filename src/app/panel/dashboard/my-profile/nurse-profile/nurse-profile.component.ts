@@ -106,7 +106,21 @@ export class NurseProfileComponent  implements OnInit {
 
   }
 
-
-
+  navigateToChat(): void {
+    if (this.user && this.user.id) {
+      this.router.navigate(['/panel/dashboard/messages/chat'], { 
+        queryParams: { 
+          receiver_id: this.user.id,
+          name: this.user.name,
+          avatar: this.user.passport
+        } 
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Unable to start chat. User information is not available.'
+      });
+    }
+  }
 }
-

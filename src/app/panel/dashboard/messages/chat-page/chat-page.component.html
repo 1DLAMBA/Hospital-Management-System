@@ -1,0 +1,178 @@
+<p-toast></p-toast>
+
+<div class="chat-shell">
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="(loading$ | async)">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Loading conversation...</p>
+    </div>
+  </div>
+
+  <div class="chat-container">
+    <div class="chat-grid">
+      <div class="chat-main">
+        <!-- Sidebar: Receiver Info -->
+        <aside class="sidebar" [class.hidden]="sidebarHidden" *ngIf="!isMobile || !sidebarHidden">
+      <div class="sidebar-header">
+        <button pButton type="button" icon="pi pi-arrow-left" class="back-btn" (click)="goBack()"></button>
+        <button pButton type="button" icon="pi pi-times" class="close-sidebar-btn" (click)="toggleSidebar()"></button>
+      </div>
+      
+      <div class="sidebar-content">
+      <div class="card profile">
+        <div class="avatar-container">
+          <div class="avatar xl">
+            <img *ngIf="chatDp" [src]="avatar_file + chatDp" alt="avatar" />
+            <div class="avatar-placeholder" *ngIf="!chatDp">
+              <i class="bi bi-person"></i>
+            </div>
+          </div>
+          <div class="online-status" *ngIf="isOnline">
+            <div class="status-dot"></div>
+          </div>
+        </div>
+        <div class="who">
+          <div class="name">{{ chatName || 'Conversation' }}</div>
+          <div class="role">{{ receiverType || 'User' }}</div>
+          <div class="status-text" *ngIf="isOnline">Online</div>
+          <div class="status-text offline" *ngIf="!isOnline">Last seen recently</div>
+        </div>
+      </div>
+
+      <div class="card info">
+        <div class="info-title">
+          <i class="bi bi-info-circle"></i>
+          Contact Information
+        </div>
+        <div class="info-row" *ngIf="chatName">
+          <i class="bi bi-person"></i>
+          <span>{{ chatName }}</span>
+        </div>
+       
+        <div class="info-row" *ngIf="receiverGender">
+          <i class="bi bi-gender-ambiguous"></i>
+          <span class="text-capitalize">{{ receiverGender }}</span>
+        </div>
+        <div class="info-row" *ngIf="receiverType">
+          <i class="bi bi-briefcase"></i>
+          <span class="text-capitalize">{{ receiverType }}</span>
+        </div>
+      </div>
+
+      <div class="card help">
+        <div class="info-title">
+          <i class="bi bi-lightbulb"></i>
+          Quick Tips
+        </div>
+        <div class="tips-list">
+          <div class="tip-item">
+            <i class="bi bi-keyboard"></i>
+            <span>Shift + Enter for new line</span>
+          </div>
+          <div class="tip-item">
+            <i class="bi bi-paperclip"></i>
+            <span>Click clip to attach files</span>
+          </div>
+          <div class="tip-item">
+            <i class="bi bi-shield-check"></i>
+            <span>Messages are encrypted</span>
+          </div>
+        </div>
+      </div>
+      </div>
+    </aside>
+
+        <!-- Conversation -->
+        <section class="conversation">
+          <header class="chat-header">
+            <div class="peer">
+              <button type="button" class="sidebar-toggle" (click)="toggleSidebar()" *ngIf="isMobile">
+                <i class="bi bi-list"></i>
+              </button>
+          <div class="avatar">
+            <img *ngIf="chatDp" [src]="avatar_file + chatDp" alt="avatar" />
+            <div class="avatar-placeholder" *ngIf="!chatDp">
+              <i class="bi bi-person"></i>
+            </div>
+          </div>
+          <div class="meta">
+            <div class="name">{{ chatName || 'Conversation' }}</div>
+            <div class="sub">
+              <span *ngIf="isOnline" class="status-online">Online</span>
+              <span *ngIf="!isOnline" class="status-offline">Last seen recently</span>
+            </div>
+          </div>
+        </div>
+            <div class="header-actions" *ngIf="!isMobile">
+              <button pButton type="button" icon="pi pi-phone" class="action-btn" title="Call"></button>
+              <button pButton type="button" icon="pi pi-video" class="action-btn" title="Video Call"></button>
+              <button pButton type="button" icon="pi pi-ellipsis-v" class="action-btn" title="More"></button>
+            </div>
+      </header>
+
+      <main #messageContainer class="chat-body" (scroll)="onScroll()">
+        <ng-container *ngIf="messages?.length; else emptyChat">
+          <div class="message-group" *ngFor="let message of messages; trackBy: trackByMessage; let i = index">
+            <div class="message-wrapper" [ngClass]="{ 'me': message.sender_id === id, 'them': message.sender_id !== id }">
+              <div class="message-bubble">
+                <div class="message-content">
+                  <div class="text">{{ message.message }}</div>
+                  <div class="message-meta">
+                    <span class="time">{{ message.created_at | date:'h:mm a' }}</span>
+                    <span class="status" *ngIf="message.sender_id === id">
+                      <i class="bi bi-check2-all" *ngIf="message.delivered"></i>
+                      <i class="bi bi-check2" *ngIf="!message.delivered"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #emptyChat>
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="bi bi-chat-dots"></i>
+            </div>
+            <div class="empty-title">Start your conversation</div>
+            <div class="empty-subtitle">Send a message to begin chatting with {{ chatName || 'this user' }}</div>
+          </div>
+        </ng-template>
+      </main>
+
+      <footer class="composer mb-1 ">
+        <div class="composer-bar">
+            <div class="composer-tools" *ngIf="!isMobile">
+              <button pButton type="button" icon="pi pi-smile" class="tool-btn" title="Emoji"></button>
+              <button pButton type="button" icon="pi pi-paperclip" class="tool-btn" title="Attach"></button>
+              <button pButton type="button" icon="pi pi-image" class="tool-btn" title="Photo"></button>
+            </div>
+          <div class="input-container">
+            <textarea 
+              pInputTextarea 
+              [autoResize]="true" 
+              [rows]="1" 
+              [(ngModel)]="newMessage" 
+              placeholder="Type a message..."
+              (keydown.enter)="onEnter($event)"
+              [disabled]="(loading$ | async) || false"
+              class="message-input">
+            </textarea>
+          </div>
+          <button 
+            type="button" 
+            class="send-btn" 
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim() || (loading$ | async)">
+            <i class="bi bi-send-fill"></i>
+          
+          </button>
+        </div>
+        
+        </footer>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
