@@ -31,6 +31,7 @@ import { ProfileNurseComponent } from './panel/dashboard/nurses/profile-nurse/pr
 import { ProfilePageComponent } from './panel/dashboard/my-profile/profile-page/profile-page.component';
 import { AssignmentsComponent } from './panel/dashboard/assignments/assignments.component';
 import { MedicalAIComponent } from './panel/dashboard/medical-ai/medical-ai.component';
+import { ChatPageComponent } from './panel/dashboard/messages/chat-page/chat-page.component';
 
 export const routes: Routes = [
     {
@@ -149,6 +150,10 @@ export const routes: Routes = [
         {
           path: 'messages',
           component: MessagesComponent
+        },
+        {
+          path: 'messages/:receiverId',
+          component: ChatPageComponent
         },
         {
           path: 'my-profile',
