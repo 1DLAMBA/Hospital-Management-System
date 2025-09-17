@@ -316,6 +316,7 @@
   justify-content: space-between;
   padding: 1rem 1.5rem;
   background: #ffffff;
+  border-radius: 40px;
   border-bottom: 1px solid #e9ecef;
 }
 
@@ -571,6 +572,12 @@
   max-height: 120px;
   padding: 0.5rem 0 !important;
 }
+textarea:focus{
+  border: none !important;
+  background: transparent !important;
+  resize: none !important;
+  outline: none !important;
+}
 
 .message-input::placeholder {
   color: #adb5bd;
@@ -605,10 +612,7 @@
   font-size: 1rem;
 }
 
-.composer-footer {
-  margin-top: 0.5rem;
-  min-height: 20px;
-}
+
 
 .typing-indicator {
   color: #6c757d;
@@ -694,6 +698,13 @@
     padding: 0.25rem;
     margin-bottom: 5%;
   }
+
+  footer {
+  width:100%;
+  position: fixed;
+  bottom: 0;
+
+  }
   
   .chat-container {
     height: calc(100vh - 80px);
@@ -773,7 +784,7 @@
   }
   
   .chat-header {
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1.0rem;
   }
   
   .chat-header .peer {

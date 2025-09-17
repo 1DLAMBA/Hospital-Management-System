@@ -1,123 +1,175 @@
-@media (min-width: 500px){
-    .herotext h1{
-        font-size: calc(1.9rem + 2.0vw);
-        color: white;
-        font-family: "EB Garamond", serif;
-      
-      }
+/* Base styles for hero heading */
+.herotext h1 {
+  color: white;
+  font-family: "EB Garamond", serif;
+  line-height: 1.2;
+  margin: 0.5em 0;
+  font-weight: 600;
 }
-@media (max-width: 499px){
-    .herotext h1{
-        font-size: calc(1rem + 2.0vw);
-        color: white;
-        font-family: "EB Garamond", serif;
-      
-      }
-      .herobtns .btn{
-        width: 100px !important;
-        font-size: 10px;
-      }
-      .heroglass h1{
-        font-size: calc(1rem + 1.0vw);
 
-      }
-      .herotext p{
-        font-size: 10px;
-      }
-      .heroglass p{
-        font-size: 8px;
+/* Responsive font sizes */
+@media (max-width: 400px) {
+  .herotext h1 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+}
 
-      }
-      .servicecards .box-shadow-hover{
-        width: 100%;
-    
-    }
-    .featureset1 img{
-        width: 100%;
-    }
-    .featureset2{
-        width: 100%;
-        margin-top: 260px;
-       
-    }
-    .featureset2 img{
-        width: 100%;
-    }
-    .set1context{
-        padding: 100px;
-        position: absolute;
-    }
-    .set1context h4{
-        color: white;
-        padding: 10px;
-        
-    }
-    .set1context h4 span{
+@media (min-width: 401px) and (max-width: 599px) {
+  .herotext h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .herotext h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .herotext h1 {
+    font-size: 2.8rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .herotext h1 {
+    font-size: 3.2rem;
+  }
+}
+
+/* Adjust line breaks for better text flow */
+.herotext h1 br {
+  display: none; /* Hide line breaks by default */
+}
+
+@media (min-width: 768px) {
+  .herotext h1 br {
+    display: block; /* Show line breaks on larger screens */
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 499px) {
+  .herobtns .btn {
+    width: 100px !important;
+    font-size: 10px;
+  }
+  
+  .heroglass h1 {
+    font-size: calc(1rem + 1.0vw);
+  }
+  
+  .herotext p {
+    font-size: 10px;
+  }
+  
+  .heroglass p {
+    font-size: 8px;
+  }
+  
+  .servicecards .box-shadow-hover {
+    width: 100%;
+  }
+  
+  .featureset1 img {
+    width: 100%;
+  }
+  
+  .featureset2 {
+    width: 100%;
+    margin-top: 260px;
+  }
+  
+  .featureset2 img {
+    width: 100%;
+  }
+  
+  .set1context {
+    padding: 100px;
+    position: absolute;
+  }
+  
+  .set1context h4 {
+    color: white;
+    padding: 10px;
+  }
+  
+  .set1context h4 span {
     color: #2690fa;
-
-    }
-    .set1context p{
-        margin-top: 220px;
-    }
-    
-
-    .setcontext{
-        padding: 20px;
-        position: absolute;
-    }
-    .setcontext h4{
-        color: white;
-        margin: 0px !important;
-        padding: 5px;
-    }
-    .setcontext h4 span{
+  }
+  
+  .set1context p {
+    margin-top: 220px;
+  }
+  
+  .setcontext {
+    padding: 20px;
+    position: absolute;
+  }
+  
+  .setcontext h4 {
+    color: white;
+    margin: 0 !important;
+    padding: 5px;
+  }
+  
+  .setcontext h4 span {
     color: #2690fa;
-
-    }
-    .setcontext p{
-        margin-top: 210px;
-    }
-
-    .testimonials{
-        margin:300px 10px 10px 10px;
-    }
-    .aboutbod img{
-        width: 50%;
-        height: 50%;
-    }
-    .abouttext h4{
-        font-size: 15px;
-    }
-    .abouttext p{
-        font-size: 12px;
-    }
-    .subscribe .input{
-        width: 50%;
-        border: 0px !important;
-    }
-    .subscribe h1{
-        font-size: 20px;
-    }
+  }
+  
+  .setcontext p {
+    margin-top: 210px;
+  }
+  
+  .testimonials {
+    margin: 300px 10px 10px 10px;
+  }
+  
+  .aboutbod img {
+    width: 50%;
+    height: 50%;
+  }
+  
+  .abouttext h4 {
+    font-size: 15px;
+  }
+  
+  .abouttext p {
+    font-size: 12px;
+  }
+  
+  .subscribe .input {
+    width: 50%;
+    border: 0 !important;
+  }
+  
+  .subscribe h1 {
+    font-size: 20px;
+  }
 }
 
-.about .btn:hover{
-    color: #17224d !important;
-
-}
-.subscribe{
-    background-color: #ececec;
-    padding: 7%;
-    margin: 10%;
-}
-.subscribe .input{
-    border: 0.5px solid #17224d;
-}
-.subscribe input{
-    border: 0;
-    background-color: transparent;
-}
-.subscribe .btn:hover{
-    color: #17224d !important;
-
+/* Global styles */
+.about .btn:hover {
+  color: #17224d !important;
 }
 
+.subscribe {
+  background-color: #ececec;
+  padding: 7%;
+  margin: 10%;
+}
+
+.subscribe .input {
+  border: 0.5px solid #17224d;
+}
+
+.subscribe input {
+  border: 0;
+  background-color: transparent;
+}
+
+.subscribe .btn:hover {
+  color: #17224d !important;
+}

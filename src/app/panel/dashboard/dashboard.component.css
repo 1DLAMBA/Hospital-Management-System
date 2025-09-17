@@ -59,7 +59,8 @@
 
     .header{
         width: 100% !important;
-        margin:auto;
+        /* margin:auto; */
+        margin-bottom: 15%;
         
 
     }

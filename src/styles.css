@@ -38,6 +38,10 @@
         background-color: transparent !important;
     }
 
+    .services{
+        z-index: 2;
+    }
+
     .sub-card  p{
         font-size: 0.67rem !important;
         padding: 1%;
@@ -52,6 +56,14 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+    }
+    .herodoctor{
+     width: 70% !important;
+     position: absolute;
+     opacity: 0.3;
+     right:0px;
+     
+
     }
 
     .panel-hold .main-sect{
