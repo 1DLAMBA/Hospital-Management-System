@@ -4,4 +4,4 @@ export const environment = {
     apiUrl: 'https://coestudycenter.com.ng/phoenix/Phoenix-api/public/api',  
     // apiUrl: 'https://aandbcleaner.org/phoenix/Phoenix-api/public/api'
 
-}
+}   

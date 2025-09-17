@@ -26,6 +26,7 @@ export class DoctorAppointmentComponent implements OnInit {
   acceptedAppointment: any;
   declinedAppointment: any;
   btnDisable: boolean = false;
+  loading: boolean = true;
 
 
   constructor(
@@ -37,35 +38,55 @@ export class DoctorAppointmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = localStorage.getItem('id')
+    this.id = localStorage.getItem('id');
+    this.loadData();
+  }
 
+  loadData(): void {
+    this.loading = true;
     this.getUser();
   }
   getUser() {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
-        this.user = response.user
+        this.user = response.user;
         this.avatar_file = environment.apiUrl + '/file/get/';
-        this.appointmentEndpoint.get(this.user.doctors.id+ '?_=' + new Date().getTime(), 'doctor').subscribe({
-          next: (response: any) => {
-            this.appointment = response.appointments;
-            this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;
-            this.acceptedAppointment = this.appointment.filter((user: any) => user.status=='Accepted').length;
-            this.declinedAppointment = this.appointment.filter((user: any) => user.status=='Declined').length;
-          }
-        })
-
+        this.loadAppointments();
+      },
+      error: (error) => {
+        console.error('Error fetching user:', error);
+        this.loading = false;
       }
-    })
+    });
   }
 
-  viewAppt(appt_id: any) {
-    this.appointmentEndpoint.getSingle(appt_id).subscribe({
+  loadAppointments(): void {
+    this.appointmentEndpoint.get(this.user.doctors.id + '?_=' + new Date().getTime(), 'doctor').subscribe({
+      next: (response: any) => {
+        this.appointment = response.appointments;
+        this.updateAppointmentCounts();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading appointments:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  viewAppt(id: any) {
+    this.appointmentEndpoint.getSingle(id).subscribe({
       next: (response: any) => {
         this.apptDetails = true;
-        this.singleAppt = response.appointments;
+        this.singleAppt = this.appointment.find((appt: any) => appt.id === id);
       }
-    })
+    });
+  }
+
+  updateAppointmentCounts(): void {
+    this.pendingAppointment = this.appointment.filter(appt => appt.status === 'pending').length;
+    this.acceptedAppointment = this.appointment.filter(appt => appt.status === 'Accepted').length;
+    this.declinedAppointment = this.appointment.filter(appt => appt.status === 'Declined').length;
   }
 
   clear(table: Table) {
