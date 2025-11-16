@@ -184,44 +184,67 @@ export class MessagesComponent implements OnInit, OnDestroy {
       Pusher.logToConsole = true;
     }
 
+    // Get Pusher configuration from environment
+    const pusherKey = environment.pusher?.key || '45cde359e2dec89841a7';
+    const pusherCluster = environment.pusher?.cluster || 'mt1';
+
     // Basic Pusher configuration (cloud). If you move to self-hosted websockets,
     // adjust options (wsHost/wsPort/forceTLS) here.
-    this.pusher = new Pusher('45cde359e2dec89841a7', {
-      cluster: 'mt1',
+    this.pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
       forceTLS: true,
       // reconnect options
       enabledTransports: ['ws', 'wss'],
+      // Note: authEndpoint is not needed for public channels
     });
 
     // Connection state logging
     this.pusher.connection.bind('state_change', (states: any) => {
       console.log('Pusher state change:', states.previous, '->', states.current);
+      if (states.current === 'failed' || states.current === 'disconnected') {
+        console.warn('Pusher connection lost. Attempting to reconnect...');
+      }
     });
+    
     this.pusher.connection.bind('connected', () => {
-      console.log('Pusher connected');
+      console.log('Pusher connected successfully');
     });
+    
+    this.pusher.connection.bind('disconnected', () => {
+      console.warn('Pusher disconnected');
+    });
+    
     this.pusher.connection.bind('error', (err: any) => {
       console.error('Pusher connection error:', err);
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Realtime offline',
-        detail: 'Live updates unavailable; will still poll conversations.'
-      });
+      if (environment.production) {
+        // Only show user-facing error in production if connection fails completely
+        if (err?.error?.data?.code === 1006) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Connection issue',
+            detail: 'Live updates unavailable; will still poll conversations.'
+          });
+        }
+      }
     });
 
     this.channel = this.pusher.subscribe('messaging-channel');
 
     // Channel subscription diagnostics
     this.channel.bind('pusher:subscription_succeeded', () => {
-      console.log('Subscribed to messaging-channel');
+      console.log('Subscribed to messaging-channel successfully');
     });
+    
     this.channel.bind('pusher:subscription_error', (status: any) => {
       console.error('Subscription error:', status);
+      if (status === 403) {
+        console.error('Access denied to messaging-channel. Check channel authorization.');
+      }
     });
     
     // App event from Laravel
     this.channel.bind('MessageSent', (data: any) => {
-      console.log('Message received:', data.message);
+      console.log('Message received via websocket:', data.message);
       
       if (this.id == data.message.receiver_id) {
         this.messageService.add({
@@ -231,17 +254,18 @@ export class MessagesComponent implements OnInit, OnDestroy {
         });
         
         // Update current chat if it's from the same sender
-        this.messages.push({
-          sender_id: data.message.sender_id,
-          message: data.message.message,
-          created_at: new Date(),
-        });
-        this.scrollToBottom();
+        if (this.receiver_id && Number(data.message.sender_id) === Number(this.receiver_id)) {
+          this.messages.push({
+            sender_id: data.message.sender_id,
+            message: data.message.message,
+            created_at: new Date(),
+          });
+          this.scrollToBottom();
+        }
+        // Always refresh the conversation list to show the latest message
         this.getConversation();
       }
     });
-    
-    // Always refresh the conversation list to show the latest message
   };
   
 
