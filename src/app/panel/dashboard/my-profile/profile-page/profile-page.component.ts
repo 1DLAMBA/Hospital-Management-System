@@ -37,8 +37,13 @@ export class ProfilePageComponent implements OnInit {
   medicalRecords!: any[];
   viewMedRecordDialog: boolean = false;
   selectedMedRecord: any = null;
+  defaultAvatar = 'assets/images/default-avatar.png';
 
-
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = this.defaultAvatar;
+    img.onerror = null; // Prevent infinite loop if default image fails
+  }
   
   constructor(
     private route: ActivatedRoute,
