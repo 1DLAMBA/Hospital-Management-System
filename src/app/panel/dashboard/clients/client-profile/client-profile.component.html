@@ -25,7 +25,7 @@
 
 <!-- Medical Record Creation Dialog -->
 <p-dialog [(visible)]="display" [modal]="true" [closable]="true" 
-    [style]="{width: '550px'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog"
+    [style]="{width: '600px', maxWidth: '90vw'}" [baseZIndex]="10000" styleClass="modern-medical-record-dialog"
     [showHeader]="false">
     
     <form [formGroup]="medicalRecordForm" (ngSubmit)="onSubmit()">
@@ -34,7 +34,7 @@
         <div class="med-record-header">
           <div class="header-content">
             <div class="header-icon">
-              <i class="pi pi-file-medical"></i>
+              <i class="pi pi-file"></i>
             </div>
             <div class="header-text">
               <h3>Medical Record</h3>
@@ -264,7 +264,7 @@
             <div class="d-flex justify-content-between">
 
                 <button pButton label="Message" class="message-button" icon="bi bi-chat-left-text-fill"
-                    (click)="showMsgDialog('left')" severity="info"></button>
+                    (click)="navigateToChat()" severity="info"></button>
 
                 <button *ngIf="user.user_type != 'nurse'" pButton label="Assign" class="blue-button"
                     icon="bi bi-calendar-plus" severity="info" (click)="assign()"></button>
@@ -335,12 +335,12 @@
                         <div class="d-flex justify-content-between">
                             <p-button pRipple label="Clear" size="small" [outlined]="true" icon="pi pi-filter-slash" />
                             
-                <p-button pRipple size="small" label="Create Medical Record" (click)="showMedRecDialog()" severity="success" [outlined]="true" icon="pi pi-filter-slash" />
+                <p-button pRipple size="small" label="Create Medical Record" (click)="showMedRecDialog()" class="p-button-success p-button-outlined" icon="pi pi-filter-slash" />
 
                         </div>
                     </ng-template>
                     <ng-template pTemplate="header">
-                        <tr>
+                        <tr>    
                             <th style="min-width:7rem">
                                 <div class="flex align-items-center">
                                     View

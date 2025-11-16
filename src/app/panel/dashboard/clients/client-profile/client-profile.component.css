@@ -88,21 +88,7 @@
     color: white;
 }
 
-:host {
-    ::ng-deep .p-button {
-        background-color: #17224d !important;
-        color: white !important;
-        border: 0;
-        border-radius: 5px;
-        
-    } 
-    ::ng-deep  .message-button {
-        background-color: #145a57 !important;
-        color: white !important;
-        border: 0;
-        border-radius: 5px;
-        
-    } 
+
     ::ng-deep .p-dialog{
         display: flex;
         flex-direction: column;
@@ -116,7 +102,7 @@
         border-bottom-left-radius: 6px;
         overflow: hidden;
     }
-}
+
 
 
 .chat-container {
@@ -239,11 +225,12 @@
   }
 
 /* Match Messages PrimeNG button styling */
-:host {
+
   ::ng-deep .p-button {
     background-color: #17224d !important;
     color: #ffffff !important;
     border: 0;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,95 +240,115 @@
     background-color: #253681 !important;
     transform: scale(1.05);
   }
-}
+
   
-/* New Medical Record Dialog Styling */host ::ng-deep .modern-medical-record-dialog .p-dialog-content {
+/* New Medical Record Dialog Styling */
+::ng-deep .modern-medical-record-dialog .p-dialog-content {
   padding: 0 !important;
   overflow: hidden;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Container */
 .med-record-container {
   display: flex;
   flex-direction: column;
+  background: #ffffff;
+  max-height: 90vh;
+  overflow: hidden;
 }
 
 /* Header */
 .med-record-header {
   background: #17224d;
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  padding: 1.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 2px 8px rgba(23,34,77,0.04);
+  flex-shrink: 0;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .header-icon {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 44px;
-  height: 44px;
-  background-color: #f3f4f6;
-  border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(23,34,77,0.06);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
 }
 
 .header-icon i {
-  color: #17224d;
-  font-size: 1.5rem;
+  color: #ffffff;
+  font-size: 1.25rem;
 }
 
 .header-text h3 {
-  color: #17224d;
+  color: #ffffff;
   margin: 0;
   font-weight: 600;
-  font-size: 1.35rem;
-  line-height: 1.2;
+  font-size: 1.25rem;
 }
 
 .header-text p {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0.25rem 0 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .close-btn {
-  background: none;
+  background: transparent;
   border: none;
-  color: #17224d;
-  opacity: 0.7;
+  color: #ffffff;
   cursor: pointer;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  font-size: 1.2rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+  font-size: 1.1rem;
 }
 
 .close-btn:hover {
-  opacity: 1;
-  background-color: #f3f4f6;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Body */
 .med-record-body {
-  padding: 2rem 1.5rem;
-  background-color: #f9fafb;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 2px 8px rgba(23,34,77,0.03);
+  padding: 2rem;
+  background: #ffffff;
+  overflow-y: auto;
+  flex: 1;
+  max-height: calc(90vh - 200px);
+}
+
+.med-record-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.med-record-body::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.med-record-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.med-record-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .form-field {
@@ -350,9 +357,9 @@
 
 .form-field label {
   display: block;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #17224d;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
   margin-bottom: 0.5rem;
 }
 
@@ -362,34 +369,30 @@
 
 .form-field textarea {
   width: 100%;
-  padding: 0.85rem;
-  font-size: 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  transition: border-color 0.2s;
   font-family: inherit;
   resize: vertical;
-  background-color: #fff;
-  box-shadow: 0 1px 2px rgba(23,34,77,0.03);
+  background-color: #ffffff;
 }
 
 .form-field textarea:focus {
   outline: none;
   border-color: #17224d;
-  box-shadow: 0 0 0 2px rgba(23,34,77,0.08);
-  background-color: #f9fafb;
 }
 
 .form-field textarea::placeholder {
   color: #9ca3af;
-  font-size: 0.98rem;
 }
 
 .error-message {
   display: block;
   color: #ef4444;
   font-size: 0.85rem;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .form-row {
@@ -403,48 +406,44 @@
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  padding: 1.25rem 1.75rem;
-  background-color: #f3f4f6;
+  padding: 1.25rem 2rem 1.75rem 2rem;
+  background: #f9fafb;
   border-top: 1px solid #e5e7eb;
-  border-radius: 0 0 12px 12px;
+  flex-shrink: 0;
 }
 
 .cancel-btn, .save-btn {
-  padding: 0.6rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
   border: none;
 }
 
 .cancel-btn {
-  background-color: #fff;
-  color: #17224d;
-  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
 }
 
 .cancel-btn:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
+  background-color: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .save-btn {
   background-color: #17224d;
-  color: white;
-  border: 1px solid transparent;
-  box-shadow: 0 1px 4px rgba(23,34,77,0.06);
+  color: #ffffff;
 }
 
 .save-btn:hover:not(:disabled) {
-  background-color: #222b4d;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(23,34,77,0.10);
+  background-color: #1e2f5f;
 }
 
 .save-btn:disabled {
-  opacity: 0.65;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
