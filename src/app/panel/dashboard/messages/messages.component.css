@@ -631,7 +631,7 @@ body, html {
 }
 
 /* Custom PrimeNG Dialog Styling */
-:host {
+
   ::ng-deep .p-dialog {
     border-radius: 6px;
     overflow: hidden;
@@ -683,7 +683,7 @@ body, html {
   ::ng-deep .p-dialog .p-dialog-content:last-of-type {
     padding: 0 !important;
   }
-}
+
 
 /* Responsive Design */
 @media (max-width: 1200px) {

@@ -134,6 +134,25 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
       this.loadMessageHistory(formData);
     }
   }
+
+  navigateToChat() {
+    const receiverId = this.singleClient?.user_id || this.singleClient?.user?.id;
+    if (!receiverId) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Unable to determine receiver ID' });
+      return;
+    }
+
+    this.router.navigate([`/panel/messages/${receiverId}`], {
+      queryParams: {
+        name: this.singleClient?.user?.name,
+        dp: this.singleClient?.user?.passport,
+        email: this.singleClient?.user?.email,
+        phoneno: this.singleClient?.user?.phoneno,
+        gender: this.singleClient?.user?.gender,
+        user_type: this.singleClient?.user?.user_type
+      }
+    });
+  }
   showMedRecDialog() {
     // Generate a unique record number (timestamp + random string)
     const timestamp = new Date().getTime();

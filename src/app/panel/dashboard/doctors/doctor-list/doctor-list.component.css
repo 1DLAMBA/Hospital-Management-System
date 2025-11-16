@@ -25,7 +25,7 @@ section{
     width: 30%;
 }
 
-:host {
+
     ::ng-deep .p-button {
         background-color: #17224d !important;
         color: white !important;
@@ -36,4 +36,3 @@ section{
     ::ng-deep .p-calender{
 
     }
-}
