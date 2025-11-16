@@ -106,14 +106,44 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!environment.production) {
       Pusher.logToConsole = true;
     }
-    this.pusher = new Pusher('45cde359e2dec89841a7', {
-      cluster: 'mt1',
+
+    // Get Pusher configuration from environment
+    const pusherKey = environment.pusher?.key || '45cde359e2dec89841a7';
+    const pusherCluster = environment.pusher?.cluster || 'mt1';
+
+    this.pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster,
       forceTLS: true,
       enabledTransports: ['ws', 'wss'],
+      // Note: authEndpoint is not needed for public channels
+    });
+
+    // Connection state logging
+    this.pusher.connection.bind('state_change', (states: any) => {
+      console.log('Pusher state change:', states.previous, '->', states.current);
+    });
+    
+    this.pusher.connection.bind('connected', () => {
+      console.log('Pusher connected successfully');
+    });
+    
+    this.pusher.connection.bind('error', (err: any) => {
+      console.error('Pusher connection error:', err);
     });
 
     this.channel = this.pusher.subscribe('messaging-channel');
+    
+    // Channel subscription diagnostics
+    this.channel.bind('pusher:subscription_succeeded', () => {
+      console.log('Subscribed to messaging-channel successfully');
+    });
+    
+    this.channel.bind('pusher:subscription_error', (status: any) => {
+      console.error('Subscription error:', status);
+    });
+    
     this.channel.bind('MessageSent', (data: any) => {
+      console.log('Message received via websocket:', data.message);
       if (this.id == data.message.receiver_id && Number(data.message.sender_id) === this.receiver_id) {
         this.messages.push({
           sender_id: data.message.sender_id,
