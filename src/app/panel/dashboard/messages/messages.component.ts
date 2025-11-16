@@ -160,6 +160,12 @@ export class MessagesComponent implements OnInit, OnDestroy {
     return item?.id ?? `${item?.created_at?.getTime?.() || item?.created_at || ''}-${index}`;
   }
   ngOnInit(): void {
+    // Initialize debug array for production debugging
+    if (environment.production) {
+      (window as any).pusherDebug = [];
+      console.log('Pusher debug enabled. Access logs via: window.pusherDebug');
+    }
+    
     // Initial data load
     this.loadingService.startLoading();
 
@@ -179,14 +185,23 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   initializePusher(): void {
-    // Enable verbose logging in non-production for troubleshooting
-    if (!environment.production) {
-      Pusher.logToConsole = true;
-    }
+    // Enable verbose logging for troubleshooting (works in production too)
+    Pusher.logToConsole = !environment.production;
+    
+    // Helper function for production-safe logging
+    const log = (message: string, data?: any) => {
+      console.log(`[Pusher] ${message}`, data || '');
+      // Also log to window for debugging in production
+      if (environment.production && (window as any).pusherDebug) {
+        (window as any).pusherDebug.push({ time: new Date(), message, data });
+      }
+    };
 
     // Get Pusher configuration from environment
     const pusherKey = environment.pusher?.key || '45cde359e2dec89841a7';
     const pusherCluster = environment.pusher?.cluster || 'mt1';
+
+    log('Initializing Pusher', { key: pusherKey, cluster: pusherCluster });
 
     // Basic Pusher configuration (cloud). If you move to self-hosted websockets,
     // adjust options (wsHost/wsPort/forceTLS) here.
@@ -200,22 +215,31 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
     // Connection state logging
     this.pusher.connection.bind('state_change', (states: any) => {
-      console.log('Pusher state change:', states.previous, '->', states.current);
+      log(`State change: ${states.previous} -> ${states.current}`, states);
       if (states.current === 'failed' || states.current === 'disconnected') {
-        console.warn('Pusher connection lost. Attempting to reconnect...');
+        console.warn('[Pusher] Connection lost. Attempting to reconnect...');
       }
     });
     
     this.pusher.connection.bind('connected', () => {
-      console.log('Pusher connected successfully');
+      log('✅ Connected successfully');
+      // Show notification in production to confirm connection
+      if (environment.production) {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Connected',
+          detail: 'Real-time messaging active',
+          life: 3000
+        });
+      }
     });
     
     this.pusher.connection.bind('disconnected', () => {
-      console.warn('Pusher disconnected');
+      console.warn('[Pusher] Disconnected');
     });
     
     this.pusher.connection.bind('error', (err: any) => {
-      console.error('Pusher connection error:', err);
+      console.error('[Pusher] Connection error:', err);
       if (environment.production) {
         // Only show user-facing error in production if connection fails completely
         if (err?.error?.data?.code === 1006) {
@@ -232,40 +256,67 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
     // Channel subscription diagnostics
     this.channel.bind('pusher:subscription_succeeded', () => {
-      console.log('Subscribed to messaging-channel successfully');
+      log('✅ Subscribed to messaging-channel successfully');
     });
     
     this.channel.bind('pusher:subscription_error', (status: any) => {
-      console.error('Subscription error:', status);
+      console.error('[Pusher] Subscription error:', status);
       if (status === 403) {
-        console.error('Access denied to messaging-channel. Check channel authorization.');
+        console.error('[Pusher] Access denied to messaging-channel. Check channel authorization.');
       }
+    });
+    
+    // Test: Bind to all events to see what's being received
+    this.channel.bind_global((eventName: string, data: any) => {
+      log(`📨 Global event received: ${eventName}`, data);
     });
     
     // App event from Laravel
     this.channel.bind('MessageSent', (data: any) => {
-      console.log('Message received via websocket:', data.message);
+      log('📩 MessageSent event received', data);
+      console.log('Full event data:', JSON.stringify(data, null, 2));
       
-      if (this.id == data.message.receiver_id) {
+      // Handle different possible data structures
+      let messageData = data;
+      if (data.message) {
+        messageData = data.message;
+      }
+      
+      log('Processing message', { 
+        receiver_id: messageData.receiver_id, 
+        sender_id: messageData.sender_id, 
+        current_user_id: this.id 
+      });
+      
+      if (this.id == messageData.receiver_id) {
+        log('✅ Message is for current user');
         this.messageService.add({
           severity: 'info', 
           summary: 'New message', 
-          detail: data.message.message
+          detail: messageData.message
         });
         
         // Update current chat if it's from the same sender
-        if (this.receiver_id && Number(data.message.sender_id) === Number(this.receiver_id)) {
+        if (this.receiver_id && Number(messageData.sender_id) === Number(this.receiver_id)) {
+          log('✅ Updating current chat');
           this.messages.push({
-            sender_id: data.message.sender_id,
-            message: data.message.message,
+            sender_id: messageData.sender_id,
+            message: messageData.message,
             created_at: new Date(),
           });
           this.scrollToBottom();
         }
         // Always refresh the conversation list to show the latest message
         this.getConversation();
+      } else {
+        log('⚠️ Message not for current user', { 
+          expected: this.id, 
+          received: messageData.receiver_id 
+        });
       }
     });
+    
+    log('Pusher initialization complete');
   };
   
 
