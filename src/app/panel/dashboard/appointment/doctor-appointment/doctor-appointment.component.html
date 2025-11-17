@@ -4,7 +4,6 @@
     <ng-template pTemplate="header">
         <div class="dialog-header">
             <h2>Appointment Details</h2>
-            <p-button icon="pi pi-times" (click)="apptDetails=false" styleClass="p-button-rounded p-button-text"></p-button>
         </div>
     </ng-template>
     
@@ -254,7 +253,7 @@
                     <ng-template pTemplate="body" let-appt>
                         <tr>
                             <td>
-                                <p-button label="View" severity="info" [raised]="true" [rounded]="true"
+                                <p-button styleClass="view-button" label="View" severity="info" [raised]="true" [rounded]="true"
                                     (click)="viewAppt(appt.id)" />
                             </td>
                             <td class="d-flex">

@@ -546,7 +546,7 @@
     }
 }
 
-:host {
+
     ::ng-deep .p-button {
         background-color: #17224d !important;
         color: white !important;
@@ -556,7 +556,7 @@
     ::ng-deep .p-dialog{
         flex-direction: column;
     }
-}
+
 
 @media print {
     body * {

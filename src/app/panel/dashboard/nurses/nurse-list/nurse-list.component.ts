@@ -21,7 +21,14 @@ export class NurseListComponent implements OnInit{
   id: any;
   user!: UserResource[];
   avatar_file!:string;
-  nurses!: NurseResource[];
+  nurses: NurseResource[] = [];
+  
+  // Pagination and search properties
+  searchValue: string = '';
+  totalRecords: number = 0;
+  currentPage: number = 1;
+  rowsPerPage: number = 10;
+  loading: boolean = false;
 
   constructor(
     private userEndpoint: UserService,
@@ -34,6 +41,8 @@ export class NurseListComponent implements OnInit{
   ngOnInit(): void {
     this.id=localStorage.getItem('id');
     this.getUser();
+    this.avatar_file = environment.apiUrl + '/file/get/';
+    // Load initial data
     this.getNurse();
   }
 
@@ -53,16 +62,44 @@ export class NurseListComponent implements OnInit{
       }
     })
   }
-  getNurse(){
-    this.nurseEnpoint.get().subscribe({
+  
+  getNurse(search?: string, page: number = 1, perPage: number = 10){
+    this.loading = true;
+    this.nurseEnpoint.get(search, page, perPage).subscribe({
       next: (response: any)=>{
-        this.nurses = response.nurse
-        this.avatar_file = environment.apiUrl + '/file/get/';        
-
+        this.nurses = response.nurse;
+        if (response.pagination) {
+          this.totalRecords = response.pagination.total;
+          this.currentPage = response.pagination.current_page;
+          this.rowsPerPage = response.pagination.per_page;
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
       }
     });
-   }
+  }
 
- 
+  onSearch(event: any) {
+    const value = event.target?.value || '';
+    this.searchValue = value;
+    this.currentPage = 1; // Reset to first page on search
+    this.getNurse(this.searchValue, this.currentPage, this.rowsPerPage);
+  }
+
+  clearSearch() {
+    this.searchValue = '';
+    this.currentPage = 1;
+    this.getNurse('', this.currentPage, this.rowsPerPage);
+  }
+
+  onPageChange(event: any) {
+    // PrimeNG lazy load event structure: { first, rows, sortField, sortOrder, filters, globalFilter }
+    const page = Math.floor(event.first / event.rows) + 1;
+    this.currentPage = page;
+    this.rowsPerPage = event.rows;
+    this.getNurse(this.searchValue, this.currentPage, this.rowsPerPage);
+  }
 
 }

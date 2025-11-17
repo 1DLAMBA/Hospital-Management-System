@@ -20,9 +20,16 @@ export class ClientListComponent implements OnInit{
   id: any;
   user!: UserResource[];
   avatar_file!:string;
-  clients!: ClientResource[];
+  clients: ClientResource[] = [];
   client!: ClientResource;
   visible: boolean = false;
+  
+  // Pagination and search properties
+  searchValue: string = '';
+  totalRecords: number = 0;
+  currentPage: number = 1;
+  rowsPerPage: number = 10;
+  loading: boolean = false;
 
   constructor(
     private userEndpoint: UserService,
@@ -35,6 +42,8 @@ export class ClientListComponent implements OnInit{
   ngOnInit(): void {
     this.id=localStorage.getItem('id');
     this.getUser();
+    this.avatar_file = environment.apiUrl + '/file/get/';
+    // Load initial data
     this.getClient();
   }
 
@@ -55,15 +64,45 @@ export class ClientListComponent implements OnInit{
       }
     })
   }
-  getClient(){
-    this.clientEnpoint.get().subscribe({
+  
+  getClient(search?: string, page: number = 1, perPage: number = 10){
+    this.loading = true;
+    this.clientEnpoint.get(search, page, perPage).subscribe({
       next: (response: any)=>{
-        this.clients = response.client
-        this.avatar_file = environment.apiUrl + '/file/get/';        
-
+        this.clients = response.client;
+        if (response.pagination) {
+          this.totalRecords = response.pagination.total;
+          this.currentPage = response.pagination.current_page;
+          this.rowsPerPage = response.pagination.per_page;
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
       }
     });
-   }
+  }
+
+  onSearch(event: any) {
+    const value = event.target?.value || '';
+    this.searchValue = value;
+    this.currentPage = 1; // Reset to first page on search
+    this.getClient(this.searchValue, this.currentPage, this.rowsPerPage);
+  }
+
+  clearSearch() {
+    this.searchValue = '';
+    this.currentPage = 1;
+    this.getClient('', this.currentPage, this.rowsPerPage);
+  }
+
+  onPageChange(event: any) {
+    // PrimeNG lazy load event structure: { first, rows, sortField, sortOrder, filters, globalFilter }
+    const page = Math.floor(event.first / event.rows) + 1;
+    this.currentPage = page;
+    this.rowsPerPage = event.rows;
+    this.getClient(this.searchValue, this.currentPage, this.rowsPerPage);
+  }
 
 }
 
