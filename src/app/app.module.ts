@@ -66,6 +66,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         AboutComponent,
         ServicesComponent,
         ContactComponent,
+        // DashboardComponent,
         //   ChatDialogComponent
     ],
     imports: [ 

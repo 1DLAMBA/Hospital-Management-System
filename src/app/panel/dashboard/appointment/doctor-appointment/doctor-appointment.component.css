@@ -225,8 +225,8 @@ section{
     border-left: 1px solid rgba(155, 154, 154, 0.597);
 }
 
-:host {
-    ::ng-deep .p-button {
+
+    ::ng-deep .view-button {
         background-color: #17224d !important;
         color: white !important;
         border: 0;
@@ -236,7 +236,7 @@ section{
     ::ng-deep .p-calender{
 
     }
-}
+
 
 .accept{
     background-color: green !important;

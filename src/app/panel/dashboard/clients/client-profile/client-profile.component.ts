@@ -1,5 +1,7 @@
-import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewChecked, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter, distinctUntilChanged } from 'rxjs/operators';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
@@ -31,10 +33,13 @@ import { error } from 'node:console';
   templateUrl: './client-profile.component.html',
   styleUrls: ['./client-profile.component.css']
 })
-export class ClientProfileComponent implements OnInit, AfterViewChecked {
+export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestroy {
   today = inject(NgbCalendar).getToday();
-  id: string = this.route.snapshot.params['id'];
+  id!: string;
   singleClient!: ClientResource | any;
+  private routeSubscription?: Subscription;
+  private routerSubscription?: Subscription;
+  private isComponentActive: boolean = true;
   singleNurse!: NurseResource | any;
   medRecord: boolean=false;
   avatar_file!: string;
@@ -67,6 +72,12 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
   receiver_id: any;
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   medicalRecords!: any[];
+  isLoading: boolean = true;
+  private loadingFlags = {
+    client: false,
+    user: false,
+    medicalRecords: false
+  };
 
 
 
@@ -96,12 +107,90 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  ngOnInit(): void {
-    this.getSingleClient(this.id);
+  ngOnInit() {
     this.user_id = localStorage.getItem('id');
-    this.getUser();
-    this.getMedicalRecord();
+    
+    // Subscribe to route parameter changes - this will fire on every navigation
+    // Use paramMap for better Angular 17 compatibility
+    this.routeSubscription = this.route.paramMap.subscribe(params => {
+      const newId = params.get('id');
+      if (newId) {
+        // Always reload data, even if ID is the same (handles component reuse)
+        if (newId !== this.id) {
+          this.id = newId;
+        }
+        this.loadData();
+      }
+    });
+    
+    // Subscribe to router navigation events to detect when navigating to this component
+    // This handles the case where component is reused with same ID
+    this.routerSubscription = this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event) => {
+      if (!this.isComponentActive) return;
+      
+      const currentUrl = event.urlAfterRedirects || event.url;
+      const urlId = this.extractIdFromUrl(currentUrl);
+      
+      // If we're on a client profile route, reload data
+      // This ensures data is refreshed even when component is reused
+      if (urlId && (currentUrl.includes('/panel/clients/profile/') || currentUrl.includes('/clients/profile/'))) {
+        // Update ID if different
+        if (urlId !== this.id) {
+          this.id = urlId;
+        }
+        // Always reload data when on this route (handles component reuse)
+        // Use setTimeout to avoid multiple rapid calls and ensure component is ready
+        setTimeout(() => {
+          if (this.isComponentActive && this.router.url === currentUrl) {
+            this.loadData();
+          }
+        }, 100);
+      }
+    });
+  }
 
+  private extractIdFromUrl(url: string): string | null {
+    const match = url.match(/\/clients\/profile\/([^\/]+)/) || url.match(/\/profile\/([^\/]+)/);
+    return match ? match[1] : null;
+  }
+
+  ngOnDestroy(): void {
+    // Mark component as inactive
+    this.isComponentActive = false;
+    
+    // Clean up subscriptions
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private loadData(): void {
+    // Reset loading state
+    this.isLoading = true;
+    this.loadingFlags = { client: false, user: false, medicalRecords: false };
+    
+    // Reset component state
+    this.singleClient = null;
+    this.medicalRecords = [];
+    this.selectedMedRecord = null;
+    
+    // Load data
+    if (this.id) {
+      this.getSingleClient(this.id);
+      this.getUser();
+      this.getMedicalRecord();
+    }
+  }
+
+  private checkLoadingComplete(): void {
+    if (this.loadingFlags.client && this.loadingFlags.user && this.loadingFlags.medicalRecords) {
+      this.isLoading = false;
+    }
   }
   ngAfterViewChecked(): void {
     this.scrollToBottom();
@@ -170,14 +259,35 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
   }
 
   getMedicalRecord(){
+    if (!this.user?.doctors?.id) {
+      // If user is not loaded yet, wait for it
+      setTimeout(() => {
+        if (this.user?.doctors?.id) {
+          this.loadMedicalRecords();
+        } else {
+          this.loadingFlags.medicalRecords = true;
+          this.checkLoadingComplete();
+        }
+      }, 100);
+      return;
+    }
+    this.loadMedicalRecords();
+  }
+
+  private loadMedicalRecords(): void {
     this.medicalEndpoint.getDoc(this.user.doctors.id).subscribe({
       next: (response: any) => {
         this.medicalRecords = response.record;
-        console.table(this.medicalRecords)
+        console.table(this.medicalRecords);
+        this.loadingFlags.medicalRecords = true;
+        this.checkLoadingComplete();
       },
-    error:(error:any)=>{
-      this.dangerAlert('Failed to get medical record');
-    }})
+      error: (error: any) => {
+        this.dangerAlert('Failed to get medical record');
+        this.loadingFlags.medicalRecords = true;
+        this.checkLoadingComplete();
+      }
+    });
   }
   
   onSubmit() {
@@ -200,7 +310,8 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
           console.log('Medical record created:', response);
           this.successAlert('Medical record created successfully');
           this.display = false; // Close dialog after submission
-          // Optionally refresh medical records list
+          // Refresh medical records list
+          this.getMedicalRecord();
         },
         error: (error: any) => {
           console.error('Error creating medical record:', error);
@@ -347,12 +458,19 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
     this.userEndpoint.get(this.user_id).subscribe({
       next: (response: any) => {
         this.user = response.user;
-
-        // this.getClient(this.user.id);
-
         this.avatar_file = environment.apiUrl + '/file/get/';
+        this.loadingFlags.user = true;
+        this.checkLoadingComplete();
+        // If medical records weren't loaded yet, try again now that user is loaded
+        if (!this.loadingFlags.medicalRecords && this.user?.doctors?.id) {
+          this.loadMedicalRecords();
+        }
+      },
+      error: (error: any) => {
+        this.loadingFlags.user = true;
+        this.checkLoadingComplete();
       }
-    })
+    });
   }
 
 
@@ -366,17 +484,23 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
       next: (response: any) => {
         this.singleClient = response.client;
         this.appointments = this.singleClient.appointments;
-        const appointmentDate = new Date(this.appointments.date_time);
-        const today = new Date();
-        if (appointmentDate.getDate() < today.getDate()) {
-          this.appointment = false;
+        if (this.appointments?.date_time) {
+          const appointmentDate = new Date(this.appointments.date_time);
+          const today = new Date();
+          if (appointmentDate.getDate() < today.getDate()) {
+            this.appointment = false;
+          }
         }
         console.log('APPOINTEMENTS', this.appointments);
-
         this.avatar_file = environment.apiUrl + '/file/get/';
-        // this.router.navigate([`/doctors/profile/${this.SingleDoctor.id}`])
+        this.loadingFlags.client = true;
+        this.checkLoadingComplete();
+      },
+      error: (error: any) => {
+        this.loadingFlags.client = true;
+        this.checkLoadingComplete();
       }
-    })
+    });
   }
 
   back() {
@@ -395,9 +519,24 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked {
     if (printContents) {
       const printWindow = window.open('', '', 'height=600,width=800');
       if (printWindow) {
-        printWindow.document.write('<html><head><title>Print Medical Record</title>');
-        printWindow.document.write('<style>body{font-family:sans-serif;} .print-header{background:#6366f1;color:white;padding:1rem;} .print-section{margin:1rem 0;} .print-label{font-weight:bold;} .print-value{margin-left:0.5rem;} .print-footer{margin-top:2rem;}</style>');
-        printWindow.document.write('</head><body >');
+        printWindow.document.write('<html><head><title>Medical Record - ' + (this.selectedMedRecord?.record_number || 'Record') + '</title>');
+        printWindow.document.write('<style>');
+        printWindow.document.write('body{font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:20px;color:#111827;background:#fff;}');
+        printWindow.document.write('.patient-info-section{display:flex;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #e5e7eb;}');
+        printWindow.document.write('.patient-photo{width:80px;height:80px;border-radius:8px;border:1px solid #e5e7eb;}');
+        printWindow.document.write('.patient-details-list{flex:1;display:flex;flex-direction:column;gap:0.5rem;}');
+        printWindow.document.write('.detail-row{display:flex;gap:0.5rem;}');
+        printWindow.document.write('.detail-label{font-size:0.875rem;font-weight:600;color:#6b7280;min-width:100px;}');
+        printWindow.document.write('.detail-value{font-size:0.875rem;color:#111827;}');
+        printWindow.document.write('.medical-section{padding-bottom:1rem;border-bottom:1px solid #e5e7eb;margin-bottom:1rem;}');
+        printWindow.document.write('.section-title{margin:0 0 0.5rem 0;font-size:0.95rem;font-weight:600;color:#17224d;}');
+        printWindow.document.write('.section-text{font-size:0.875rem;line-height:1.6;color:#374151;margin:0;}');
+        printWindow.document.write('.section-text-empty{font-size:0.875rem;color:#9ca3af;font-style:italic;margin:0;}');
+        printWindow.document.write('.record-footer-info{margin-top:1rem;padding-top:1rem;border-top:1px solid #e5e7eb;text-align:right;}');
+        printWindow.document.write('.record-footer-info small{font-size:0.75rem;color:#9ca3af;}');
+        printWindow.document.write('@media print{body{padding:0;} .medical-section{margin-bottom:0.75rem;}}');
+        printWindow.document.write('</style>');
+        printWindow.document.write('</head><body>');
         printWindow.document.write(printContents);
         printWindow.document.write('</body></html>');
         printWindow.document.close();

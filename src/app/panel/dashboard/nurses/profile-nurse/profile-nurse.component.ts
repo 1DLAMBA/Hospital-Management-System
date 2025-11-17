@@ -182,12 +182,15 @@ export class ProfileNurseComponent implements OnInit {
 
   navigateToChat(): void {
     if (this.user && this.user.id) {
-      this.router.navigate(['/panel/dashboard/messages/chat'], { 
-        queryParams: { 
-          receiver_id: this.user.id,
+      this.router.navigate([`/panel/messages/${this.user.id}`], {
+        queryParams: {
           name: this.user.name,
-          avatar: this.user.passport
-        } 
+          dp: this.user.passport,
+          email: this.user.email,
+          phoneno: this.user.phoneno,
+          gender: this.user.gender,
+          user_type: this.user.user_type
+        }
       });
     } else {
       this.messageService.add({

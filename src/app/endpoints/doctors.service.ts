@@ -27,4 +27,8 @@ export class DoctorsService {
   getDocUser(id:any){
     return this.httpClient.get(`${this.baseUrl}/user/get/${id}`);
   }
+
+  toggleAvailability(id: any, availability: boolean){
+    return this.httpClient.post(`${this.baseUrl}/toggle-availability/${id}`, { availability });
+  }
 }

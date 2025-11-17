@@ -131,6 +131,7 @@ export class DoctorAppointmentComponent implements OnInit {
         // this.apptDetails = false;
         this.viewAppt(id);
         this.btnDisable=false;
+        this.loadAppointments();
 
       }
     })

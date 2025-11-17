@@ -208,8 +208,15 @@ export class MessagesComponent implements OnInit, OnDestroy {
     this.pusher = new Pusher(pusherKey, {
       cluster: pusherCluster,
       forceTLS: true,
-      // reconnect options
+      // Reconnect options
       enabledTransports: ['ws', 'wss'],
+      // Fallback transport options for better connectivity
+      disabledTransports: [],
+      // Connection timeout
+      activityTimeout: 30000,
+      pongTimeout: 6000,
+      // Enable automatic reconnection
+      enableStats: false,
       // Note: authEndpoint is not needed for public channels
     });
 
@@ -240,16 +247,55 @@ export class MessagesComponent implements OnInit, OnDestroy {
     
     this.pusher.connection.bind('error', (err: any) => {
       console.error('[Pusher] Connection error:', err);
-      if (environment.production) {
-        // Only show user-facing error in production if connection fails completely
-        if (err?.error?.data?.code === 1006) {
-          this.messageService.add({
-            severity: 'warn',
-            summary: 'Connection issue',
-            detail: 'Live updates unavailable; will still poll conversations.'
-          });
+      log('❌ Connection error', err);
+      
+      // More detailed error handling
+      if (err?.error?.data) {
+        const errorCode = err.error.data.code;
+        const errorMessage = err.error.data.message || 'Unknown error';
+        
+        log('Error details', { code: errorCode, message: errorMessage });
+        
+        if (environment.production) {
+          if (errorCode === 1006 || errorCode === 1000) {
+            // Connection closed or abnormal closure
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Connection issue',
+              detail: 'WebSocket connection failed. Retrying...',
+              life: 5000
+            });
+          } else if (errorCode === 4001) {
+            // Over connection limit
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Connection limit',
+              detail: 'Too many connections. Please refresh.',
+              life: 5000
+            });
+          }
         }
       }
+    });
+    
+    // Handle connection failures
+    this.pusher.connection.bind('failed', () => {
+      console.error('[Pusher] Connection failed completely');
+      log('❌ Connection failed completely');
+      
+      if (environment.production) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Connection failed',
+          detail: 'Unable to connect to real-time service. Messages will still work.',
+          life: 5000
+        });
+      }
+    });
+    
+    // Handle connection retries
+    this.pusher.connection.bind('retry', () => {
+      log('🔄 Retrying connection...');
     });
 
     this.channel = this.pusher.subscribe('messaging-channel');

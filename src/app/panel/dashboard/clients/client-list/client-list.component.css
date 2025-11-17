@@ -29,7 +29,7 @@ section{
 
 .profile-body{}
 
-:host {
+
     ::ng-deep .p-button {
         background-color: #17224d !important;
         color: white !important;
@@ -44,4 +44,3 @@ section{
         background-color: #17224d !important;
         color: white !important;
     }
-}
