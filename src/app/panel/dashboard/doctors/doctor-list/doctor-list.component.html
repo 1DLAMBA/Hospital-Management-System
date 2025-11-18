@@ -119,8 +119,8 @@
             </td>
             <td>
                 <!-- <img [alt]="doctors.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ doctors.representative.image }}" width="32" style="vertical-align: middle" /> -->
-                <span *ngIf="!doctor.availability">Unavailable</span>
-                <span *ngIf="doctor.availability" class="ml-1 vertical-align-middle">{{ doctor.availability }}</span>
+                <p-tag *ngIf="doctor.availability === '0'" value="Unavailable" severity="danger"></p-tag>
+                <p-tag *ngIf="doctor.availability === '1'" value="Available" severity="success"></p-tag>
             </td>
             <td>
                 {{ doctor.user.email}}
