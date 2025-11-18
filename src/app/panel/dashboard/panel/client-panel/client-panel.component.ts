@@ -240,7 +240,7 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
             
             this.recentAppt = this.acceptedAppointment[0];
 
-            this.complaint = this.splitComplaint(this.recentAppt.symptoms)
+            this.complaint = this.splitComplaint(this.recentAppt?.symptoms || '')
             this.pendingAppointment = this.appointment.filter((user: any) => {
               const appointmentDate = new Date(user.date_time);
               const today = new Date();
