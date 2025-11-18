@@ -6,8 +6,8 @@ import { UserService } from '../../endpoints/user.service';
 import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessagesService } from '../../endpoints/messages.service';
-import Pusher from 'pusher-js';
 import { Router } from '@angular/router';
+import { PusherService } from '../../services/pusher.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,31 +23,31 @@ export class DashboardComponent implements OnInit {
   visible: boolean = false;
   newNotificationBatch:boolean = false;
   position: string = 'center';
-  pusher: any;
   router?: Router;
-  channel: any;
   notifications: { title: string; message: string; time: Date | string; read?: boolean }[] = [];
+  private messageSentHandler?: (data: any) => void;
 
   constructor(
     private messageService: MessageService,
     private userEndpoint: UserService,
     private spinner: NgxSpinnerService,
     private messagesServe: MessagesService,
+    private pusherService: PusherService
     //  router: Router
-  ){
-this.pusher = new Pusher('45cde359e2dec89841a7', {
-      cluster: 'mt1',
-      // forceTLS: true,
-    });
+  ){}
+  ngOnInit(): void {
+    this.id = localStorage.getItem('id');
+    this.getUser();
+    this.initializePusher();
+  }
 
-    this.channel = this.pusher.subscribe('messaging-channel');
-    
-    this.channel.bind('MessageSent', (data: any) => {
+  private initializePusher(): void {
+    // Store the callback reference so we can unbind it later if needed
+    this.messageSentHandler = (data: any) => {
       console.log('Message received:', data.message);
-      console.log(this.id, data.message.receiver_id )
-      if(this.id == data.message.receiver_id){
-        this.messageService.add({severity: 'info', summary: 'new message', detail: data.message.message})
-        // console.log('new message',data.message)
+      console.log(this.id, data.message.receiver_id);
+      if (this.id == data.message.receiver_id) {
+        this.messageService.add({severity: 'info', summary: 'new message', detail: data.message.message});
         this.newNotificationBatch = true;
         // Push to notification tray
         const rawSender = data.sender_name;
@@ -74,16 +74,11 @@ this.pusher = new Pusher('45cde359e2dec89841a7', {
           time: new Date(),
           read: false
         });
-        // this.getConversation();
-      
       }
-      // Handle incoming message
-      // this.getConversation();
-    });
-  }
-  ngOnInit(): void {
-    this.id=localStorage.getItem('id')
-    this.getUser();
+    };
+
+    // Bind to MessageSent event using the shared service
+    this.pusherService.bind('MessageSent', this.messageSentHandler);
   }
 
   notificationBadge(){
