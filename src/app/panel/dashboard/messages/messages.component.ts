@@ -10,12 +10,12 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { StreamAutocompleteTextareaModule, StreamChatModule } from 'stream-chat-angular';
 import { ConversationService } from '../../../endpoints/conversation.service';
 import { environment } from '../../../../environments/environment';
-import Pusher from 'pusher-js';
 import { MessageService } from 'primeng/api';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter, Subscription, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { LoadingService } from '../../../services/loading.service';
+import { PusherService } from '../../../services/pusher.service';
 
 @Component({
   selector: 'app-messages',
@@ -37,11 +37,10 @@ export class MessagesComponent implements OnInit, OnDestroy {
   receiver_id: any;
   chatDp: any;
   chatName: any;
-  pusher: any;
-  channel: any;
   newMessageStyle: boolean = false;
   messageReceived: boolean = false;
   private routerSubscription: Subscription;
+  private messageSentHandler?: (data: any) => void;
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   loading$!: Observable<boolean>;
 
@@ -55,7 +54,8 @@ export class MessagesComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private pusherService: PusherService
   ) {
     this.loading$ = this.loadingService.loading$;
 
@@ -173,10 +173,9 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscriptions when component is destroyed
-    if (this.channel) {
-      this.channel.unbind_all();
-      this.pusher.unsubscribe('messaging-channel');
+    // Unbind only our specific event handler - service manages the connection
+    if (this.messageSentHandler) {
+      this.pusherService.unbind('MessageSent', this.messageSentHandler);
     }
     
     if (this.routerSubscription) {
@@ -185,140 +184,19 @@ export class MessagesComponent implements OnInit, OnDestroy {
   }
 
   initializePusher(): void {
-    // Enable verbose logging for troubleshooting (works in production too)
-    Pusher.logToConsole = !environment.production;
-    
     // Helper function for production-safe logging
     const log = (message: string, data?: any) => {
-      console.log(`[Pusher] ${message}`, data || '');
+      console.log(`[MessagesComponent] ${message}`, data || '');
       // Also log to window for debugging in production
       if (environment.production && (window as any).pusherDebug) {
         (window as any).pusherDebug.push({ time: new Date(), message, data });
       }
     };
 
-    // Get Pusher configuration from environment
-    const pusherKey = environment.pusher?.key || '45cde359e2dec89841a7';
-    const pusherCluster = environment.pusher?.cluster || 'mt1';
+    log('Initializing Pusher via service');
 
-    log('Initializing Pusher', { key: pusherKey, cluster: pusherCluster });
-
-    // Basic Pusher configuration (cloud). If you move to self-hosted websockets,
-    // adjust options (wsHost/wsPort/forceTLS) here.
-    this.pusher = new Pusher(pusherKey, {
-      cluster: pusherCluster,
-      forceTLS: true,
-      // Reconnect options
-      enabledTransports: ['ws', 'wss'],
-      // Fallback transport options for better connectivity
-      disabledTransports: [],
-      // Connection timeout
-      activityTimeout: 30000,
-      pongTimeout: 6000,
-      // Enable automatic reconnection
-      enableStats: false,
-      // Note: authEndpoint is not needed for public channels
-    });
-
-    // Connection state logging
-    this.pusher.connection.bind('state_change', (states: any) => {
-      log(`State change: ${states.previous} -> ${states.current}`, states);
-      if (states.current === 'failed' || states.current === 'disconnected') {
-        console.warn('[Pusher] Connection lost. Attempting to reconnect...');
-      }
-    });
-    
-    this.pusher.connection.bind('connected', () => {
-      log('✅ Connected successfully');
-      // Show notification in production to confirm connection
-      if (environment.production) {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Connected',
-          detail: 'Real-time messaging active',
-          life: 3000
-        });
-      }
-    });
-    
-    this.pusher.connection.bind('disconnected', () => {
-      console.warn('[Pusher] Disconnected');
-    });
-    
-    this.pusher.connection.bind('error', (err: any) => {
-      console.error('[Pusher] Connection error:', err);
-      log('❌ Connection error', err);
-      
-      // More detailed error handling
-      if (err?.error?.data) {
-        const errorCode = err.error.data.code;
-        const errorMessage = err.error.data.message || 'Unknown error';
-        
-        log('Error details', { code: errorCode, message: errorMessage });
-        
-        if (environment.production) {
-          if (errorCode === 1006 || errorCode === 1000) {
-            // Connection closed or abnormal closure
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Connection issue',
-              detail: 'WebSocket connection failed. Retrying...',
-              life: 5000
-            });
-          } else if (errorCode === 4001) {
-            // Over connection limit
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Connection limit',
-              detail: 'Too many connections. Please refresh.',
-              life: 5000
-            });
-          }
-        }
-      }
-    });
-    
-    // Handle connection failures
-    this.pusher.connection.bind('failed', () => {
-      console.error('[Pusher] Connection failed completely');
-      log('❌ Connection failed completely');
-      
-      if (environment.production) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Connection failed',
-          detail: 'Unable to connect to real-time service. Messages will still work.',
-          life: 5000
-        });
-      }
-    });
-    
-    // Handle connection retries
-    this.pusher.connection.bind('retry', () => {
-      log('🔄 Retrying connection...');
-    });
-
-    this.channel = this.pusher.subscribe('messaging-channel');
-
-    // Channel subscription diagnostics
-    this.channel.bind('pusher:subscription_succeeded', () => {
-      log('✅ Subscribed to messaging-channel successfully');
-    });
-    
-    this.channel.bind('pusher:subscription_error', (status: any) => {
-      console.error('[Pusher] Subscription error:', status);
-      if (status === 403) {
-        console.error('[Pusher] Access denied to messaging-channel. Check channel authorization.');
-      }
-    });
-    
-    // Test: Bind to all events to see what's being received
-    this.channel.bind_global((eventName: string, data: any) => {
-      log(`📨 Global event received: ${eventName}`, data);
-    });
-    
-    // App event from Laravel
-    this.channel.bind('MessageSent', (data: any) => {
+    // Store the callback reference so we can unbind it later
+    this.messageSentHandler = (data: any) => {
       log('📩 MessageSent event received', data);
       console.log('Full event data:', JSON.stringify(data, null, 2));
       
@@ -360,10 +238,13 @@ export class MessagesComponent implements OnInit, OnDestroy {
           received: messageData.receiver_id 
         });
       }
-    });
-    
+    };
+
+    // Bind to MessageSent event using the shared service
+    this.pusherService.bind('MessageSent', this.messageSentHandler);
+
     log('Pusher initialization complete');
-  };
+  }
   
 
   ngAfterViewChecked() {
