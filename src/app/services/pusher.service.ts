@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import Pusher from 'pusher-js';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
