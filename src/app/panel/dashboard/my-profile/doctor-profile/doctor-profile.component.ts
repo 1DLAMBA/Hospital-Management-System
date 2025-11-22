@@ -14,6 +14,7 @@ import { ClientsService } from '../../../../endpoints/clients.service';
 import { ClientResource } from '../../../../../resources/client.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { MedicalService } from '../../../../endpoints/medical.service';
+import { AuthService } from '../../../../auth.service';
 
 
 
@@ -48,6 +49,7 @@ export class DoctorProfileComponent implements OnInit {
     private messageService: MessageService,
     private doctorEndpoint: DoctorsService,
     private medicalEndpoint: MedicalService,
+    private authService: AuthService,
   ) {
     this.availabilityGroup = new FormGroup({
       checked: new FormControl<boolean>(false)
@@ -195,7 +197,14 @@ export class DoctorProfileComponent implements OnInit {
 
   }
 
-
+  logout() {
+    // Call auth service logout (which clears localStorage)
+    this.authService.logout();
+    // Clear all localStorage (including id)
+    localStorage.clear();
+    // Navigate to login page
+    this.router.navigate(['/login']);
+  }
 
 }
 

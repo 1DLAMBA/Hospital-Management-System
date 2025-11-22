@@ -14,8 +14,16 @@
             
         </div>
         <button class="burger bi bi-list btn btn-bw mb-2 me-2" (click)="openFullscreen(content)"></button>
-        <div class="end">
-            <button class="btn btn-bw"  (click)="login()">Appointment</button>
+        <div class="end no-view d-flex align-items-center gap-3">
+            <ng-container *ngIf="isLoggedIn && user?.user">
+                <button class="btn btn-bw" (click)="navigateToDashboard()" title="Dashboard">
+                    <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                </button>
+                <div class="passport-nav">
+                    <img [src]="avatar_file + (user?.user?.passport || '')" [alt]="user?.user?.name || 'Profile'" title="{{user?.user?.name}}">
+                </div>
+            </ng-container>
+            <button class="btn btn-bw" *ngIf="!isLoggedIn" (click)="login()">Appointment</button>
         </div>
         
     </header>
@@ -33,7 +41,15 @@
         <a href="" (click)="modal.close('Close click')" routerLink="about">About Us</a>
         <a href="" (click)="modal.close('Close click')" routerLink="contact">Contact Us</a>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click') || login()">Appointment</button>
+    <div class="modal-footer d-flex align-items-center justify-content-center gap-3">
+        <ng-container *ngIf="isLoggedIn && user?.user">
+            <button type="button" class="btn" (click)="modal.close('Close click'); navigateToDashboard()" title="Dashboard">
+                <i class="bi bi-speedometer2 me-1"></i>Dashboard
+            </button>
+            <div class="passport-nav">
+                <img [src]="avatar_file + (user?.user?.passport || '')" [alt]="user?.user?.name || 'Profile'" title="{{user?.user?.name}}">
+            </div>
+        </ng-container>
+        <button type="button" class="btn btn-secondary" *ngIf="!isLoggedIn" (click)="modal.close('Close click'); login()">Appointment</button>
     </div>
 </ng-template>

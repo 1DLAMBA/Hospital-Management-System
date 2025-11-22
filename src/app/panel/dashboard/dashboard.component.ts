@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { MessagesService } from '../../endpoints/messages.service';
 import { Router } from '@angular/router';
 import { PusherService } from '../../services/pusher.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,6 @@ export class DashboardComponent implements OnInit {
   visible: boolean = false;
   newNotificationBatch:boolean = false;
   position: string = 'center';
-  router?: Router;
   notifications: { title: string; message: string; time: Date | string; read?: boolean }[] = [];
   private messageSentHandler?: (data: any) => void;
 
@@ -32,8 +32,9 @@ export class DashboardComponent implements OnInit {
     private userEndpoint: UserService,
     private spinner: NgxSpinnerService,
     private messagesServe: MessagesService,
-    private pusherService: PusherService
-    //  router: Router
+    private pusherService: PusherService,
+    private router: Router,
+    private authService: AuthService
   ){}
   ngOnInit(): void {
     this.id = localStorage.getItem('id');
@@ -117,5 +118,14 @@ export class DashboardComponent implements OnInit {
   show(firstname: any) {
     this.messageService.add({ icon: ' bi bi-person', severity: 'success', detail: `Hello, ${firstname}`  });
     console.log(this.user);
+  }
+
+  logout() {
+    // Call auth service logout (which clears localStorage)
+    this.authService.logout();
+    // Clear all localStorage (including id)
+    localStorage.clear();
+    // Navigate to login page
+    this.router.navigate(['/login']);
   }
 }
