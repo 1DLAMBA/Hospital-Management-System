@@ -36,6 +36,8 @@ export class ProfileComponent implements OnInit {
   preview: boolean = false;
   user: any;
   appointment!: boolean;
+  loading: boolean = false;
+  minDate: Date = new Date();
 
 
 
@@ -115,6 +117,7 @@ export class ProfileComponent implements OnInit {
 
   proceed() {
     console.log('THE USER ID',this.user.id)
+    this.loading = true;
     
       this.formData = {
         symptoms: this.apptFormGroup.value.symptoms,
@@ -128,9 +131,15 @@ export class ProfileComponent implements OnInit {
       this.appointmentEndppoint.create(this.formData).subscribe({
         next: (res: any) => {
           console.log(res);
+          this.loading = false;
           this.visible = false;
-          this.successAlert('Appointment request sent')
-  
+          this.successAlert('Appointment request sent');
+          // Refresh user data to get updated appointment information
+          this.getUser(this.user_id);
+        },
+        error: (err: any) => {
+          this.loading = false;
+          this.dangerAlert('Failed to create appointment');
         }
       })
 

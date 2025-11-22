@@ -40,8 +40,9 @@
                 </div>
             </div>
 
-            <div class="profile-actions">
+            <div class="profile-actions d-flex gap-2">
                 <p-button label="Edit Profile" (click)="showDialog()" severity="info" [raised]="true" [rounded]="true" />
+                <p-button label="Logout" icon="pi pi-sign-out" severity="danger" [raised]="true" [rounded]="true" (click)="logout()" />
             </div>
         </div>
         <div class="right-profile">

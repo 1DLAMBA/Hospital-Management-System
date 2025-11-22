@@ -3,9 +3,12 @@
         display: none;
     }
 }
-@media (max-width: 499px){
+@media (max-width: 699px){
     .middle, .end {
         display: none;
+    }
+    .no-view{
+        display: none !important;
     }
 }
 @media (max-width: 500px){
@@ -46,5 +49,26 @@
 .active{
     border-bottom: 2px solid white;
 
+}
+
+.passport-nav {
+    padding: 5px;
+    border: 1px solid #17224d;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.passport-nav:hover {
+    transform: scale(1.1);
+}
+
+.passport-nav img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 

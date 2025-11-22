@@ -71,6 +71,11 @@ export class PusherService {
     this.channel.bind('pusher:subscription_error', (status: any) => {
       console.error('[PusherService] Subscription error:', status);
     });
+
+    // Bind to ALL events for debugging (helps identify if events are being received)
+    this.channel.bind_global((eventName: string, data: any) => {
+      console.log(`[PusherService] 📨 Global event received: ${eventName}`, data);
+    });
   }
 
   getChannel(): any {

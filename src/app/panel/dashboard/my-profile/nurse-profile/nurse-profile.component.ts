@@ -15,6 +15,7 @@ import { ClientResource } from '../../../../../resources/client.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { NursesService } from '../../../../endpoints/nurses.service';
 import { NurseResource } from '../../../../../resources/nurse.model';
+import { AuthService } from '../../../../auth.service';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class NurseProfileComponent  implements OnInit {
     private readonly router: Router,
     private messageService: MessageService,
     private nurseEndpoint: NursesService,
+    private authService: AuthService,
   ) {
     this.availabilityGroup = new FormGroup({
       checked: new FormControl<boolean>(true)
@@ -122,5 +124,14 @@ export class NurseProfileComponent  implements OnInit {
         detail: 'Unable to start chat. User information is not available.'
       });
     }
+  }
+
+  logout() {
+    // Call auth service logout (which clears localStorage)
+    this.authService.logout();
+    // Clear all localStorage (including id)
+    localStorage.clear();
+    // Navigate to login page
+    this.router.navigate(['/login']);
   }
 }

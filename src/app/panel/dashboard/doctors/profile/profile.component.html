@@ -8,7 +8,7 @@
 
             <div class=" calendar justify-content-center">
                 <p-calendar class="" formControlName="date" [inline]="true" [showWeek]="false" [showTime]="true"
-                    panelStyle="background-color:blue" />
+                    [minDate]="minDate" panelStyle="background-color:blue" />
 
 
             </div>
@@ -28,7 +28,7 @@
                 </small><br>
 
 
-                <p-button [disabled]="this.apptFormGroup.invalid" label="Proceed"  (click)="proceed()" severity="info" [raised]="true" [rounded]="true" />
+                <p-button [disabled]="this.apptFormGroup.invalid || loading" [loading]="loading" label="Proceed"  (click)="proceed()" severity="info" [raised]="true" [rounded]="true" />
             </div>
         </form>
         <!-- <div *ngIf="preview">
@@ -80,7 +80,8 @@
                 <img class="m-auto" src="{{ avatar_file + SingleDoctor.user.passport }}">
                 <h1 class="m-2">{{SingleDoctor.user.name}}</h1>
                 <p class="m-2">{{SingleDoctor.specialization}}</p>
-                <p class="">{{SingleDoctor.availability}}</p>
+                <p-tag *ngIf="SingleDoctor.availability === '0'" value="Unavailable" severity="danger"></p-tag>
+                <p-tag *ngIf="SingleDoctor.availability === '1'" value="Available" severity="success"></p-tag>
             </div>
         </div>
         <div class="right-profile p-2">
