@@ -128,4 +128,9 @@ export class DashboardComponent implements OnInit {
     // Navigate to login page
     this.router.navigate(['/login']);
   }
+
+  get hasUnreadNotifications(): boolean {
+    return this.notifications && this.notifications.length > 0 && 
+           this.notifications.some(n => !n.read);
+  }
 }
