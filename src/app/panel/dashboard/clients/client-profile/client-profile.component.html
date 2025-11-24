@@ -101,11 +101,12 @@
         
         <!-- Footer -->
         <div class="med-record-footer">
-          <button type="button" class="cancel-btn" (click)="display=false">
+          <button type="button" class="cancel-btn" (click)="display=false" [disabled]="savingMedicalRecord">
             Cancel
           </button>
-          <button type="submit" class="save-btn" [disabled]="medicalRecordForm.invalid">
-            Save Record
+          <button type="submit" class="save-btn" [disabled]="medicalRecordForm.invalid || savingMedicalRecord">
+            <i *ngIf="savingMedicalRecord" class="pi pi-spin pi-spinner" style="margin-right: 0.5rem;"></i>
+            <span>{{ savingMedicalRecord ? 'Saving...' : 'Save Record' }}</span>
           </button>
         </div>
       </div>
@@ -389,7 +390,7 @@
                         <div class="d-flex justify-content-between">
                             <!-- <p-button pRipple label="Clear" size="small" [outlined]="true" icon="pi pi-filter-slash" /> -->
                             
-                <p-button pRipple [rounded]="true" size="small" (click)="showMedRecDialog()" class="p-button-success p-button-outlined" icon="pi pi-plus-circle" />
+                <p-button pRipple [rounded]="true" size="small" label="Add Medical Record" (click)="showMedRecDialog()" class="p-button-success p-button-outlined" icon="pi pi-plus-circle" />
 
                         </div>
                     </ng-template>

@@ -71,9 +71,10 @@
         <div class="action-buttons">
             <ng-container *ngIf="singleAppt.status === 'pending'">
                 <p-button 
-                    label="Accept" 
-                    icon="pi pi-check" 
-                    [disabled]="btnDisable" 
+                    [label]="acceptLoading ? 'Accepting...' : 'Accept'" 
+                    [icon]="acceptLoading ? 'pi pi-spin pi-spinner' : 'pi pi-check'" 
+                    [disabled]="btnDisable || acceptLoading" 
+                    [loading]="acceptLoading"
                     styleClass="p-button-raised p-button-success" 
                     (click)="status(singleAppt.id, 'Accepted')">
                 </p-button>
