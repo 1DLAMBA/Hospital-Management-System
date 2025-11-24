@@ -65,18 +65,22 @@ header="Edit Profile"
                 <div class="notification-body">
                     <ng-container *ngIf="notifications?.length; else noNotifs">
                         <ul class="notification-list">
-                            <li *ngFor="let n of notifications; let last = last" class="notification-item" [class.unread]="!n.read">
+                            <li *ngFor="let n of notifications; let last = last" class="notification-item" [class.unread]="!n.read_at" (click)="handleNotificationClick(n)">
                                 <div class="notification-content">
                                     <div class="notification-icon">
-                                        <i class="bi bi-envelope"></i>
+                                        <i class="bi" [ngClass]="{
+                                            'bi-calendar-check': n.type === 'appointment_booking' || n.type === 'appointment_accepted',
+                                            'bi-file-medical': n.type === 'medical_record_created',
+                                            'bi-envelope': n.type === 'message'
+                                        }"></i>
                                     </div>
                                     <div class="notification-details">
                                         <div class="notification-title">{{ n.title }}</div>
                                         <div class="notification-message">{{ n.message }}</div>
-                                        <div class="notification-time">{{ n.time | date:'MMM d, h:mm a' }}</div>
+                                        <div class="notification-time">{{ n.created_at | date:'MMM d, h:mm a' }}</div>
                                     </div>
                                 </div>
-                                <div class="notification-indicator" *ngIf="!n.read"></div>
+                                <div class="notification-indicator" *ngIf="!n.read_at"></div>
                                 <div class="notification-divider" *ngIf="!last"></div>
                             </li>
                         </ul>

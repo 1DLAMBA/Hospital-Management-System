@@ -7,7 +7,6 @@ import { DoctorResource } from '../../../../../resources/doctor.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { environment } from '../../../../../environments/environment';
 import { Table } from 'primeng/table';
-import { response } from 'express';
 
 @Component({
   selector: 'app-doctor-appointment',
@@ -27,6 +26,7 @@ export class DoctorAppointmentComponent implements OnInit {
   declinedAppointment: any;
   btnDisable: boolean = false;
   loading: boolean = true;
+  acceptLoading: boolean = false;
 
 
   constructor(
@@ -97,18 +97,17 @@ export class DoctorAppointmentComponent implements OnInit {
   status(id: any, status: any) {
     this.btnDisable=true;
     if (status == 'Accepted') {
+      this.acceptLoading = true;
       const formData = {
         status: 'Accepted'
       }
-      this.editStatus(id, formData);
-      this.getUser();
-
+      this.editStatus(id, formData, true);
       return;
     } else if (status == 'Declined') {
       const formData = {
         status: 'Declined'
       }
-      this.editStatus(id, formData);
+      this.editStatus(id, formData, false);
       this.getUser();
 
       return;
@@ -116,7 +115,7 @@ export class DoctorAppointmentComponent implements OnInit {
       const formData = {
         status: 'pending'
       }
-      this.editStatus(id, formData);
+      this.editStatus(id, formData, false);
       this.getUser();
 
       return;
@@ -124,15 +123,26 @@ export class DoctorAppointmentComponent implements OnInit {
     }
   }
 
-  editStatus(id: any, status: any) {
+  editStatus(id: any, status: any, isAccept: boolean = false) {
 
     this.appointmentEndpoint.edit(id, status).subscribe({
       next: (response: any) => {
-        // this.apptDetails = false;
-        this.viewAppt(id);
         this.btnDisable=false;
+        this.acceptLoading = false;
         this.loadAppointments();
-
+        
+        if (isAccept) {
+          // Close dialog after successful acceptance
+          this.apptDetails = false;
+        } else {
+          // Update the appointment view for other status changes
+          this.viewAppt(id);
+        }
+      },
+      error: (error) => {
+        console.error('Error updating appointment status:', error);
+        this.btnDisable = false;
+        this.acceptLoading = false;
       }
     })
   }
