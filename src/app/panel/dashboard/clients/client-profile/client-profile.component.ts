@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewChecked, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, ViewChild, ElementRef, AfterViewChecked, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, distinctUntilChanged } from 'rxjs/operators';
@@ -73,6 +73,7 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestr
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   medicalRecords!: any[];
   isLoading: boolean = true;
+  savingMedicalRecord: boolean = false;
   private loadingFlags = {
     client: false,
     user: false,
@@ -92,7 +93,8 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestr
     private assignmentEndpoint: AssignmentsService,
     private chatDialogService: ChatDialogService,
     private MessagesEnpoint: MessagesService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.assignForm = new FormGroup({
       assignment_message: new FormControl('', Validators.required),
@@ -290,8 +292,15 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestr
     });
   }
   
-  onSubmit() {
+  onSubmit(event?: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+    
     if (this.medicalRecordForm.valid) {
+      // Set loading state
+      this.savingMedicalRecord = true;
+      
       // Log form values for debugging
       console.log('Medical Record Data:', this.medicalRecordForm.value);
       const formData = {
@@ -309,19 +318,32 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestr
         next: (response: any) => {
           console.log('Medical record created:', response);
           this.successAlert('Medical record created successfully');
-          this.display = false; // Close dialog after submission
+          // Reset loading state
+          this.savingMedicalRecord = false;
+          // Close dialog immediately
+          this.display = false;
+          // Force change detection to ensure dialog closes
+          this.cdr.detectChanges();
+          // Reset form
+          this.medicalRecordForm.reset();
           // Refresh medical records list
           this.getMedicalRecord();
         },
         error: (error: any) => {
           console.error('Error creating medical record:', error);
           this.dangerAlert('Failed to create medical record');
+          // Reset loading state on error
+          this.savingMedicalRecord = false;
+          this.display = false;
+
         }
       });
     } else {
       // Mark fields as touched to show validation errors
       this.medicalRecordForm.markAllAsTouched();
     }
+    // this.display = false;
+
   }
   sendMessage() {
     if (this.newMessage.trim()) {

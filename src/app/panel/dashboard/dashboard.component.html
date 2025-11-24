@@ -32,61 +32,67 @@ header="Edit Profile"
                         <small>{{user?.user_type}}</small>
                         <div class="d-flex ">
                             <!-- Bell button toggles the notification tray -->
-                            <button style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)" pBadge [value]="newNotificationBatch ? '1' : ''">
+                            <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                                <i class="bi bi-bell text-3xl"></i>
+                            </button>
+                            <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)">
                                 <i class="bi bi-bell text-3xl"></i>
                             </button>
                             <!-- Logout button -->
                             <button style="border: 0; background-color: white; margin-left: 10px;" (click)="logout()" title="Logout">
                                 <i class="bi bi-box-arrow-right text-3xl"></i>
                             </button>
-                            
-                            <!-- Notification Tray -->
-                            <p-overlayPanel #notifPanel [showCloseIcon]="false" [dismissable]="true" [style]="{width: '360px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'}">
-                                <div class="notification-panel">
-                                    <div class="notification-header">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <i class="bi bi-bell"></i>
-                                                <h6 class="mb-0">Notifications</h6>
-                                                <span class="notification-count" *ngIf="notifications?.length">{{ notifications.length }}</span>
-                                            </div>
-                                            <button class="notification-close" (click)="notifPanel.hide()" type="button">
-                                                <i class="bi bi-x-lg"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="notification-body">
-                                        <ng-container *ngIf="notifications?.length; else noNotifs">
-                                            <ul class="notification-list">
-                                                <li *ngFor="let n of notifications; let last = last" class="notification-item" [class.unread]="!n.read">
-                                                    <div class="notification-content">
-                                                        <div class="notification-icon">
-                                                            <i class="bi bi-envelope"></i>
-                                                        </div>
-                                                        <div class="notification-details">
-                                                            <div class="notification-title">{{ n.title }}</div>
-                                                            <div class="notification-message">{{ n.message }}</div>
-                                                            <div class="notification-time">{{ n.time | date:'MMM d, h:mm a' }}</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-indicator" *ngIf="!n.read"></div>
-                                                    <div class="notification-divider" *ngIf="!last"></div>
-                                                </li>
-                                            </ul>
-                                        </ng-container>
-                                        <ng-template #noNotifs>
-                                            <div class="notification-empty">
-                                                <p class="mb-0">No notifications</p>
-                                            </div>
-                                        </ng-template>
-                                    </div>
-                                </div>
-                            </p-overlayPanel>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Notification Tray - Shared between desktop and mobile views -->
+        <p-overlayPanel #notifPanel [showCloseIcon]="false" [dismissable]="true" [style]="{width: '360px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'}">
+            <div class="notification-panel">
+                <div class="notification-header">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-bell"></i>
+                            <h6 class="mb-0">Notifications</h6>
+                            <span class="notification-count" *ngIf="notifications?.length">{{ notifications.length }}</span>
+                        </div>
+                        <button class="notification-close" (click)="notifPanel.hide()" type="button">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="notification-body">
+                    <ng-container *ngIf="notifications?.length; else noNotifs">
+                        <ul class="notification-list">
+                            <li *ngFor="let n of notifications; let last = last" class="notification-item" [class.unread]="!n.read_at" (click)="handleNotificationClick(n)">
+                                <div class="notification-content">
+                                    <div class="notification-icon">
+                                        <i class="bi" [ngClass]="{
+                                            'bi-calendar-check': n.type === 'appointment_booking' || n.type === 'appointment_accepted',
+                                            'bi-file-medical': n.type === 'medical_record_created',
+                                            'bi-envelope': n.type === 'message'
+                                        }"></i>
+                                    </div>
+                                    <div class="notification-details">
+                                        <div class="notification-title">{{ n.title }}</div>
+                                        <div class="notification-message">{{ n.message }}</div>
+                                        <div class="notification-time">{{ n.created_at | date:'MMM d, h:mm a' }}</div>
+                                    </div>
+                                </div>
+                                <div class="notification-indicator" *ngIf="!n.read_at"></div>
+                                <div class="notification-divider" *ngIf="!last"></div>
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-template #noNotifs>
+                        <div class="notification-empty">
+                            <p class="mb-0">No notifications</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </p-overlayPanel>
         <div *ngIf="user?.user_type=='doctor'" class="d-flex mob-head  justify-content-between p-1">
             <a routerLink="my-profile/doctor/{{this.id}}" class="text-decoration-none">
 
@@ -97,11 +103,17 @@ header="Edit Profile"
     
                 </button>
             </a>
-            <div class="d-flex">
+            <div class="d-flex align-items-center gap-2">
+                <!-- Bell button for mobile view -->
+                <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                    <i class="bi bi-bell text-2xl"></i>
+                </button>
+                <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)">
+                    <i class="bi bi-bell text-2xl"></i>
+                </button>
                 <div class="passport">
                     <img  src="{{ avatar_file + (user?.passport || '') }}">
                 </div>
-                
             </div>
         </div>
         <div *ngIf="user?.user_type=='client'" class="d-flex mob-head  justify-content-between p-1">
@@ -114,11 +126,17 @@ header="Edit Profile"
     
                 </button>
             </a>
-            <div class="d-flex">
+            <div class="d-flex align-items-center gap-2">
+                <!-- Bell button for mobile view -->
+                <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                    <i class="bi bi-bell text-2xl"></i>
+                </button>
+                <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)">
+                    <i class="bi bi-bell text-2xl"></i>
+                </button>
                 <div class="passport">
                     <img  src="{{ avatar_file + user.passport }}">
                 </div>
-                
             </div>
         </div>
         <div *ngIf="user?.user_type=='nurse'" class="d-flex mob-head  justify-content-between p-1">
@@ -131,11 +149,17 @@ header="Edit Profile"
     
                 </button>
             </a>
-            <div class="d-flex">
+            <div class="d-flex align-items-center gap-2">
+                <!-- Bell button for mobile view -->
+                <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                    <i class="bi bi-bell text-2xl"></i>
+                </button>
+                <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)">
+                    <i class="bi bi-bell text-2xl"></i>
+                </button>
                 <div class="passport">
                     <img  src="{{ avatar_file + user.passport }}">
                 </div>
-                
             </div>
         </div>
         <div class="">

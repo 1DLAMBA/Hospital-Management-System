@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class PusherService {
   private pusherInstance: Pusher | null = null;
   private channel: any = null;
+  private notificationsChannel: any = null;
   private connectionState$ = new BehaviorSubject<string>('disconnected');
 
   constructor() {
@@ -61,7 +62,7 @@ export class PusherService {
       console.log('[PusherService] 🔄 Retrying connection...');
     });
 
-    // Subscribe to channel
+    // Subscribe to messaging channel
     this.channel = this.pusherInstance.subscribe('messaging-channel');
 
     this.channel.bind('pusher:subscription_succeeded', () => {
@@ -70,6 +71,17 @@ export class PusherService {
 
     this.channel.bind('pusher:subscription_error', (status: any) => {
       console.error('[PusherService] Subscription error:', status);
+    });
+
+    // Subscribe to notifications channel
+    this.notificationsChannel = this.pusherInstance.subscribe('notifications-channel');
+
+    this.notificationsChannel.bind('pusher:subscription_succeeded', () => {
+      console.log('[PusherService] ✅ Subscribed to notifications-channel');
+    });
+
+    this.notificationsChannel.bind('pusher:subscription_error', (status: any) => {
+      console.error('[PusherService] Notifications subscription error:', status);
     });
 
     // Bind to ALL events for debugging (helps identify if events are being received)
@@ -90,12 +102,29 @@ export class PusherService {
     channel.bind(eventName, callback);
   }
 
+  bindToNotifications(eventName: string, callback: (data: any) => void): void {
+    if (!this.notificationsChannel) {
+      this.initialize();
+    }
+    this.notificationsChannel.bind(eventName, callback);
+  }
+
   unbind(eventName: string, callback?: (data: any) => void): void {
     if (this.channel) {
       if (callback) {
         this.channel.unbind(eventName, callback);
       } else {
         this.channel.unbind(eventName);
+      }
+    }
+  }
+
+  unbindFromNotifications(eventName: string, callback?: (data: any) => void): void {
+    if (this.notificationsChannel) {
+      if (callback) {
+        this.notificationsChannel.unbind(eventName, callback);
+      } else {
+        this.notificationsChannel.unbind(eventName);
       }
     }
   }
@@ -109,10 +138,15 @@ export class PusherService {
       this.channel.unbind_all();
       this.pusherInstance?.unsubscribe('messaging-channel');
     }
+    if (this.notificationsChannel) {
+      this.notificationsChannel.unbind_all();
+      this.pusherInstance?.unsubscribe('notifications-channel');
+    }
     if (this.pusherInstance) {
       this.pusherInstance.disconnect();
       this.pusherInstance = null;
       this.channel = null;
+      this.notificationsChannel = null;
     }
   }
 }
