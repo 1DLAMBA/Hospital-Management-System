@@ -24,6 +24,7 @@ import { UserService } from "./endpoints/user.service";
 import { RegisterComponent } from "./register/register.component";
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FileUploadModule } from 'primeng/fileupload';
+import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { DoctorsService } from "./endpoints/doctors.service";
 import { ClientsService } from "./endpoints/clients.service";
@@ -83,6 +84,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         FormsModule,
         RadioButtonModule,
         FileUploadModule,
+        DropdownModule,
         ToastModule,
         CalendarModule,
         NgbTooltipModule,
@@ -91,7 +93,8 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         AnimateOnScrollModule,
         NgxSpinnerModule,
         DynamicDialogModule,
-        PanelModule
+        PanelModule,
+        SharedModule
     ],
     exports:[
         NavBarComponent,

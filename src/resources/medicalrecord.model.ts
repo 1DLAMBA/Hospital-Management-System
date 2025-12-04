@@ -6,10 +6,12 @@ export interface MedicalRecordResource{
     assigned_doctor_id: number,
     record_number:number,
     client_id:number,
-    diagnosis:number,
-    past_diagnosis:number,
+    diagnosis:string,
+    past_diagnosis:string,
     allergies: string,
     treatment: string,
+    created_at?: string | Date,
+    updated_at?: string | Date,
     client: ClientResource,
     doctor: DoctorResource
 }

@@ -3,6 +3,7 @@ import { UserService } from '../../../../endpoints/user.service';
 import { UserResource } from '../../../../../resources/user.model';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
+import { OtherProfessionalsService } from '../../../../endpoints/other-professionals.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { response } from 'express';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -41,6 +42,7 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
   constructor(
     private userEndpoint: UserService,
     private doctorEndpoint: DoctorsService,
+    private otherProfessionalEndpoint: OtherProfessionalsService,
     private appointmentEndpoint: AppointmentsService,
     private router: Router,
     private route: ActivatedRoute
@@ -83,24 +85,50 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
         console.log('User data loaded:', response);
         this.user = response.user;
         
-        // Then load doctor data
-        this.doctorEndpoint.getDocUser(this.id).subscribe({
-          next: (docResponse: any) => {
-            this.doctor = docResponse.doctor;
-            
-            // Finally load appointments
-            if (this.user?.doctors?.id) {
-              this.loadAppointments(this.user.doctors.id);
-            } else {
-              console.error('Doctor ID not available');
+        // Check if user is doctor or other_professional
+        if (this.user.user_type === 'doctor') {
+          // Load doctor data
+          this.doctorEndpoint.getDocUser(this.id).subscribe({
+            next: (docResponse: any) => {
+              this.doctor = docResponse.doctor;
+              
+              // Load appointments
+              if (this.user?.doctors?.id) {
+                this.loadAppointments(this.user.doctors.id, 'doctor');
+              } else {
+                console.error('Doctor ID not available');
+                this.loading = false;
+              }
+            },
+            error: (err) => {
+              console.error('Error loading doctor data', err);
               this.loading = false;
             }
-          },
-          error: (err) => {
-            console.error('Error loading doctor data', err);
-            this.loading = false;
-          }
-        });
+          });
+        } else if (this.user.user_type === 'other_professional') {
+          // Load other professional data
+          this.otherProfessionalEndpoint.getOtherProfessionalUser(this.id).subscribe({
+            next: (opResponse: any) => {
+              // Store other professional data in doctor property for compatibility
+              this.doctor = opResponse.other_professional;
+              
+              // Load appointments
+              if (this.user?.other_professionals?.id) {
+                this.loadAppointments(this.user.other_professionals.id, 'other_professional');
+              } else {
+                console.error('Other Professional ID not available');
+                this.loading = false;
+              }
+            },
+            error: (err) => {
+              console.error('Error loading other professional data', err);
+              this.loading = false;
+            }
+          });
+        } else {
+          console.error('User type not supported:', this.user.user_type);
+          this.loading = false;
+        }
       },
       error: (err) => {
         console.error('Error loading user data', err);
@@ -109,8 +137,8 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
     });
   }
   
-  loadAppointments(doctorId: string): void {
-    this.appointmentEndpoint.get(doctorId, 'doctor').subscribe({
+  loadAppointments(professionalId: string, userType: string): void {
+    this.appointmentEndpoint.get(professionalId, userType).subscribe({
       next: (response: any) => {
         console.log('Appointments loaded:', response);
         this.appointment = response.appointments;

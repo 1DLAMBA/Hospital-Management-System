@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
+import { OtherProfessionalsService } from '../../../../endpoints/other-professionals.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -28,6 +29,8 @@ export class DoctorProfileComponent implements OnInit {
   today = inject(NgbCalendar).getToday();
   id: string = this.route.snapshot.params['id'];
   singleDoctor!: ClientResource | any;
+  singleOtherProfessional!: any;
+  professionalType: 'doctor' | 'other_professional' = 'doctor';
   avatar_file!: string;
   date: Date[] | undefined;
   visible: boolean = false;
@@ -48,6 +51,7 @@ export class DoctorProfileComponent implements OnInit {
     private readonly router: Router,
     private messageService: MessageService,
     private doctorEndpoint: DoctorsService,
+    private otherProfessionalEndpoint: OtherProfessionalsService,
     private medicalEndpoint: MedicalService,
     private authService: AuthService,
   ) {
@@ -57,15 +61,16 @@ export class DoctorProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getsingleDoctor(this.id);
     this.user_id = localStorage.getItem('id');
+    // First get user to determine type, then load professional data
     this.getUser();
     
     // Subscribe to availability toggle changes
     this.availabilityGroup.get('checked')?.valueChanges.subscribe((checked: boolean) => {
-      if (this.singleDoctor?.id) {
+      if (this.singleDoctor?.id && this.professionalType === 'doctor') {
         this.toggleAvailability(checked);
       }
+      // Note: other_professionals don't have availability toggle
     });
 
   }
@@ -84,14 +89,20 @@ export class DoctorProfileComponent implements OnInit {
       next: (response: any) => {
         this.user = response.user;
         
-    // this.getClient(this.user.id);
-
         this.avatar_file = environment.apiUrl + '/file/get/';
         
-        // Initialize availability toggle with current doctor availability from user
-        if (this.user?.doctors?.availability !== undefined && this.user?.doctors?.availability !== null) {
-          const availability = this.convertToBoolean(this.user.doctors.availability);
-          this.availabilityGroup.patchValue({ checked: availability }, { emitEvent: false });
+        // Determine professional type and load professional data
+        if (this.user.user_type === 'doctor' && this.user.doctors?.id) {
+          this.professionalType = 'doctor';
+          this.getsingleDoctor(this.user.doctors.id);
+          // Initialize availability toggle with current doctor availability from user
+          if (this.user.doctors.availability !== undefined && this.user.doctors.availability !== null) {
+            const availability = this.convertToBoolean(this.user.doctors.availability);
+            this.availabilityGroup.patchValue({ checked: availability }, { emitEvent: false });
+          }
+        } else if (this.user.user_type === 'other_professional' && this.user.other_professionals?.id) {
+          this.professionalType = 'other_professional';
+          this.getsingleOtherProfessional(this.user.other_professionals.id);
         }
       }
     })
@@ -122,24 +133,40 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorEndpoint.getSingle(id).subscribe({
       next: (response: any) => {
         this.singleDoctor = response.doctor;
-    this.loadMedicalRecords(this.singleDoctor.id);
+        this.loadMedicalRecords(this.singleDoctor.id);
 
         this.appointments = this.singleDoctor.appointments;
-        const appointmentDate = new Date(this.appointments.date_time);
-        const today = new Date();
-        if(appointmentDate.getDate() < today.getDate()){
-          this.appointment=false;
+        if (this.appointments && this.appointments.date_time) {
+          const appointmentDate = new Date(this.appointments.date_time);
+          const today = new Date();
+          if(appointmentDate.getDate() < today.getDate()){
+            this.appointment=false;
+          }
         }
         console.log('APPOINTEMENTS', this.appointments);
         
         // Initialize availability toggle with current doctor availability
         if (this.singleDoctor?.availability !== undefined) {
-          const availability = Boolean(this.singleDoctor.availability);
+          const availability = this.convertToBoolean(this.singleDoctor.availability);
           this.availabilityGroup.patchValue({ checked: availability }, { emitEvent: false });
         }
         
         this.avatar_file = environment.apiUrl + '/file/get/';
-        // this.router.navigate([`/doctors/profile/${this.SingleDoctor.id}`])
+      }
+    })
+  }
+
+  getsingleOtherProfessional(id: any) {
+    this.otherProfessionalEndpoint.getSingle(id).subscribe({
+      next: (response: any) => {
+        this.singleOtherProfessional = response.other_professional;
+        // Note: Medical records might not be applicable for other_professionals
+        // this.loadMedicalRecords(this.singleOtherProfessional.id);
+        
+        this.avatar_file = environment.apiUrl + '/file/get/';
+      },
+      error: (error: any) => {
+        console.error('Error loading other professional:', error);
       }
     })
   }

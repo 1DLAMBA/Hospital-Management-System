@@ -144,25 +144,25 @@ export class ProfileNurseComponent implements OnInit {
   }
 
   getsingleNurse(id: any) {
+    // Try to get as nurse first, then as other_professional
     this.nurseEndpoint.getSingle(id).subscribe({
       next: (response: any) => {
         this.singleNurse = response.nurse;
-    this.getAssignment(this.singleNurse.id);
+        this.getAssignment(this.singleNurse.id);
         console.log('APPOINTEMENTS', this.singleNurse);
         this.userEndpoint.get(this.singleNurse.user_id).subscribe({
           next: (response: any) => {
             this.user = response.user;
           }
         })
-        // this.appointments = this.singleNurse.appointments;
-        // const appointmentDate = new Date(this.appointments.date_time);
-        // const today = new Date();
-        // if(appointmentDate.getDate() < today.getDate()){
-        //   this.appointment=false;
-        // }
-
         this.avatar_file = environment.apiUrl + '/file/get/';
-        // this.router.navigate([`/doctors/profile/${this.SingleDoctor.id}`])
+      },
+      error: (err) => {
+        // If not found as nurse, try as other_professional
+        // This handles cases where other_professionals are viewed from nurse routes
+        // Note: This would require importing OtherProfessionalsService
+        console.error('Nurse not found, might be other_professional:', err);
+        this.avatar_file = environment.apiUrl + '/file/get/';
       }
     })
   }

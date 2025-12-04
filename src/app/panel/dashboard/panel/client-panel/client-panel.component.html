@@ -68,8 +68,8 @@
     <div *ngIf="recentAppt" class="d-flex justify-content-between">
      
          <div  class="appt d-flex">
-             <p>{{recentAppt.doctor.user.name}} - {{complaint}}</p>
-             <p class="text-secondary">{{recentAppt.date_time}}</p>
+             <p>{{recentAppt?.doctor?.user?.name || 'N/A'}} - {{complaint}}</p>
+             <p class="text-secondary">{{recentAppt?.date_time}}</p>
              <a style="cursor: pointer; text-decoration: none;" routerLink="/panel/client-appointment">View Details</a>
  
          </div>
@@ -132,7 +132,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-appointments>
                     <tr>
-                        <td>{{ appointments.doctor.user.name }}</td>
+                        <td>{{ appointments.doctor?.user?.name || 'N/A' }}</td>
 
                         <td>
                             <p-tag *ngIf="appointments.status == 'pending'" [rounded]="true" severity="warning" value="{{ appointments.status }}"></p-tag>
@@ -167,7 +167,7 @@
                 <p-timeline [value]="pendingAppointment">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
-                            {{event?.doctor?.user.name}}
+                            {{event?.doctor?.user?.name || 'N/A'}}
                         </small>
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>
@@ -183,7 +183,7 @@
                 <p-timeline [value]="previousAppointment">
                     <ng-template pTemplate="content" let-event>
                         <small class="text-secondary">
-                            {{event.doctor.user.name}}
+                            {{event?.doctor?.user?.name || 'N/A'}}
                         </small>
                     </ng-template>
                     <ng-template pTemplate="opposite" let-event>

@@ -1,3 +1,5 @@
+import { OtherProfessionalResource } from "./other-professional.model";
+
 export interface UserResource{
     id: number;
     name:string;
@@ -9,7 +11,7 @@ export interface UserResource{
     passport: string;
     created_at: Date;
     updated_at: Date;
-
+    other_professionals?: OtherProfessionalResource;
 };
 
 export interface UserDTO{

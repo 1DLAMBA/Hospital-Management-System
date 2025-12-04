@@ -1,0 +1,25 @@
+<div #imageContainer class="lazy-image-container" [ngClass]="class" [style.width]="width || '100%'" [style.height]="height || '100%'" [style.border-radius]="borderRadius">
+  <!-- Spinner while loading -->
+  <div *ngIf="showSpinner && !imageLoaded && !imageError" class="image-spinner">
+    <div class="spinner"></div>
+  </div>
+  
+  <!-- Image -->
+  <img 
+    *ngIf="imageLoaded || imageError"
+    [src]="imageSrc" 
+    [alt]="alt"
+    [ngClass]="class"
+    [style.width]="width || '100%'"
+    [style.height]="height || '100%'"
+    [style.border-radius]="borderRadius"
+    class="lazy-loaded-image"
+    (error)="imageError = true; showSpinner = false"
+  />
+  
+  <!-- Error placeholder -->
+  <div *ngIf="imageError && !imageLoaded" class="image-placeholder">
+    <i class="bi bi-person-circle"></i>
+  </div>
+</div>
+

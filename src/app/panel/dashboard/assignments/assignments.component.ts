@@ -46,7 +46,15 @@ export class AssignmentsComponent implements OnInit {
       next: (response: any) => {
         this.user = response.user
         this.avatar_file = environment.apiUrl + '/file/get/';
-        this.appointmentEndpoint.get(this.user.nurses.id).subscribe({
+        // Handle both nurses and other_professionals
+        const professionalId = this.user.nurses?.id || this.user.other_professionals?.id;
+        
+        if (!professionalId) {
+          console.error('No nurse or other_professional ID found');
+          return;
+        }
+        
+        this.appointmentEndpoint.get(professionalId).subscribe({
           next: (response: any) => {
             this.appointment = response.assignment;
             this.pendingAppointment = this.appointment.filter((user: any) => user.status=='pending').length;

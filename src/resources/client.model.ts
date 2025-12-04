@@ -13,7 +13,8 @@ export interface ClientResource {
     appointments: AppointmentResource,
     doctors: DoctorResource,
     nurse: NurseResource,
-    created_by: UserResource
+    created_by: UserResource,
+    user?: UserResource
 }
 
 export interface ClientsRequest{

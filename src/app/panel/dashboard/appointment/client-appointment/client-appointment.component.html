@@ -64,7 +64,8 @@
             <div class="mx-4">
                 <b>Next Appointment</b>
                 <div class="d-flex sub justify-content-between">
-                    <p><span class="text-secondary">Doctor:</span><br>{{ appi.doctor.user.name }}</p>
+                    <p><span class="text-secondary">Healthcare Provider:</span><br>{{ appi.doctor?.user?.name || appi.other_professional?.user?.name }}</p>
+                    <p *ngIf="appi.other_professional" class="text-secondary small">{{ appi.other_professional.professional_type }}</p>
                     <p><span class="text-secondary">Date:</span><br>{{ appi.date_time | date }}</p>
                     <div>
                         <p>Status</p>
@@ -109,7 +110,7 @@
 
 
     <p-table #dt1 [tableStyle]="{'min-width': '50rem'}" [value]="appointment" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
-        [globalFilterFields]="['doctor.user.name', 'doctors.specialization', 'representative.name', 'status']">
+        [globalFilterFields]="['doctor.user.name', 'other_professional.user.name', 'other_professional.professional_type', 'status']">
 
 
         <ng-template pTemplate="caption">
@@ -133,7 +134,7 @@
                 </th>
                 <th style="min-width:15rem">
                     <div class="flex align-items-center">
-                        Doctor Name
+                        Healthcare Provider
                         <p-columnFilter type="text" field="name" display="menu" />
                     </div>
                 </th>
@@ -183,9 +184,12 @@
                 </td>
                 <td class="d-flex">
                     <div class="passport">
-                        <img src="{{ avatar_file + appointments.doctor.user.passport }}">
+                        <img src="{{ avatar_file + (appointments.doctor?.user?.passport || appointments.other_professional?.user?.passport) }}">
                     </div>
-                    {{ appointments.doctor.user.name}}
+                    <div>
+                        {{ appointments.doctor?.user?.name || appointments.other_professional?.user?.name}}
+                        <small *ngIf="appointments.other_professional" class="d-block text-secondary">{{ appointments.other_professional.professional_type }}</small>
+                    </div>
                 </td>
                 <td>
                     <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + doctors.country.code" style="width: 20px" /> -->
@@ -202,7 +206,7 @@
                         appointments.status }}</span>
                 </td>
                 <td>
-                    {{ appointments.doctor.user.phoneno}}
+                    {{ appointments.doctor?.user?.phoneno || appointments.other_professional?.user?.phoneno}}
                 </td>
 
 

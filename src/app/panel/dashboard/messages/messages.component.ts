@@ -151,7 +151,11 @@ export class MessagesComponent implements OnInit, OnDestroy {
   // Get user type for display
   getUserType(conversation: any): string {
     const otherUser = conversation.user_one_id === this.id ? conversation.user_two : conversation.user_one;
-    return otherUser.user_type || '';
+    if(otherUser.user_type == 'other_professional') {
+      return otherUser?.other_professionals?.professional_type || 'Healthcare Professional';
+    } else {
+      return otherUser.user_type || '';
+    } 
   }
   
   // TrackBy for message ngFor to avoid re-render flicker

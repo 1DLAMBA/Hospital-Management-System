@@ -20,7 +20,14 @@
                     <i class="bi bi-speedometer2 me-1"></i>Dashboard
                 </button>
                 <div class="passport-nav">
-                    <img [src]="avatar_file + (user?.user?.passport || '')" [alt]="user?.user?.name || 'Profile'" title="{{user?.user?.name}}">
+                    <app-lazy-image 
+                        [src]="avatar_file + (user?.user?.passport || '')" 
+                        [alt]="user?.user?.name || 'Profile'" 
+                        [title]="user?.user?.name || ''"
+                        width="40px"
+                        height="40px"
+                        borderRadius="50%">
+                    </app-lazy-image>
                 </div>
             </ng-container>
             <button class="btn btn-bw" *ngIf="!isLoggedIn" (click)="login()">Appointment</button>

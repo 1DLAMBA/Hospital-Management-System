@@ -1,0 +1,26 @@
+<div class="skeleton-container">
+  <!-- Avatar Skeleton -->
+  <div *ngIf="type === 'avatar'" class="skeleton-avatar" [style.width]="width" [style.height]="height" [style.border-radius]="borderRadius"></div>
+  
+  <!-- Card Skeleton -->
+  <div *ngIf="type === 'card'" class="skeleton-card">
+    <div class="skeleton-avatar skeleton-card-avatar" [style.border-radius]="borderRadius"></div>
+    <div class="skeleton-card-content">
+      <div class="skeleton-text skeleton-title" [style.width]="'60%'"></div>
+      <div class="skeleton-text skeleton-subtitle" [style.width]="'40%'"></div>
+    </div>
+  </div>
+  
+  <!-- Table Skeleton -->
+  <div *ngIf="type === 'table'" class="skeleton-table">
+    <div *ngFor="let item of items" class="skeleton-table-row">
+      <div class="skeleton-text" [style.width]="width" [style.height]="height"></div>
+    </div>
+  </div>
+  
+  <!-- Text Skeleton (default) -->
+  <div *ngIf="type === 'text'" class="skeleton-text-container">
+    <div *ngFor="let item of items" class="skeleton-text" [style.width]="width" [style.height]="height" [style.border-radius]="borderRadius"></div>
+  </div>
+</div>
+
