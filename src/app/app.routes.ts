@@ -84,6 +84,7 @@ export const routes: Routes = [
           {
           path: 'client-panel',
           component: ClientPanelComponent,
+          runGuardsAndResolvers: 'always'
         },
         {
           path: 'medical-ai',
@@ -136,10 +137,12 @@ export const routes: Routes = [
         {
           path: 'doctors',
           component: DoctorsComponent,
+          runGuardsAndResolvers: 'always',
           children: [
             {
             path: '',
-            component: DoctorListComponent
+            component: DoctorListComponent,
+            runGuardsAndResolvers: 'always'
           },
             {
             path: 'profile/:id',

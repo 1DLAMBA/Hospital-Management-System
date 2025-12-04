@@ -1,4 +1,4 @@
-<section *ngIf='user.user_type == "doctor"'>
+<section *ngIf='user.user_type == "doctor" || user.user_type == "other_professional"'>
 
     <app-doctor-panel></app-doctor-panel>
 </section>
@@ -7,6 +7,6 @@
     <app-client-panel></app-client-panel>
 </section>
 <section *ngIf='user.user_type == "nurse"'>
-
+ 
     <app-nurse-panel></app-nurse-panel>
 </section>

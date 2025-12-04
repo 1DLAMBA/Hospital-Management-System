@@ -1,0 +1,68 @@
+<p-toast></p-toast>
+
+<div class="otp-container">
+  <div class="otp-card">
+    <div class="otp-header">
+      <h3>Email Verification</h3>
+      <p>Please check your email for the verification code</p>
+    </div>
+
+    <div class="otp-content">
+      <div class="email-info">
+        <p>We've sent a 4-digit verification code to:</p>
+        <p class="email-address">{{ userEmail }}</p>
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+        <div class="otp-input-group">
+          <label>Enter Verification Code</label>
+          <div class="otp-inputs-container">
+            <input
+              *ngFor="let digit of otpDigits; let i = index; trackBy: trackByIndex"
+              [id]="'otp-digit-' + i"
+              type="text"
+              [formControlName]="'digit' + i"
+              class="otp-digit-input"
+              [class.error]="otpForm.get('digit' + i)?.invalid && otpForm.get('digit' + i)?.touched"
+              maxlength="1"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              (input)="onDigitInput($event, i)"
+              (keydown)="onKeyDown($event, i)"
+              (focus)="onInputFocus($event, i)"
+              (click)="onInputClick($event, i)"
+              autocomplete="off"
+            />
+          </div>
+          <small class="error-message" *ngIf="otpForm.invalid && (otpForm.get('digit0')?.touched || otpForm.get('digit1')?.touched || otpForm.get('digit2')?.touched || otpForm.get('digit3')?.touched)">
+            Please enter all 4 digits
+          </small>
+        </div>
+
+        <div class="otp-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="otpForm.invalid || isLoading"
+          >
+            <span *ngIf="!isLoading">Verify</span>
+            <span *ngIf="isLoading">Verifying...</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="regenerate-section">
+        <p>Didn't receive the code?</p>
+        <button
+          type="button"
+          class="btn btn-link"
+          (click)="regenerateOtp()"
+          [disabled]="isRegenerating"
+        >
+          <span *ngIf="!isRegenerating">Resend Code</span>
+          <span *ngIf="isRegenerating">Sending...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

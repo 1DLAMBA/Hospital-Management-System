@@ -22,6 +22,7 @@ import { NurseResource } from '../../../../../resources/nurse.model';
 import { ChatDialogService } from '../../../chat-dialog.service';
 import { MessagesService } from '../../../../endpoints/messages.service';
 import { error } from 'node:console';
+import { MedicalRecordViewComponent } from '../../../../shared/components/medical-record-view/medical-record-view.component';
 
 
 
@@ -534,37 +535,6 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestr
   openMedRecordView(record: any) {
     this.selectedMedRecord = record;
     this.viewMedRecordDialog = true;
-  }
-
-  printMedRecord() {
-    const printContents = document.getElementById('printable-med-record')?.innerHTML;
-    if (printContents) {
-      const printWindow = window.open('', '', 'height=600,width=800');
-      if (printWindow) {
-        printWindow.document.write('<html><head><title>Medical Record - ' + (this.selectedMedRecord?.record_number || 'Record') + '</title>');
-        printWindow.document.write('<style>');
-        printWindow.document.write('body{font-family:"Segoe UI",Arial,sans-serif;margin:0;padding:20px;color:#111827;background:#fff;}');
-        printWindow.document.write('.patient-info-section{display:flex;gap:1.5rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #e5e7eb;}');
-        printWindow.document.write('.patient-photo{width:80px;height:80px;border-radius:8px;border:1px solid #e5e7eb;}');
-        printWindow.document.write('.patient-details-list{flex:1;display:flex;flex-direction:column;gap:0.5rem;}');
-        printWindow.document.write('.detail-row{display:flex;gap:0.5rem;}');
-        printWindow.document.write('.detail-label{font-size:0.875rem;font-weight:600;color:#6b7280;min-width:100px;}');
-        printWindow.document.write('.detail-value{font-size:0.875rem;color:#111827;}');
-        printWindow.document.write('.medical-section{padding-bottom:1rem;border-bottom:1px solid #e5e7eb;margin-bottom:1rem;}');
-        printWindow.document.write('.section-title{margin:0 0 0.5rem 0;font-size:0.95rem;font-weight:600;color:#17224d;}');
-        printWindow.document.write('.section-text{font-size:0.875rem;line-height:1.6;color:#374151;margin:0;}');
-        printWindow.document.write('.section-text-empty{font-size:0.875rem;color:#9ca3af;font-style:italic;margin:0;}');
-        printWindow.document.write('.record-footer-info{margin-top:1rem;padding-top:1rem;border-top:1px solid #e5e7eb;text-align:right;}');
-        printWindow.document.write('.record-footer-info small{font-size:0.75rem;color:#9ca3af;}');
-        printWindow.document.write('@media print{body{padding:0;} .medical-section{margin-bottom:0.75rem;}}');
-        printWindow.document.write('</style>');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write(printContents);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-      }
-    }
   }
 
 }

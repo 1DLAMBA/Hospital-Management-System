@@ -84,7 +84,13 @@ export class NurseProfileComponent  implements OnInit {
         this.user = response.user;
         console.log('APPOINTEMENTS', this.singleNurse);
 
-        this.nurseEndpoint.getSingle(this.user.nurses.id).subscribe({
+        // Handle both nurses and other_professionals
+        const professionalId = this.user.nurses?.id || this.user.other_professionals?.id;
+        if (!professionalId) {
+          console.error('No nurse or other_professional ID found');
+          return;
+        }
+        this.nurseEndpoint.getSingle(professionalId).subscribe({
           next: (response: any) => {
             this.singleNurse = response.nurse;
           }

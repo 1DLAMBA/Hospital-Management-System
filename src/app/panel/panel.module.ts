@@ -59,6 +59,8 @@ import { PanelSkeletonComponent } from '../shared/components/panel-skeleton/pane
 import { OverlayModule } from 'primeng/overlay';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChatPageComponent } from './dashboard/messages/chat-page/chat-page.component';
+import { SharedModule } from '../shared.module';
+import { MedicalRecordViewComponent } from '../shared/components/medical-record-view/medical-record-view.component';
 
 @NgModule({
   declarations: [
@@ -123,6 +125,8 @@ import { ChatPageComponent } from './dashboard/messages/chat-page/chat-page.comp
     SkeletonModule,
     OverlayModule,
     OverlayPanelModule,
+    SharedModule,
+    MedicalRecordViewComponent,
     
   ],
   exports: [PanelLoaderComponent],

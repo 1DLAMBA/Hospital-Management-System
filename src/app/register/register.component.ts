@@ -12,6 +12,7 @@ import {
 } from '@angular/router';
 import { ClientsService } from '../endpoints/clients.service';
 import { NursesService } from '../endpoints/nurses.service';
+import { OtherProfessionalsService } from '../endpoints/other-professionals.service';
 import { MessageService } from 'primeng/api';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -39,15 +40,40 @@ export class RegisterComponent implements OnInit {
   loader: boolean = false;
   passport: any;
   uploadedPassport: any;
+  signatureFile: any;
+  uploadedSignatureFile: any;
+  signatureLoader: boolean = false;
+  idCardFile: any;
+  uploadedIdCardFile: any;
+  idCardLoader: boolean = false;
   userId: any;
   invalidFill: boolean = false;
   submitLoader: boolean = false;
+  showOtpVerification: boolean = false;
+  registeredUserEmail: string = '';
+  registeredUserType: string = '';
+
+  // Professional types for other_professional user type
+  professionalTypes = [
+    { label: 'Public Health', value: 'Public Health' },
+    { label: 'Physiologist', value: 'Physiologist' },
+    { label: 'Pharmacist', value: 'Pharmacist' },
+    { label: 'Physical Therapist', value: 'Physical Therapist' },
+    { label: 'Occupational Therapist', value: 'Occupational Therapist' },
+    { label: 'Radiologist', value: 'Radiologist' },
+    { label: 'Laboratory Technician', value: 'Laboratory Technician' },
+    { label: 'Medical Social Worker', value: 'Medical Social Worker' },
+    { label: 'Nutritionist', value: 'Nutritionist' },
+    { label: 'Respiratory Therapist', value: 'Respiratory Therapist' },
+    { label: 'Other', value: 'Other' }
+  ];
 
   constructor(
     private _http: HttpClient,
     private readonly userEndpoint: UserService,
     private readonly doctorEndpoint: DoctorsService,
     private readonly nurseEndpoint: NursesService,
+    private readonly otherProfessionalEndpoint: OtherProfessionalsService,
     private readonly clientEndpoint: ClientsService,
     private readonly router: Router,
     private messageService: MessageService,
@@ -61,6 +87,7 @@ export class RegisterComponent implements OnInit {
       password: new FormControl('', Validators.required),
       confirm_password: new FormControl('', Validators.required),
       user_type: new FormControl('', Validators.required),
+      professional_type: new FormControl(''), // Required conditionally for other_professional
       license_number: new FormControl('', Validators.required),
       med_school: new FormControl('', Validators.required),
       specialization: new FormControl('', Validators.required),
@@ -103,7 +130,17 @@ export class RegisterComponent implements OnInit {
         this.firststep = false;
         this.clientstep = true;
       }
-      if (this.RegisterForm.value.user_type == 'doctor' || this.RegisterForm.value.user_type == 'nurse') {
+      if (this.RegisterForm.value.user_type == 'doctor' || 
+          this.RegisterForm.value.user_type == 'nurse' || 
+          this.RegisterForm.value.user_type == 'other_professional') {
+        // Set professional_type as required for other_professional
+        if (this.RegisterForm.value.user_type === 'other_professional') {
+          this.RegisterForm.get('professional_type')?.setValidators([Validators.required]);
+        } else {
+          this.RegisterForm.get('professional_type')?.clearValidators();
+        }
+        this.RegisterForm.get('professional_type')?.updateValueAndValidity();
+        
         this.secondstep = true;
         this.firststep = false;
       }
@@ -114,9 +151,22 @@ export class RegisterComponent implements OnInit {
 
   }
   submit() {
-    // if(!this.passport.invalid){
-    //   this.degreeError('Upload Passport')
-    // }
+    // Validate signature and ID card for professionals
+    const isProfessional = this.RegisterForm.value.user_type === 'doctor' || 
+                          this.RegisterForm.value.user_type === 'nurse' || 
+                          this.RegisterForm.value.user_type === 'other_professional';
+    
+    if (isProfessional) {
+      if (!this.signatureFile) {
+        this.degreeError('Please upload your signature');
+        return;
+      }
+      if (!this.idCardFile) {
+        this.degreeError('Please upload your ID card');
+        return;
+      }
+    }
+    
     this.submitLoader=true;
     const baseUrlLength = (environment.apiUrl + '/file/get/').length;
     if (this.degreeFile) {
@@ -129,6 +179,18 @@ export class RegisterComponent implements OnInit {
       this.passport = this.uploadedPassport.slice(
         baseUrlLength,
         this.uploadedPassport.length
+      );
+    }
+    if (this.signatureFile) {
+      this.signatureFile = this.uploadedSignatureFile.slice(
+        baseUrlLength,
+        this.uploadedSignatureFile.length
+      );
+    }
+    if (this.idCardFile) {
+      this.idCardFile = this.uploadedIdCardFile.slice(
+        baseUrlLength,
+        this.uploadedIdCardFile.length
       );
     }
 
@@ -144,9 +206,15 @@ export class RegisterComponent implements OnInit {
     this.userEndpoint.register(formData).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.userId = response.user.id
-        this.adduser(this.userId, this.RegisterForm.value.user_type)
-
+        this.userId = response.user.id;
+        
+        // Check if OTP verification is required
+        if (response.requires_verification) {
+          this.registeredUserEmail = this.RegisterForm.value.email;
+          this.registeredUserType = this.RegisterForm.value.user_type;
+        }
+        
+        this.adduser(this.userId, this.RegisterForm.value.user_type);
       },
       error: (error) => {
         console.log(error);
@@ -156,13 +224,16 @@ export class RegisterComponent implements OnInit {
     })
   }
   finalstep() {
+    const isOtherProfessional = this.RegisterForm.value.user_type === 'other_professional';
+    const hasProfessionalType = this.RegisterForm.value.professional_type;
+    
     if (this.RegisterForm.value.license_number &&
       this.RegisterForm.value.med_school &&
-      !this.degreeFile.invalid &&
+      this.degreeFile &&
       this.RegisterForm.value.specialization &&
-      this.RegisterForm.value.grad_year
+      this.RegisterForm.value.grad_year &&
+      (!isOtherProfessional || hasProfessionalType)
     ) {
-
       this.secondstep = false;
       this.photostep = true;
     }
@@ -209,15 +280,21 @@ export class RegisterComponent implements OnInit {
           specialization: this.RegisterForm.value.specialization,
           grad_year: this.RegisterForm.value.grad_year,
           degree_file: this.degreeFile,
+          signature: this.signatureFile,
+          id_card: this.idCardFile,
         }
         this.doctorEndpoint.create(user).subscribe({
           next: (response: any) => {
             console.log(response);
-            this.router.navigate(['login'])
-
+            this.submitLoader = false;
+            // Show OTP verification instead of navigating to login
+            this.showOtpVerification = true;
+            this.registeredUserEmail = this.RegisterForm.value.email;
+            this.registeredUserType = 'doctor';
           },
-          error(err) {
-            console.log(err)
+          error: (err) => {
+            console.log(err);
+            this.submitLoader = false;
           },
         })
         break;
@@ -230,13 +307,48 @@ export class RegisterComponent implements OnInit {
           specialization: this.RegisterForm.value.specialization,
           grad_year: this.RegisterForm.value.grad_year,
           degree_file: this.degreeFile,
+          signature: this.signatureFile,
+          id_card: this.idCardFile,
         }
         this.nurseEndpoint.create(nurse).subscribe({
           next: (response) => {
             console.log(response);
-            this.router.navigate(['login'])
-          }, error(err) {
-
+            this.submitLoader = false;
+            // Show OTP verification instead of navigating to login
+            this.showOtpVerification = true;
+            this.registeredUserEmail = this.RegisterForm.value.email;
+            this.registeredUserType = 'nurse';
+          }, 
+          error: (err) => {
+            console.log(err);
+            this.submitLoader = false;
+          },
+        })
+        break;
+      case 'other_professional':
+        const otherProfessional = {
+          user_id: userId,
+          professional_type: this.RegisterForm.value.professional_type,
+          license_number: this.RegisterForm.value.license_number,
+          med_school: this.RegisterForm.value.med_school,
+          specialization: this.RegisterForm.value.specialization,
+          grad_year: this.RegisterForm.value.grad_year,
+          degree_file: this.degreeFile,
+          signature: this.signatureFile,
+          id_card: this.idCardFile,
+        }
+        this.otherProfessionalEndpoint.create(otherProfessional).subscribe({
+          next: (response) => {
+            console.log(response);
+            this.submitLoader = false;
+            // Show OTP verification instead of navigating to login
+            this.showOtpVerification = true;
+            this.registeredUserEmail = this.RegisterForm.value.email;
+            this.registeredUserType = 'other_professional';
+          }, 
+          error: (err) => {
+            console.log(err);
+            this.submitLoader = false;
           },
         })
         break;
@@ -267,6 +379,12 @@ export class RegisterComponent implements OnInit {
       case 'passport':
         this.passportLoader = true;
         break;
+      case 'signature':
+        this.signatureLoader = true;
+        break;
+      case 'id_card':
+        this.idCardLoader = true;
+        break;
       default:
         window.alert('something went wrong')
         break;
@@ -290,6 +408,14 @@ export class RegisterComponent implements OnInit {
             this.passport = file;
             this.passportLoader = false;
             break;
+          case 'signature':
+            this.signatureFile = file;
+            this.signatureLoader = false;
+            break;
+          case 'id_card':
+            this.idCardFile = file;
+            this.idCardLoader = false;
+            break;
           default:
             window.alert('something went wrong')
             break;
@@ -309,6 +435,14 @@ export class RegisterComponent implements OnInit {
             this.passportLoader = false
 
             break;
+          case 'signature':
+            this.uploadedSignatureFile = environment.apiUrl + '/file/get/' + this.signatureFile
+            this.signatureLoader = false
+            break;
+          case 'id_card':
+            this.uploadedIdCardFile = environment.apiUrl + '/file/get/' + this.idCardFile
+            this.idCardLoader = false
+            break;
           default:
             window.alert('something went wrong')
             break;
@@ -319,11 +453,16 @@ export class RegisterComponent implements OnInit {
         this.loader = false;
         this.degreeError('Please try again')
         this.passportLoader = false;
+        this.signatureLoader = false;
+        this.idCardLoader = false;
       }
 
     })
   }
 
-
+  onOtpVerified() {
+    // OTP verification component handles navigation
+    this.showOtpVerification = false;
+  }
 
 }

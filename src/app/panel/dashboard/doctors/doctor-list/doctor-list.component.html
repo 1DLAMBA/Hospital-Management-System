@@ -6,8 +6,8 @@
             <div class="m-2 d-flex">
                 <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
                 <div class="m-1">
-                    <h1>{{doctors.length}}</h1>
-                    <p>Doctors</p>
+                    <h1>{{(professionals && professionals.length) || 0}}</h1>
+                    <p>Healthcare Professionals</p>
                 </div>
             </div>
         </div>
@@ -15,7 +15,7 @@
             <div class="m-2 d-flex">
                 <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
                 <div class="m-1">
-                    <h1>1</h1>
+                    <h1>{{ unavailableCount }}</h1>
                     <p>Unavailable</p>
                 </div>
             </div>
@@ -24,117 +24,78 @@
             <div class="m-2 d-flex">
                 <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
                 <div class="m-1">
-                    <h1>2</h1>
+                    <h1>{{ availableCount }}</h1>
                     <p>Available</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <p-table
-        #dt1
-        [value]="doctors"
-        dataKey="id"
-        [rows]="10"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        [paginator]="true"
-        [globalFilterFields]="['doctor.user.name', 'doctors.specialization', 'representative.name', 'status']"
-    >
-    
-    
-    <ng-template pTemplate="caption">
-        <div class="flex">
-            <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clear(dt1)" />
+    <!-- Search and Filter Section -->
+    <div class="search-section mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clearSearch()" />
             <span class="p-input-icon-left ml-auto">
                 <i class="pi pi-search"></i>
-                <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" />
+                <input pInputText type="text" [(ngModel)]="searchValue" (input)="filterProfessionals()" placeholder="Search keyword" />
             </span>
         </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-        <tr>
-            <th style="min-width:7rem">
-                <div class="flex align-items-center">
-                    View
-                    <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
+    </div>
+
+    <!-- Horizontal Scrollable Profile Cards -->
+    <div class="professionals-container">
+        <!-- Skeleton Loaders while loading -->
+        <div class="professionals-scroll" *ngIf="!professionals">
+            <div class="profile-card" *ngFor="let i of [1,2,3,4]">
+                <div class="card-image-container">
+                    <p-skeleton shape="circle" size="100px"></p-skeleton>
                 </div>
-            </th>
-            <th style="min-width:15rem">
-                <div class="flex align-items-center">
-                    Name
-                    <p-columnFilter type="text" field="name" display="menu" />
+                <div class="card-content">
+                    <p-skeleton width="80%" height="1.2rem" styleClass="mb-2"></p-skeleton>
+                    <p-skeleton width="60%" height="1rem" styleClass="mb-2"></p-skeleton>
+                    <p-skeleton width="70%" height="1rem"></p-skeleton>
                 </div>
-            </th>
-            <th style="min-width:10rem">
-                <div class="flex align-items-center">
-                    Specialization
-                    <p-columnFilter type="text" field="country.name" display="menu" />
+            </div>
+        </div>
+        
+        <!-- Profile Cards -->
+        <div class="professionals-scroll" *ngIf="professionals && filteredProfessionals && filteredProfessionals.length > 0">
+            <div class="profile-card" *ngFor="let professional of filteredProfessionals">
+                <div class="card-image-container">
+                    <app-lazy-image 
+                        [src]="avatar_file + (professional.user.passport || '')" 
+                        [alt]="professional.user.name"
+                        class="card-image">
+                    </app-lazy-image>
                 </div>
-            </th>
-            <th style="min-width:5rem">
-                <div class="flex align-items-center">
-                    Availability
-                    <!-- <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                        <ng-template pTemplate="header">
-                            <div class="px-3 pt-3 pb-0">
-                                <span class="font-bold">Agent Picker</span>
-                            </div>
-                        </ng-template>
-                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                            <p-multiSelect [(ngModel)]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name">
-                                <ng-template let-option pTemplate="item">
-                                    <div class="inline-block vertical-align-middle">
-                                        <img [alt]="option.label" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ option.image }}" width="24" class="vertical-align-middle" />
-                                        <span class="ml-1 mt-1">{{ option.name }}</span>
-                                    </div>
-                                </ng-template>
-                            </p-multiSelect>
-                        </ng-template>
-                    </p-columnFilter> -->
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3 class="card-name">{{ professional.user.name }}</h3>
+                        <span class="verified-badge" *ngIf="professional.type === 'doctor'">
+                            <i class="pi pi-check"></i>
+                        </span>
+                    </div>
+                    <p class="card-title">{{ professional.specialization || professional.displayType }}</p>
+                    <div class="card-metrics">
+                        <div class="metric-item">
+                            <i class="pi pi-user"></i>
+                            <span>{{ professional.displayType }}</span>
+                        </div>
+                        <div class="metric-item">
+                            <i class="pi" [ngClass]="getAvailabilityIcon(professional)"></i>
+                            <span>{{ getAvailabilityText(professional) }}</span>
+                        </div>
+                    </div>
+                    <button class="card-button" (click)="getSingleDoctor(professional.id, professional.type)">
+                        View Profile
+                    </button>
                 </div>
-            </th>
-            <th style="min-width:10rem">
-                <div class="flex align-items-center">
-                    Email
-                    <p-columnFilter type="date" field="date" display="menu" />
-                </div>
-            </th>
-            
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-doctor>
-        <tr >
-            <td>
-            <p-button label="View" severity="info" [raised]="true"  [rounded]="true" (onClick)="getSingleDoctor(doctor.id)"/>
-            </td>
-            <td class="d-flex">
-                <div class="passport">
-                    <img  src="{{ avatar_file + doctor.user.passport }}">
-                </div>
-                {{ doctor.user.name}}
-            </td>
-            <td>
-                <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + doctors.country.code" style="width: 20px" /> -->
-                <span class="ml-1 vertical-align-middle">{{ doctor.specialization }}</span>
-            </td>
-            <td>
-                <!-- <img [alt]="doctors.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ doctors.representative.image }}" width="32" style="vertical-align: middle" /> -->
-                <p-tag *ngIf="doctor.availability === '0'" value="Unavailable" severity="danger"></p-tag>
-                <p-tag *ngIf="doctor.availability === '1'" value="Available" severity="success"></p-tag>
-            </td>
-            <td>
-                {{ doctor.user.email}}
-            </td>
-           
-           
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-        <tr>
-            <td colspan="7">No doctors found.</td>
-        </tr>
-    </ng-template>
-    
-    
-    </p-table>
+            </div>
+        </div>
+        
+        <!-- Empty Message -->
+        <div class="empty-message" *ngIf="professionals && (!filteredProfessionals || filteredProfessionals.length === 0)">
+            <p>No healthcare professionals found.</p>
+        </div>
+    </div>
 </section>

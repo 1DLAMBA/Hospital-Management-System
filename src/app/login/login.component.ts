@@ -31,6 +31,10 @@ export class LoginComponent implements OnDestroy, OnInit {
   invalidDetails: boolean = false;
   error_message: string='';
   submitLoading: boolean=false;
+  showOtpVerification: boolean = false;
+  pendingVerificationUserId: number | null = null;
+  pendingVerificationEmail: string = '';
+  pendingVerificationUserType: string = '';
 
   constructor(
     private loginEndpoint: UserService,
@@ -67,6 +71,12 @@ export class LoginComponent implements OnDestroy, OnInit {
     this.toastService.clear();
   }
 
+  onOtpVerified() {
+    // After OTP verification, attempt login again
+    this.showOtpVerification = false;
+    this.login();
+  }
+
   login() {
     this.spinner.show();
     this.submitLoading = true;
@@ -85,7 +95,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     
     this.loginEndpoint.login(formData).subscribe({
       next: (response: any) => {
-    this.submitLoading = false;
+        this.submitLoading = false;
         console.log(response.user)
         this.spinner.hide();
         this.authService.login(response)
@@ -93,6 +103,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         localStorage.setItem('id', response.user.id)
         switch (response.user.user_type) {
           case 'doctor':
+          case 'other_professional':
             this.router.navigate(['panel/doctor-panel', response.user.id]);
             break;
           case 'client':
@@ -108,14 +119,23 @@ export class LoginComponent implements OnDestroy, OnInit {
       },
       error: (res: HttpErrorResponse) => {
         console.log(res);
+        this.submitLoading = false;
+        this.spinner.hide();
+        
+        // Check if error is due to unverified email
+        if (res.status === 403 && res.error?.requires_verification) {
+          this.showOtpVerification = true;
+          this.pendingVerificationUserId = res.error.user_id;
+          this.pendingVerificationEmail = res.error.email;
+          this.pendingVerificationUserType = res.error.user_type;
+          return;
+        }
+        
         if(res.status === 400){
-
           this.error_message=res.error;
         }
         this.invalidDetails = true;
-        this.submitLoading = false;
-        this.error_message=res.message;
-        this.spinner.hide();
+        this.error_message=res.message || res.error || 'Invalid credentials';
 
       }
     })

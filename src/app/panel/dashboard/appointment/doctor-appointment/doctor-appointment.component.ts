@@ -61,7 +61,17 @@ export class DoctorAppointmentComponent implements OnInit {
   }
 
   loadAppointments(): void {
-    this.appointmentEndpoint.get(this.user.doctors.id + '?_=' + new Date().getTime(), 'doctor').subscribe({
+    // Handle both doctors and other_professionals
+    const professionalId = this.user.doctors?.id || this.user.other_professionals?.id;
+    const userType = this.user.doctors ? 'doctor' : 'other_professional';
+    
+    if (!professionalId) {
+      console.error('No professional ID found');
+      this.loading = false;
+      return;
+    }
+    
+    this.appointmentEndpoint.get(professionalId + '?_=' + new Date().getTime(), userType).subscribe({
       next: (response: any) => {
         this.appointment = response.appointments;
         this.updateAppointmentCounts();

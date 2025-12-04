@@ -24,4 +24,12 @@ export class UserService{
 
   }
 
+  verifyOtp(data: { user_id: number; otp: string }){
+    return this.httpClient.post(`${this.baseUrl}/verify-otp`, data);
+  }
+
+  regenerateOtp(data: { user_id: number }){
+    return this.httpClient.post(`${this.baseUrl}/regenerate-otp`, data);
+  }
+
 }

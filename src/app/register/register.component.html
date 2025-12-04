@@ -1,5 +1,16 @@
 <p-toast></p-toast>
-<div class="  registerbody ">
+
+<!-- OTP Verification View -->
+<app-otp-verification 
+    *ngIf="showOtpVerification"
+    [userId]="userId"
+    [userEmail]="registeredUserEmail"
+    [userType]="registeredUserType"
+    (verified)="onOtpVerified()">
+</app-otp-verification>
+
+<!-- Registration Form View -->
+<div *ngIf="!showOtpVerification" class="  registerbody ">
     <div class="holder shadow-lg  m-auto d-flex  justify-content-center">
         <div class="  sideA">
             <div class="innersideA  d-flex ">
@@ -116,7 +127,7 @@
                                     Field Required
                             </small>
                     </div>
-                    <div class="user_type m-2 d-flex justify-content-between">
+                    <div class="user_type m-2 d-flex justify-content-between flex-wrap">
                         <span class="m-3">
                             <input id="Doctor" formControlName="user_type" type="radio" name="user_type"
                                 value="doctor" />
@@ -129,6 +140,11 @@
                         </span>
 
                         <span class="m-3">
+                            <input id="OtherProfessional" formControlName="user_type" type="radio" name="user_type" value="other_professional" />
+                            <label for="OtherProfessional">Other Professional</label>
+                        </span>
+
+                        <span class="m-3">
                             <input id="Client" formControlName="user_type" type="radio" name="user_type"
                                 value="client" />
                             <label for="Client">Client</label>
@@ -138,6 +154,24 @@
                     <button class="btn btn-lg submit border text-center btn-hover" (click)="next()">Next </button>
                 </div>
                 <div class="secondstep" *ngIf="secondstep">
+                    <!-- Professional Type Dropdown - Only show for other_professional -->
+                    <div class="flex flex-column gap-2" *ngIf="RegisterForm.value.user_type === 'other_professional'">
+                        <label for="professional_type">Professional Type</label><br>
+                        <p-dropdown 
+                            formControlName="professional_type" 
+                            [options]="professionalTypes" 
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Select your professional type"
+                            [showClear]="true"
+                            styleClass="w-full">
+                        </p-dropdown>
+                        <small *ngIf="RegisterForm.get('professional_type')?.touched && RegisterForm.get('professional_type')?.hasError('required')"
+                                class="text-danger">
+                                Field Required
+                        </small>
+                    </div>
+                    
                     <div class="flex flex-column gap-2">
                         <label for="license_number">License Number</label><br>
                         <input formControlName="license_number" placeholder="Your License Number" name="license_number"
@@ -215,6 +249,57 @@
                         <input type="file" #g1_identification2 name="degree_file" id="degree_file" hidden
                             accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
                             (change)="handleFileUpload($event, 'passport')" />
+                    </div>
+
+                    <!-- Signature and ID Card Upload - Only for professionals -->
+                    <div *ngIf="RegisterForm.value.user_type === 'doctor' || RegisterForm.value.user_type === 'nurse' || RegisterForm.value.user_type === 'other_professional'" class="d-flex flex-column gap-3 mt-4">
+                        <!-- Signature Upload -->
+                        <div class="card flex d-flex my-2 upload justify-content-center">
+                            <div class="m-auto d-flex flex-column align-items-center">
+                                <img *ngIf="uploadedSignatureFile" style="
+                                    border-radius: 6px;
+                                    width: 120px;
+                                    height: 120px;
+                                    object-fit: contain;
+                                " class="rounded m-auto img-fix-h img-fit img-fluid mb-2"
+                                    [src]="uploadedSignatureFile" alt="Signature Preview" />
+                                <button *ngIf="!signatureLoader" pButton pRipple type="button" (click)="signatureFileInput.click()"
+                                    class="p-2 m-2 w-full bi bi-upload upload-button">
+                                    <span role="status" aria-hidden="true"></span>&nbsp;&nbsp;Upload Signature
+                                </button>
+                                <button *ngIf="signatureLoader" pButton pRipple type="button" disabled
+                                    class="p-2 m-2 w-full upload-button">
+                                    <span role="status" aria-hidden="true" class="spinner-border"></span>&nbsp;&nbsp;Uploading...
+                                </button>
+                                <input type="file" #signatureFileInput name="signature_file" id="signature_file" hidden
+                                    accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
+                                    (change)="handleFileUpload($event, 'signature')" />
+                            </div>
+                        </div>
+
+                        <!-- ID Card Upload -->
+                        <div class="card flex d-flex my-2 upload justify-content-center">
+                            <div class="m-auto d-flex flex-column align-items-center">
+                                <img *ngIf="uploadedIdCardFile" style="
+                                    border-radius: 6px;
+                                    width: 120px;
+                                    height: 120px;
+                                    object-fit: contain;
+                                " class="rounded m-auto img-fix-h img-fit img-fluid mb-2"
+                                    [src]="uploadedIdCardFile" alt="ID Card Preview" />
+                                <button *ngIf="!idCardLoader" pButton pRipple type="button" (click)="idCardFileInput.click()"
+                                    class="p-2 m-2 w-full bi bi-upload upload-button">
+                                    <span role="status" aria-hidden="true"></span>&nbsp;&nbsp;Upload ID Card
+                                </button>
+                                <button *ngIf="idCardLoader" pButton pRipple type="button" disabled
+                                    class="p-2 m-2 w-full upload-button">
+                                    <span role="status" aria-hidden="true" class="spinner-border"></span>&nbsp;&nbsp;Uploading...
+                                </button>
+                                <input type="file" #idCardFileInput name="id_card_file" id="id_card_file" hidden
+                                    accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
+                                    (change)="handleFileUpload($event, 'id_card')" />
+                            </div>
+                        </div>
                     </div>
 
                     <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover" (click)="submit()">Submit</button>

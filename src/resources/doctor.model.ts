@@ -8,6 +8,8 @@ export interface DoctorResource {
     specialization: string,
     grad_year: string,
     degree_file: string,
+    signature?: string,
+    id_card?: string,
     availability: string,
     user: UserResource
 }

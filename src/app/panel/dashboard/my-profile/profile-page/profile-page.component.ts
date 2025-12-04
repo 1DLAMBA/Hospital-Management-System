@@ -109,22 +109,6 @@ export class ProfilePageComponent implements OnInit {
     this.viewMedRecordDialog = true;
   }
 
-  printMedRecord() {
-    const printContents = document.getElementById('printable-med-record')?.innerHTML;
-    if (printContents) {
-      const printWindow = window.open('', '', 'height=600,width=800');
-      if (printWindow) {
-        printWindow.document.write('<html><head><title>Print Medical Record</title>');
-        printWindow.document.write('<style>body{font-family:sans-serif;} .print-header{background:#6366f1;color:white;padding:1rem;} .print-section{margin:1rem 0;} .print-label{font-weight:bold;} .print-value{margin-left:0.5rem;} .print-footer{margin-top:2rem;}</style>');
-        printWindow.document.write('</head><body >');
-        printWindow.document.write(printContents);
-        printWindow.document.write('</body></html>');
-        printWindow.document.close();
-        printWindow.print();
-      }
-    }
-  }
-
 
   showDialog() {
     this.visible = true;

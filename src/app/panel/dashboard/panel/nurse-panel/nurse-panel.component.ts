@@ -155,7 +155,16 @@ this.getUser();
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user;
-        this.appointmentEndpoint.get(this.user.nurses.id).subscribe({
+        // Handle both nurses and other_professionals
+        const professionalId = this.user.nurses?.id || this.user.other_professionals?.id;
+        
+        if (!professionalId) {
+          console.error('No nurse or other_professional ID found');
+          this.loading = false;
+          return;
+        }
+        
+        this.appointmentEndpoint.get(professionalId).subscribe({
           next: (response: any) => {
             if(response.assignment){
               this.appointment = response.assignment;
@@ -366,6 +375,9 @@ this.getUser();
 
             // this.complaint = this.splitComplaint(this.recentAppt.symptoms)
             this.pendingAppointment = this.appointment.filter((user: any) => user.status == 'pending').length;
+            
+            // Set loading to false after all data is processed
+            this.loading = false;
 
           },
           error: (err: any) => {

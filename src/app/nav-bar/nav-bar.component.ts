@@ -34,7 +34,7 @@ export class NavBarComponent implements OnInit {
   login(){
     console.log(this.authService.user);
     if(this.authService.user){
-      if(this.authService.user.user.user_type=='doctor'){
+      if(this.authService.user.user.user_type=='doctor' || this.authService.user.user.user_type=='other_professional'){
         this.router.navigate(['panel/doctor-appointment'])
       } else if(this.authService.user.user.user_type=='client'){
         this.router.navigate(['panel/client-appointment'])
@@ -54,6 +54,7 @@ export class NavBarComponent implements OnInit {
       
       switch(userType) {
         case 'doctor':
+        case 'other_professional':
           this.router.navigate(['panel/doctor-panel', userId]);
           break;
         case 'client':

@@ -21,7 +21,7 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
   data: any;
   options: any;
   products!: any;
-  date: Date[] | undefined;
+  date: Date | undefined;
   upc_appt: AppointmentResource[] | any;
   doctor!: DoctorResource;
   appointment: AppointmentResource[] | any = [];
@@ -51,15 +51,10 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
     this.pendingAppointment = [];
     this.previousAppointment = [] as any;
     this.data = { labels: [], datasets: [] };
-
-    // Sample placeholder (if needed later, keep commented or remove)
-    /*this.upc_appt =[
-      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
-      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
-      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
-      {status: 'Ali Muhammed - General checkup', date:'12/10/2020 10:30', icon: 'pi pi-shopping-cart', color:'#0055aa' },
-
-    ]*/
+    this.date = new Date(); // Initialize calendar date
+    this.appointment = [];
+    this.acceptedAppointment = [];
+    this.recentAppt = null;
   }
   ngOnInit(): void {
     this.loading = true;
@@ -73,9 +68,20 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         const url = event.urlAfterRedirects || event.url;
-        if (url.includes('/panel/client-panel')) {
-          this.loading = true;
-          this.loadAllData();
+        // Reload when navigating to client-panel route
+        if (url === '/panel/client-panel' || url.includes('/panel/client-panel')) {
+          setTimeout(() => {
+            if (this.router.url === url || this.router.url.includes('/panel/client-panel')) {
+              this.loading = true;
+              // Reset data to prevent null errors
+              this.appointment = [];
+              this.acceptedAppointment = [];
+              this.pendingAppointment = [];
+              this.previousAppointment = [];
+              this.recentAppt = null;
+              this.loadAllData();
+            }
+          }, 100);
         }
       });
   }

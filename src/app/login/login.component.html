@@ -1,6 +1,16 @@
 <p-toast  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 
-<div class="  d-flex ">
+<!-- OTP Verification View -->
+<app-otp-verification 
+    *ngIf="showOtpVerification && pendingVerificationUserId"
+    [userId]="pendingVerificationUserId"
+    [userEmail]="pendingVerificationEmail"
+    [userType]="pendingVerificationUserType"
+    (verified)="onOtpVerified()">
+</app-otp-verification>
+
+<!-- Login Form View -->
+<div *ngIf="!showOtpVerification" class="  d-flex ">
     <div class="holder shadow-lg  m-auto d-flex justify-content-center">
         <div class="  sideA">
             <div class="innersideA  d-flex ">

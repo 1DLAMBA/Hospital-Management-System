@@ -29,7 +29,8 @@ header="Edit Profile"
 
                     <p><b>{{user?.name}}</b></p>
                     <div class="d-flex gap-5">
-                        <small>{{user?.user_type}}</small>
+                        <small *ngIf="user?.user_type != 'other_professional'">{{user?.user_type}}</small>
+                        <small *ngIf="user?.user_type == 'other_professional'">{{user?.other_professionals?.professional_type}}</small>
                         <div class="d-flex ">
                             <!-- Bell button toggles the notification tray -->
                             <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
@@ -93,7 +94,7 @@ header="Edit Profile"
                 </div>
             </div>
         </p-overlayPanel>
-        <div *ngIf="user?.user_type=='doctor'" class="d-flex mob-head  justify-content-between p-1">
+        <div *ngIf="user?.user_type=='doctor' || user?.user_type=='other_professional'" class="d-flex mob-head  justify-content-between p-1">
             <a routerLink="my-profile/doctor/{{this.id}}" class="text-decoration-none">
 
                 <button class="navi d-flex p-2">
@@ -176,6 +177,20 @@ header="Edit Profile"
 
         </a>
         <a routerLinkActive="active"  class=" bi bi-heart-pulse-fill" routerLink="nurses">
+
+        </a>
+        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
+
+        </a>
+        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
+            <span>AI</span>
+        </a>
+    </div>
+    <div *ngIf="user?.user_type=='other_professional'" class="mob-nav">
+        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel/{{this.id}}">
+            
+        </a>
+        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="doctor-appointment">
 
         </a>
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">

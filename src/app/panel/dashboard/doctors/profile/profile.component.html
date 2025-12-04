@@ -15,7 +15,7 @@
             <div class="diag-text my-auto d-flex justify-content-between flex-column">
                 <span class="bi bi-calendar4-week mb-5"></span>
                 <p class="mb-5">
-                    Booking an Appointment <br><br> with {{SingleDoctor.user.name}}<br>
+                    Booking an Appointment <br><br> with {{professional?.user?.name || SingleDoctor?.user?.name}}<br>
                 </p>
 
 
@@ -77,11 +77,21 @@
     <section class="main mx-auto d-flex flex-wrap justify-content-between">
         <div class="left-profile ">
             <div class="inner-profile d-flex flex-column pb-2">
-                <img class="m-auto" src="{{ avatar_file + SingleDoctor.user.passport }}">
-                <h1 class="m-2">{{SingleDoctor.user.name}}</h1>
-                <p class="m-2">{{SingleDoctor.specialization}}</p>
-                <p-tag *ngIf="SingleDoctor.availability === '0'" value="Unavailable" severity="danger"></p-tag>
-                <p-tag *ngIf="SingleDoctor.availability === '1'" value="Available" severity="success"></p-tag>
+                <app-lazy-image 
+                    class="m-auto"
+                    [src]="avatar_file + (professional?.user?.passport || SingleDoctor?.user?.passport || '')"
+                    [alt]="(professional?.user?.name || SingleDoctor?.user?.name) || 'Profile'"
+                    width="150px"
+                    height="150px"
+                    borderRadius="50%">
+                </app-lazy-image>
+                <p-skeleton *ngIf="!professional && !SingleDoctor" shape="circle" size="150px" styleClass="m-auto"></p-skeleton>
+                <h1 class="m-2">{{professional?.user?.name || SingleDoctor?.user?.name}}</h1>
+                <p class="m-2">{{professional?.specialization || SingleDoctor?.specialization}}</p>
+                <p class="m-2" *ngIf="professionalType === 'other_professional'">{{professional?.professional_type}}</p>
+                <p-tag *ngIf="professionalType === 'doctor' && (professional?.availability === '0' || SingleDoctor?.availability === '0')" value="Unavailable" severity="danger"></p-tag>
+                <p-tag *ngIf="professionalType === 'doctor' && (professional?.availability === '1' || SingleDoctor?.availability === '1')" value="Available" severity="success"></p-tag>
+                <p-tag *ngIf="professionalType === 'other_professional'" value="Available" severity="info"></p-tag>
             </div>
         </div>
         <div class="right-profile p-2">
@@ -94,39 +104,35 @@
                 <h1 class="primary-color">Profile</h1>
                 <div class="d-flex flex-wrap">
 
-                    <h3 class="col-6">{{SingleDoctor.user.name}}</h3>
-                    <small class="col-6">{{SingleDoctor.license_number}}</small>
-                    <p class="col-12">{{SingleDoctor.specialization}}</p>
+                    <h3 class="col-6">{{professional?.user?.name || SingleDoctor?.user?.name}}</h3>
+                    <small class="col-6">{{professional?.license_number || SingleDoctor?.license_number}}</small>
+                    <p class="col-12">{{professional?.specialization || SingleDoctor?.specialization}}</p>
+                    <p class="col-12" *ngIf="professionalType === 'other_professional'"><strong>Type:</strong> {{professional?.professional_type}}</p>
                 </div>
             </div>
             <div class="m-2">
                 <h1 class="primary-color">Experience</h1>
                 <span class="d-flex">
-                    <p class="col-6">{{SingleDoctor.med_school}}</p>
-                    <p class="col-6">{{SingleDoctor.grad_year}}</p>
+                    <p class="col-6">{{professional?.med_school || SingleDoctor?.med_school}}</p>
+                    <p class="col-6">{{professional?.grad_year || SingleDoctor?.grad_year}}</p>
                 </span>
             </div>
-            <div class="m-2">
+            <!-- <div class="m-2">
                 <h1 class="primary-color">Contact</h1>
                 <span class="d-flex flex-wrap">
-                    <p class="col-12">{{SingleDoctor.user.email}}</p>
-                    <p class="col-12">{{SingleDoctor.user.phoneno}}</p>
+                    <p class="col-12">{{professional?.user?.email || SingleDoctor?.user?.email}}</p>
+                    <p class="col-12">{{professional?.user?.phoneno || SingleDoctor?.user?.phoneno}}</p>
                 </span>
-            </div>
+            </div> -->
 
-            <span *ngIf="user.clients.appointments">
-                
-                
+            <span *ngIf="user?.clients?.appointments">
                     <p-button [disabled]="appointment" label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
                         [rounded]="true" />
-                  
-                
                 </span>
-                <span *ngIf="!user.clients.appointments">
-
-                    <p-button  label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
+                <span *ngIf="!user?.clients?.appointments">
+                    <p-button label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
                         [rounded]="true" />
-                    </span>
+                </span>
 
 
         </div>
