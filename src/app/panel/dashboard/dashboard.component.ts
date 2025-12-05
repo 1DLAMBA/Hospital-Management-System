@@ -283,8 +283,8 @@ export class DashboardComponent implements OnInit {
     })
   }
   show(firstname: any) {
-    this.messageService.add({ icon: ' bi bi-person', severity: 'success', detail: `Hello, ${firstname}`  });
-    console.log(this.user);
+    // this.messageService.add({ icon: ' bi bi-person', severity: 'success', detail: `Hello, ${firstname}`  });
+    // console.log(this.user);
   }
 
   logout() {
