@@ -30,7 +30,7 @@
                     </app-lazy-image>
                 </div>
             </ng-container>
-            <button class="btn btn-bw" *ngIf="!isLoggedIn" (click)="login()">Appointment</button>
+            <button class="btn btn-bw" *ngIf="!isLoggedIn" (click)="login()">Login</button>
         </div>
         
     </header>
@@ -57,6 +57,6 @@
                 <img [src]="avatar_file + (user?.user?.passport || '')" [alt]="user?.user?.name || 'Profile'" title="{{user?.user?.name}}">
             </div>
         </ng-container>
-        <button type="button" class="btn btn-secondary" *ngIf="!isLoggedIn" (click)="modal.close('Close click'); login()">Appointment</button>
+        <button type="button" class="btn btn-secondary" *ngIf="!isLoggedIn" (click)="modal.close('Close click'); login()">Login</button>
     </div>
 </ng-template>
