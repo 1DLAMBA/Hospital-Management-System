@@ -180,7 +180,7 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
           data: acceptedData
         },
         {
-          label: 'Ignored',
+          label: 'Pending',
           backgroundColor: '#7A8AB5',
           borderColor: '#7A8AB5',
           data: pendingData

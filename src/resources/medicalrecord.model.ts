@@ -1,5 +1,6 @@
 import { ClientResource } from "./client.model";
 import { DoctorResource } from "./doctor.model";
+import { OtherProfessionalResource } from "./other-professional.model";
 
 export interface MedicalRecordResource{
     id: number,
@@ -10,6 +11,7 @@ export interface MedicalRecordResource{
     past_diagnosis:string,
     allergies: string,
     treatment: string,
+    other_professional: OtherProfessionalResource,
     created_at?: string | Date,
     updated_at?: string | Date,
     client: ClientResource,

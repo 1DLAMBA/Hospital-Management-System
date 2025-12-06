@@ -304,15 +304,28 @@ export class ClientProfileComponent implements OnInit, AfterViewChecked, OnDestr
       
       // Log form values for debugging
       console.log('Medical Record Data:', this.medicalRecordForm.value);
-      const formData = {
-        client_id:this.singleClient.id,
-        assigned_doctor_id:this.user.doctors.id,
-        record_number:this.medicalRecordForm.value.record_number,
-        diagnosis:this.medicalRecordForm.value.diagnosis,
-        past_diagnosis:this.medicalRecordForm.value.past_diagnosis,
-        allergies:this.medicalRecordForm.value.allergies,
-        treatment:this.medicalRecordForm.value.treatment,
-        
+      // Determine which professional ID to use (doctor or other_professional)
+      const professionalId = this.user.doctors?.id || this.user.other_professionals?.id;
+      if (!professionalId) {
+        this.dangerAlert('Unable to determine healthcare provider');
+        this.savingMedicalRecord = false;
+        return;
+      }
+
+      const formData: any = {
+        client_id: this.singleClient.id,
+        record_number: this.medicalRecordForm.value.record_number,
+        diagnosis: this.medicalRecordForm.value.diagnosis,
+        past_diagnosis: this.medicalRecordForm.value.past_diagnosis,
+        allergies: this.medicalRecordForm.value.allergies,
+        treatment: this.medicalRecordForm.value.treatment,
+      };
+
+      // Set the appropriate professional ID based on user type
+      if (this.user.doctors?.id) {
+        formData.assigned_doctor_id = this.user.doctors.id;
+      } else if (this.user.other_professionals?.id) {
+        formData.other_professional_id = this.user.other_professionals.id;
       }
       // Send to your medical records service
       this.medicalEndpoint.create(formData).subscribe({

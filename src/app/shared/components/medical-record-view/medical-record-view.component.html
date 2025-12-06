@@ -33,13 +33,21 @@
               <span class="detail-label">Record #:</span>
               <span class="detail-value record-number">{{medicalRecord?.record_number || 'N/A'}}</span>
             </div>
-            <div class="detail-row">
+            <div *ngIf="medicalRecord?.other_professional" class="detail-row">
+              <span class="detail-label">Doctor:</span>
+              <span class="detail-value">{{medicalRecord?.other_professional?.user?.name || 'N/A'}}</span>
+            </div>
+            <div *ngIf="medicalRecord?.doctor" class="detail-row">
               <span class="detail-label">Doctor:</span>
               <span class="detail-value">{{medicalRecord?.doctor?.user?.name || 'N/A'}}</span>
             </div>
-            <div class="detail-row">
+            <div *ngIf="medicalRecord?.doctor" class="detail-row">
               <span class="detail-label">Specialization:</span>
               <span class="detail-value">{{medicalRecord?.doctor?.specialization || 'N/A'}}</span>
+            </div>
+            <div *ngIf="medicalRecord?.other_professional" class="detail-row">
+              <span class="detail-label">Specialization:</span>
+              <span class="detail-value">{{medicalRecord?.other_professional?.specialization || 'N/A'}}</span>
             </div>
             <div class="detail-row">
               <span class="detail-label">Date:</span>
@@ -83,14 +91,25 @@
           </div>
         </div>
 
-        <!-- Signature Section -->
+        <!-- Signature Section - Embedded in Medical Record Layout -->
         <div class="signature-section" *ngIf="medicalRecord?.doctor?.signature">
-          <div class="signature-container">
-            <span class="signature-label">Doctor's Signature</span>
-            <img [src]="avatar_file + (medicalRecord?.doctor?.signature || '')" 
-                 alt="Doctor Signature" 
-                 class="signature-image" />
-            <div class="doctor-name">{{medicalRecord?.doctor?.user?.name || 'N/A'}}</div>
+          <div class="signature-wrapper">
+            <div class="signature-container">
+              <div class="signature-label">Attending Physician Signature</div>
+              <div class="signature-image-wrapper">
+                <img [src]="avatar_file + (medicalRecord?.doctor?.signature || '')" 
+                     alt="Doctor Signature" 
+                     class="signature-image" />
+              </div>
+              <div class="doctor-name">{{medicalRecord?.doctor?.user?.name || 'N/A'}}</div>
+              <div class="doctor-credentials" *ngIf="medicalRecord?.doctor?.specialization">
+                {{medicalRecord?.doctor?.specialization}}
+              </div>
+            </div>
+            <div class="signature-date">
+              <div class="date-label">Date:</div>
+              <div class="date-value">{{medicalRecord?.created_at ? ((medicalRecord?.created_at | date:'short') || 'N/A') : 'N/A'}}</div>
+            </div>
           </div>
         </div>
 

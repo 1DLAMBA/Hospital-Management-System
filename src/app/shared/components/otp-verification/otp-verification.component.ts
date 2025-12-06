@@ -17,7 +17,7 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './otp-verification.component.css'
 })
 export class OtpVerificationComponent implements OnInit {
-  @Input() userId!: number;
+  @Input() userId!: any;
   @Input() userEmail!: string;
   @Input() userType!: string;
   @Output() verified = new EventEmitter<void>();
@@ -178,9 +178,12 @@ export class OtpVerificationComponent implements OnInit {
             case 'doctor':
             case 'other_professional':
               this.router.navigate(['panel/doctor-panel', this.userId]);
+              localStorage.setItem('id', this.userId);
+
               break;
             case 'nurse':
               this.router.navigate(['panel/nurse-panel']);
+              localStorage.setItem('id', this.userId);
               break;
             default:
               this.router.navigate(['login']);

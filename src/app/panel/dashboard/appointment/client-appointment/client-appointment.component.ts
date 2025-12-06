@@ -8,6 +8,7 @@ import { AppointmentResource } from '../../../../../resources/appointment.model'
 import { environment } from '../../../../../environments/environment';
 import { Table } from 'primeng/table';
 import { response } from 'express';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-appointment',
@@ -36,6 +37,7 @@ export class ClientAppointmentComponent implements OnInit {
     private userEndpoint: UserService,
     private doctorEndpoint: DoctorsService,
     private appointmentEndpoint: AppointmentsService,
+    private router: Router,
   ) {
 
   }
@@ -140,6 +142,18 @@ export class ClientAppointmentComponent implements OnInit {
 
       }
     })
+  }
+
+  viewProfile(appointment: any) {
+    if (appointment.doctor?.id) {
+      this.router.navigate(['panel/doctors/profile/', appointment.doctor.id], { queryParams: { type: 'doctor' } });
+    } else if (appointment.other_professional?.id) {
+      this.router.navigate(['panel/doctors/profile/', appointment.other_professional.id], { queryParams: { type: 'other_professional' } });
+    }
+  }
+
+  getProfessionalId(appointment: any): number | null {
+    return appointment.doctor?.id || appointment.other_professional?.id || null;
   }
 }
 
