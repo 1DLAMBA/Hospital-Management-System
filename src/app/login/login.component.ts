@@ -131,12 +131,32 @@ export class LoginComponent implements OnDestroy, OnInit {
           return;
         }
         
-        if(res.status === 400){
-          this.error_message=res.error;
+        // Handle error messages from backend
+        let errorMessage = 'Invalid credentials';
+        
+        if (res.status === 400) {
+          // Backend returns plain text 'invalid credentials' for 400 errors
+          if (typeof res.error === 'string') {
+            errorMessage = res.error;
+          } else if (res.error?.error) {
+            // Handle JSON error response with 'error' field
+            errorMessage = res.error.error;
+          } else if (res.error?.message) {
+            // Handle JSON error response with 'message' field
+            errorMessage = res.error.message;
+          }
+        } else if (res.error?.error) {
+          // Handle other error statuses with JSON error response
+          errorMessage = res.error.error;
+        } else if (res.error?.message) {
+          errorMessage = res.error.message;
+        } else if (typeof res.error === 'string') {
+          errorMessage = res.error;
         }
+        
+        this.error_message = errorMessage;
         this.invalidDetails = true;
-        this.error_message=res.message || res.error || 'Invalid credentials';
-
+        this.show(errorMessage);
       }
     })
   }

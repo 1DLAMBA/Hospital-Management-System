@@ -65,7 +65,6 @@ export class ProfilePageComponent implements OnInit {
     // this.getSingleClient(this.id);
     this.user_id = localStorage.getItem('id');
     this.getUser();
-    this.getClientRecord();
 
   }
 
@@ -96,6 +95,7 @@ export class ProfilePageComponent implements OnInit {
     this.userEndpoint.get(this.user_id).subscribe({
       next: (response: any) => {
         this.user = response.user;
+    this.getClientRecord();
         
     // this.getClient(this.user.id);
 

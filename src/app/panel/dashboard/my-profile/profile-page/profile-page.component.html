@@ -9,8 +9,8 @@
         <div class="left-profile">
             <div class="profile-header-section">
                 <div class="avatar-wrapper">
-                    <img [src]="user.passport ? (avatar_file + user.passport) : defaultAvatar" 
-                         [alt]="user.name" 
+                    <img [src]="user?.passport ? (avatar_file + user?.passport) : defaultAvatar" 
+                         [alt]="user?.name" 
                          (error)="handleImageError($event)">
                 </div>
                 <h2 class="profile-name">{{user.name}}</h2>
@@ -58,8 +58,11 @@
                         <div class="">
                             <span >Date:</span> <p class="text-secondary">{{user.clients.appointments.date_time | date}}</p>
                         </div>
-                        <div class="">
-                            <span >Doctor:</span> <p class="text-secondary">{{user.clients.appointments.doctor.user.name }}</p>
+                        <div *ngIf="user.clients.appointments?.doctor" class="">
+                            <span >Doctor:</span> <p class="text-secondary">{{user.clients.appointments?.doctor?.user.name }}</p>
+                        </div>
+                        <div *ngIf="user.clients.appointments?.other_professional" class="">
+                            <span >Other Professional:</span> <p class="text-secondary">{{user.clients.appointments?.other_professional?.user.name }}</p>
                         </div>
                         <div class=" hold3">
                             <span class="fs-6" >Status:</span> 
@@ -80,7 +83,10 @@
                             <span >Date:</span> <p class="text-secondary">{{user.clients.appointments.date_time | date}}</p>
                         </div>
                         <div class="">
-                            <span >Doctor:</span> <p class="text-secondary">{{user.clients.appointments.doctor.user.name }}</p>
+                            <span >Doctor:</span> <p class="text-secondary">{{user.clients.appointments?.doctor?.user.name }}</p>
+                        </div>
+                        <div *ngIf="user.clients.appointments?.other_professional" class="">
+                            <span >Other Professional:</span> <p class="text-secondary">{{user.clients.appointments?.other_professional?.user.name }}</p>
                         </div>
                         <div class=" hold3">
                             <span class="fs-6" >Status:</span> 
@@ -150,7 +156,7 @@
                           </td>
 
                           <td>
-                              {{medicalRecords?.doctor.user.name}}
+                              {{medicalRecords?.doctor?.user?.name || medicalRecords?.other_professional?.user?.name }}
 
                           </td>
 

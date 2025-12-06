@@ -59,7 +59,7 @@
 </p-dialog> -->
 
 <section>
-    <div class="d-flex active bg-blue p-2 m-2" *ngIf="futureAppointment as appi">
+    <!-- <div class="d-flex active bg-blue p-2 m-2" *ngIf="futureAppointment as appi">
         <div class="active w-100" *ngIf="appi.status=='Accepted' || appi.status=='pending'">
             <div class="mx-4">
                 <b>Next Appointment</b>
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="cards-sect my-5 d-flex justify-content-between">
         <div class="sub-card d-flex">
             <div class="m-2 d-flex text-warning">
@@ -168,8 +168,8 @@
                 </th>
                 <th style="min-width:10rem">
                     <div class="flex align-items-center">
-                        Phone Number
-                        <p-columnFilter type="date" field="date" display="menu" />
+                        View
+                        <!-- <p-columnFilter type="date" field="date" display="menu" /> -->
                     </div>
                 </th>
 
@@ -206,7 +206,17 @@
                         appointments.status }}</span>
                 </td>
                 <td>
-                    {{ appointments.doctor?.user?.phoneno || appointments.other_professional?.user?.phoneno}}
+                    <button 
+                        *ngIf="getProfessionalId(appointments)"
+                        pButton 
+                        label="View" 
+                        icon="pi pi-eye" 
+                        severity="info" 
+                        size="small"
+                        (click)="viewProfile(appointments)"
+                        class="view-profile-btn">
+                    </button>
+                    <span *ngIf="!getProfessionalId(appointments)" class="text-muted">N/A</span>
                 </td>
 
 

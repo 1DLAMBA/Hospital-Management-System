@@ -12,6 +12,13 @@ section{
     margin-right: 10px;
 }
 
+::ng-deep .p-button{
+    background-color: #17224d !important;
+    color: white !important;
+    border: 0;
+    border-radius: 5px;
+}
+
 .passport img{
     height: 100%;
     width: 100%;

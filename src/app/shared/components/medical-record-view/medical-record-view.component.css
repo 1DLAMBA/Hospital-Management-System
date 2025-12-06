@@ -189,50 +189,88 @@
 
 /* Signature Section */
 .signature-section {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   padding-top: 1.5rem;
   border-top: 2px solid #e5e7eb;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: 2rem;
   page-break-inside: avoid;
+}
+
+.signature-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 3rem;
+  margin-top: 1rem;
 }
 
 .signature-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 200px;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1;
 }
 
 .signature-label {
   font-size: 0.875rem;
-  color: #6b7280;
-  font-weight: 500;
-  text-align: center;
+  color: #374151;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.signature-image-wrapper {
+  border-bottom: 2px solid #111827;
+  padding-bottom: 0.5rem;
+  min-width: 250px;
+  max-width: 300px;
+  width: 100%;
 }
 
 .signature-image {
-  max-width: 200px;
-  max-height: 80px;
+  max-width: 100%;
+  max-height: 70px;
   object-fit: contain;
-  border: 1px solid #e5e7eb;
+  display: block;
   background: #fff;
-  padding: 0.25rem;
-  border-radius: 4px;
 }
 
 .doctor-name {
+  font-size: 0.9rem;
+  color: #111827;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+.doctor-credentials {
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.signature-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding-top: 2rem;
+}
+
+.date-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.date-value {
   font-size: 0.875rem;
   color: #111827;
   font-weight: 500;
-  margin-top: 0.25rem;
-  text-align: center;
-  border-top: 1px solid #e5e7eb;
-  padding-top: 0.5rem;
-  width: 100%;
 }
 
 /* Footer Information */
@@ -320,10 +358,14 @@
     justify-content: center;
   }
 
-  .signature-section {
-    justify-content: center;
+  .signature-wrapper {
     flex-direction: column;
-    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .signature-date {
+    align-items: flex-start;
+    padding-top: 1rem;
   }
 
   .med-record-view-footer {
@@ -365,6 +407,8 @@
     max-height: 70px;
   }
 }
+
+
 
 
 

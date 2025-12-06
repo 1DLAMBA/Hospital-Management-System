@@ -134,8 +134,11 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
           }
         },
         y: {
+          beginAtZero: true,
+          min: 0,
           ticks: {
-            color: 'white'
+            color: 'white',
+            stepSize: 1
           },
           grid: {
             color: '#31385261',

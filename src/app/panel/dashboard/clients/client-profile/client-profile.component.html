@@ -117,7 +117,7 @@
     [draggable]="false" [resizable]="false">
 
     <div *ngIf="singleClient" class="">
-        <h3>Assign {{user.name}} to {{singleClient.user.name}}</h3>
+        <h3>Assign {{user?.name}} to {{singleClient.user.name}}</h3>
         <form [formGroup]="assignForm">
             <!-- <label for="diagnosis">Provide Diagnosis for patient</label><br>
                 <input formControlName="diagnosis" placeholder="Patient Diagnosis" name="diagnosis"
@@ -329,7 +329,7 @@
         </div>
         <div class="right-profile">
             <div class="p-2 subs-holder" *ngIf="singleClient.appointments">
-                <div *ngIf="singleClient.appointments.status=='Accepted'" class="">
+                <!-- <div *ngIf="singleClient.appointments.status=='Accepted'" class="">
                     <b>Last Appointment</b>
 
                     <div class="d-flex  appointment-container justify-content-between m-1">
@@ -343,7 +343,10 @@
                         </div>
                         <div class="d-flex">
                             <span>Doctor:</span>
-                            <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
+                            <p *ngIf="singleClient.appointments?.doctor" class="text-secondary">{{singleClient.appointments?.doctor?.user.name }}</p>
+                        
+                            <span>Other Professional:</span>
+                            <p *ngIf="singleClient.appointments?.other_professional" class="text-secondary">{{singleClient.appointments?.other_professional?.user.name }}</p>
                         
                             <span class="fs-6">Status:</span>
                             <p-tag [rounded]="true" severity="success"
@@ -351,8 +354,8 @@
 
                         </div>
                     </div>
-                </div>
-                <div *ngIf="singleClient.appointments.status=='pending'">
+                </div> -->
+                <!-- <div *ngIf="singleClient.appointments.status=='pending'">
                     <b>Current Appointment</b>
 
                     <div class="d-flex justify-content-between m-1">
@@ -367,7 +370,11 @@
                         </div>
                         <div class="">
                             <span>Doctor:</span>
-                            <p class="text-secondary">{{singleClient.appointments.doctor.user.name }}</p>
+                            <p *ngIf="singleClient.appointments?.doctor" class="text-secondary">{{singleClient.appointments?.doctor?.user.name }}</p>
+                        </div>
+                        <div *ngIf="singleClient.appointments?.other_professional" class="">
+                            <span>Other Professional:</span>
+                            <p class="text-secondary">{{singleClient.appointments?.other_professional?.user.name }}</p>
                         </div>
                         <div class=" hold3">
                             <span class="fs-6">Status:</span>
@@ -377,7 +384,7 @@
                         </div>
                     </div>
 
-                </div>
+                </div> -->
 
             </div>
             <div class="m-2">
