@@ -9,6 +9,7 @@ export interface UserResource{
     gender: string;
     user_type: string;
     passport: string;
+    email_verified_at?: Date | string | null;
     created_at: Date;
     updated_at: Date;
     other_professionals?: OtherProfessionalResource;

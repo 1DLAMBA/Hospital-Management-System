@@ -88,7 +88,7 @@ export class RegisterComponent implements OnInit {
       confirm_password: new FormControl('', Validators.required),
       user_type: new FormControl('', Validators.required),
       professional_type: new FormControl(''), // Required conditionally for other_professional
-      license_number: new FormControl('', Validators.required),
+      license_number: new FormControl(''), // Required conditionally for doctor and nurse only
       med_school: new FormControl('', Validators.required),
       specialization: new FormControl('', Validators.required),
       grad_year: new FormControl('', Validators.required),
@@ -130,17 +130,20 @@ export class RegisterComponent implements OnInit {
         this.firststep = false;
         this.clientstep = true;
       }
-      if (this.RegisterForm.value.user_type == 'doctor' || 
-          this.RegisterForm.value.user_type == 'nurse' || 
-          this.RegisterForm.value.user_type == 'other_professional') {
+      if (this.RegisterForm.value.user_type == 'doctor' ||
+        this.RegisterForm.value.user_type == 'nurse' ||
+        this.RegisterForm.value.user_type == 'other_professional') {
         // Set professional_type as required for other_professional
         if (this.RegisterForm.value.user_type === 'other_professional') {
           this.RegisterForm.get('professional_type')?.setValidators([Validators.required]);
+          this.RegisterForm.get('license_number')?.clearValidators();
         } else {
           this.RegisterForm.get('professional_type')?.clearValidators();
+          this.RegisterForm.get('license_number')?.setValidators([Validators.required]);
         }
         this.RegisterForm.get('professional_type')?.updateValueAndValidity();
-        
+        this.RegisterForm.get('license_number')?.updateValueAndValidity();
+
         this.secondstep = true;
         this.firststep = false;
       }
@@ -152,10 +155,10 @@ export class RegisterComponent implements OnInit {
   }
   submit() {
     // Validate signature and ID card for professionals
-    const isProfessional = this.RegisterForm.value.user_type === 'doctor' || 
-                          this.RegisterForm.value.user_type === 'nurse' || 
-                          this.RegisterForm.value.user_type === 'other_professional';
-    
+    const isProfessional = this.RegisterForm.value.user_type === 'doctor' ||
+      this.RegisterForm.value.user_type === 'nurse' ||
+      this.RegisterForm.value.user_type === 'other_professional';
+
     if (isProfessional) {
       if (!this.signatureFile) {
         this.degreeError('Please upload your signature');
@@ -166,8 +169,8 @@ export class RegisterComponent implements OnInit {
         return;
       }
     }
-    
-    this.submitLoader=true;
+
+    this.submitLoader = true;
     const baseUrlLength = (environment.apiUrl + '/file/get/').length;
     if (this.degreeFile) {
       this.degreeFile = this.uploadedDegreeFile.slice(
@@ -207,18 +210,18 @@ export class RegisterComponent implements OnInit {
       next: (response: any) => {
         console.log(response);
         this.userId = response.user.id;
-        
+
         // Check if OTP verification is required
         if (response.requires_verification) {
           this.registeredUserEmail = this.RegisterForm.value.email;
           this.registeredUserType = this.RegisterForm.value.user_type;
         }
-        
+
         this.adduser(this.userId, this.RegisterForm.value.user_type);
       },
       error: (error) => {
         console.log(error);
-        this.submitLoader=false;
+        this.submitLoader = false;
         this.degreeError(error.error.error)
       }
     })
@@ -226,8 +229,12 @@ export class RegisterComponent implements OnInit {
   finalstep() {
     const isOtherProfessional = this.RegisterForm.value.user_type === 'other_professional';
     const hasProfessionalType = this.RegisterForm.value.professional_type;
-    
-    if (this.RegisterForm.value.license_number &&
+    const isDoctorOrNurse = this.RegisterForm.value.user_type === 'doctor' || this.RegisterForm.value.user_type === 'nurse';
+
+    // License number is required only for doctors and nurses
+    const licenseValid = isOtherProfessional || this.RegisterForm.value.license_number;
+
+    if (licenseValid &&
       this.RegisterForm.value.med_school &&
       this.degreeFile &&
       this.RegisterForm.value.specialization &&
@@ -318,7 +325,7 @@ export class RegisterComponent implements OnInit {
             this.showOtpVerification = true;
             this.registeredUserEmail = this.RegisterForm.value.email;
             this.registeredUserType = 'nurse';
-          }, 
+          },
           error: (err) => {
             console.log(err);
             this.submitLoader = false;
@@ -345,7 +352,7 @@ export class RegisterComponent implements OnInit {
             this.showOtpVerification = true;
             this.registeredUserEmail = this.RegisterForm.value.email;
             this.registeredUserType = 'other_professional';
-          }, 
+          },
           error: (err) => {
             console.log(err);
             this.submitLoader = false;

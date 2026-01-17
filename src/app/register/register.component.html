@@ -1,12 +1,8 @@
 <p-toast></p-toast>
 
 <!-- OTP Verification View -->
-<app-otp-verification 
-    *ngIf="showOtpVerification"
-    [userId]="userId"
-    [userEmail]="registeredUserEmail"
-    [userType]="registeredUserType"
-    (verified)="onOtpVerified()">
+<app-otp-verification *ngIf="showOtpVerification" [userId]="userId" [userEmail]="registeredUserEmail"
+    [userType]="registeredUserType" (verified)="onOtpVerified()">
 </app-otp-verification>
 
 <!-- Registration Form View -->
@@ -58,7 +54,7 @@
 
             <h3><b>Welcome To <span class="text-secondary">Phoe</span><span class="text-blue">nix</span></b></h3>
             <p>Let's begin your renewed healthcare journey!</p>
-            
+
             <form [formGroup]="RegisterForm" class="mt-2">
                 <div *ngIf="firststep" class="firststep">
 
@@ -66,22 +62,26 @@
                         <label for="name">Name</label><br>
                         <input formControlName="name" placeholder="Your Name" name="name" type="name" pInputText
                             id="name" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('name')?.touched && RegisterForm.get('name')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <small
+                            *ngIf="RegisterForm.get('name')?.touched && RegisterForm.get('name')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <div class="flex flex-column gap-2">
                         <label for="email">Email</label><br>
                         <input formControlName="email" placeholder="Youremail@example.com" name="email" type="email"
                             pInputText id="email" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('email')?.touched && RegisterForm.get('email')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
-                            <small *ngIf="RegisterForm.get('email')?.touched && RegisterForm.get('email')?.hasError('email')" class="text-danger">
-                                Please enter a valid email address
-                              </small>
+                        <small
+                            *ngIf="RegisterForm.get('email')?.touched && RegisterForm.get('email')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
+                        <small
+                            *ngIf="RegisterForm.get('email')?.touched && RegisterForm.get('email')?.hasError('email')"
+                            class="text-danger">
+                            Please enter a valid email address
+                        </small>
                     </div>
 
 
@@ -90,9 +90,10 @@
                             <label for="Phoneno">Phone Number</label><br>
                             <input formControlName="phoneno" placeholder="+234 80 293 298 22" name="phoneno" type="tel"
                                 pInputText id="phoneno" aria-describedby="username-help" />
-                                <small *ngIf="RegisterForm.get('phoneno')?.touched && RegisterForm.get('phoneno')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
+                            <small
+                                *ngIf="RegisterForm.get('phoneno')?.touched && RegisterForm.get('phoneno')?.hasError('required')"
+                                class="text-danger">
+                                Field Required
                             </small>
                         </div>
                         <div class="d-flex">
@@ -113,19 +114,21 @@
                         <label for="password">Password</label><br>
                         <input formControlName="password" name="password" placeholder="************" type="password"
                             pInputText id="password" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('password')?.touched && RegisterForm.get('password')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <small
+                            *ngIf="RegisterForm.get('password')?.touched && RegisterForm.get('password')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <div class="flex flex-column gap-2">
                         <label for="confirm_password">Confirm Password</label><br>
                         <input formControlName="confirm_password" placeholder="************" name="confirm_password"
                             type="password" pInputText id="confirm_password" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('confirm_password')?.touched && RegisterForm.get('confirm_password')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <small
+                            *ngIf="RegisterForm.get('confirm_password')?.touched && RegisterForm.get('confirm_password')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <div class="user_type m-2 d-flex justify-content-between flex-wrap">
                         <span class="m-3">
@@ -140,7 +143,8 @@
                         </span>
 
                         <span class="m-3">
-                            <input id="OtherProfessional" formControlName="user_type" type="radio" name="user_type" value="other_professional" />
+                            <input id="OtherProfessional" formControlName="user_type" type="radio" name="user_type"
+                                value="other_professional" />
                             <label for="OtherProfessional">Other Professional</label>
                         </span>
 
@@ -157,38 +161,40 @@
                     <!-- Professional Type Dropdown - Only show for other_professional -->
                     <div class="flex flex-column gap-2" *ngIf="RegisterForm.value.user_type === 'other_professional'">
                         <label for="professional_type">Professional Type</label><br>
-                        <p-dropdown 
-                            formControlName="professional_type" 
-                            [options]="professionalTypes" 
-                            optionLabel="label" 
-                            optionValue="value"
-                            placeholder="Select your professional type"
-                            [showClear]="true"
-                            styleClass="w-full">
+                        <p-dropdown formControlName="professional_type" [options]="professionalTypes"
+                            optionLabel="label" optionValue="value" placeholder="Select your professional type"
+                            [showClear]="true" styleClass="w-full">
                         </p-dropdown>
-                        <small *ngIf="RegisterForm.get('professional_type')?.touched && RegisterForm.get('professional_type')?.hasError('required')"
-                                class="text-danger">
-                                Field Required
+                        <small
+                            *ngIf="RegisterForm.get('professional_type')?.touched && RegisterForm.get('professional_type')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
                         </small>
                     </div>
-                    
+
                     <div class="flex flex-column gap-2">
-                        <label for="license_number">License Number</label><br>
-                        <input formControlName="license_number" placeholder="Your License Number" name="license_number"
-                            type="text" pInputText id="license_number" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('license_number')?.touched && RegisterForm.get('license_number')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <label for="license_number">License Number <span
+                                *ngIf="RegisterForm.value.user_type === 'other_professional'"
+                                class="text-muted">(Optional)</span></label><br>
+                        <input formControlName="license_number"
+                            [placeholder]="RegisterForm.value.user_type === 'other_professional' ? 'Your License Number (Optional)' : 'Your License Number'"
+                            name="license_number" type="text" pInputText id="license_number"
+                            aria-describedby="username-help" />
+                        <small
+                            *ngIf="RegisterForm.get('license_number')?.touched && RegisterForm.get('license_number')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <div class="flex flex-column gap-2">
                         <label for="med_school">Medical School</label><br>
                         <input formControlName="med_school" placeholder="Medical School" name="med_school" type="text"
                             pInputText id="med_school" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('med_school')?.touched && RegisterForm.get('med_school')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <small
+                            *ngIf="RegisterForm.get('med_school')?.touched && RegisterForm.get('med_school')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <div class="card flex d-flex my-2 upload justify-content-center">
                         <!-- <p-toast></p-toast> -->
@@ -200,8 +206,8 @@
                                     aria-hidden="true"></span>&nbsp;&nbsp;Upload Degree</button>
 
                             <button *ngIf="loader" pButton pRipple type="button" disabled
-                                class="p-2 m-2 w-full  upload-button"><span role="status"
-                                    aria-hidden="true" class="spinner-border"></span>&nbsp;&nbsp;Uploading...</button>
+                                class="p-2 m-2 w-full  upload-button"><span role="status" aria-hidden="true"
+                                    class="spinner-border"></span>&nbsp;&nbsp;Uploading...</button>
 
                             <input type="file" #g1_identification2 name="degree_file" id="degree_file" hidden
                                 accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
@@ -212,19 +218,21 @@
                         <label for="specialization">Specialization</label><br>
                         <input formControlName="specialization" name="specialization" placeholder="Your Specialization"
                             type="text" pInputText id="specialization" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('specialization')?.touched && RegisterForm.get('specialization')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <small
+                            *ngIf="RegisterForm.get('specialization')?.touched && RegisterForm.get('specialization')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <div class="flex flex-column gap-2">
                         <label for="grad_year">Graduation Year</label><br>
                         <input formControlName="grad_year" placeholder="Graduation Year" name="grad_year" type="text"
                             pInputText id="grad_year" aria-describedby="username-help" />
-                            <small *ngIf="RegisterForm.get('grad_year')?.touched && RegisterForm.get('grad_year')?.hasError('required')"
-                                    class="text-danger">
-                                    Field Required
-                            </small>
+                        <small
+                            *ngIf="RegisterForm.get('grad_year')?.touched && RegisterForm.get('grad_year')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
                     </div>
                     <button class="btn btn-lg submit border text-center btn-hover" (click)="finalstep()">Next
                     </button>
@@ -239,12 +247,14 @@
                         " class=" rounded m-auto img-fix-h img-fit img-fluid mb-2 p-link w-full"
                             [src]="uploadedPassport" onError="this.src='../assets/streamline_user-profile-focus.png';"
                             alt="Avatar File" />
-                        <button *ngIf="!passportLoader" pButton pRipple type="button" (click)="g1_identification2.click()"
+                        <button *ngIf="!passportLoader" pButton pRipple type="button"
+                            (click)="g1_identification2.click()"
                             class="p-2 m-2 w-full bi bi-upload upload-button "><span role="status"
                                 aria-hidden="true"></span>&nbsp;&nbsp;Upload Passport</button>
-                        <button *ngIf="passportLoader" pButton pRipple type="button" (click)="g1_identification2.click()"
-                            class="p-2 m-2 w-full upload-button"><span role="status"
-                                aria-hidden="true" class="spinner-border"></span>&nbsp;&nbsp;Uploading...</button>
+                        <button *ngIf="passportLoader" pButton pRipple type="button"
+                            (click)="g1_identification2.click()" class="p-2 m-2 w-full upload-button"><span
+                                role="status" aria-hidden="true"
+                                class="spinner-border"></span>&nbsp;&nbsp;Uploading...</button>
 
                         <input type="file" #g1_identification2 name="degree_file" id="degree_file" hidden
                             accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
@@ -252,7 +262,8 @@
                     </div>
 
                     <!-- Signature and ID Card Upload - Only for professionals -->
-                    <div *ngIf="RegisterForm.value.user_type === 'doctor' || RegisterForm.value.user_type === 'nurse' || RegisterForm.value.user_type === 'other_professional'" class="d-flex flex-column gap-3 mt-4">
+                    <div *ngIf="RegisterForm.value.user_type === 'doctor' || RegisterForm.value.user_type === 'nurse' || RegisterForm.value.user_type === 'other_professional'"
+                        class="d-flex flex-column gap-3 mt-4">
                         <!-- Signature Upload -->
                         <div class="card flex d-flex my-2 upload justify-content-center">
                             <div class="m-auto d-flex flex-column align-items-center">
@@ -261,15 +272,17 @@
                                     width: 120px;
                                     height: 120px;
                                     object-fit: contain;
-                                " class="rounded m-auto img-fix-h img-fit img-fluid mb-2"
-                                    [src]="uploadedSignatureFile" alt="Signature Preview" />
-                                <button *ngIf="!signatureLoader" pButton pRipple type="button" (click)="signatureFileInput.click()"
+                                " class="rounded m-auto img-fix-h img-fit img-fluid mb-2" [src]="uploadedSignatureFile"
+                                    alt="Signature Preview" />
+                                <button *ngIf="!signatureLoader" pButton pRipple type="button"
+                                    (click)="signatureFileInput.click()"
                                     class="p-2 m-2 w-full bi bi-upload upload-button">
                                     <span role="status" aria-hidden="true"></span>&nbsp;&nbsp;Upload Signature
                                 </button>
                                 <button *ngIf="signatureLoader" pButton pRipple type="button" disabled
                                     class="p-2 m-2 w-full upload-button">
-                                    <span role="status" aria-hidden="true" class="spinner-border"></span>&nbsp;&nbsp;Uploading...
+                                    <span role="status" aria-hidden="true"
+                                        class="spinner-border"></span>&nbsp;&nbsp;Uploading...
                                 </button>
                                 <input type="file" #signatureFileInput name="signature_file" id="signature_file" hidden
                                     accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
@@ -285,15 +298,16 @@
                                     width: 120px;
                                     height: 120px;
                                     object-fit: contain;
-                                " class="rounded m-auto img-fix-h img-fit img-fluid mb-2"
-                                    [src]="uploadedIdCardFile" alt="ID Card Preview" />
-                                <button *ngIf="!idCardLoader" pButton pRipple type="button" (click)="idCardFileInput.click()"
-                                    class="p-2 m-2 w-full bi bi-upload upload-button">
+                                " class="rounded m-auto img-fix-h img-fit img-fluid mb-2" [src]="uploadedIdCardFile"
+                                    alt="ID Card Preview" />
+                                <button *ngIf="!idCardLoader" pButton pRipple type="button"
+                                    (click)="idCardFileInput.click()" class="p-2 m-2 w-full bi bi-upload upload-button">
                                     <span role="status" aria-hidden="true"></span>&nbsp;&nbsp;Upload ID Card
                                 </button>
                                 <button *ngIf="idCardLoader" pButton pRipple type="button" disabled
                                     class="p-2 m-2 w-full upload-button">
-                                    <span role="status" aria-hidden="true" class="spinner-border"></span>&nbsp;&nbsp;Uploading...
+                                    <span role="status" aria-hidden="true"
+                                        class="spinner-border"></span>&nbsp;&nbsp;Uploading...
                                 </button>
                                 <input type="file" #idCardFileInput name="id_card_file" id="id_card_file" hidden
                                     accept="image/jpg,image/jpeg,image/png,pdf" maxFileSize="2048"
@@ -302,8 +316,10 @@
                         </div>
                     </div>
 
-                    <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover" (click)="submit()">Submit</button>
-                    <button *ngIf="submitLoader" disabled class="btn btn-lg submit border text-center btn-hover" >Submitting...</button>
+                    <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover"
+                        (click)="submit()">Submit</button>
+                    <button *ngIf="submitLoader" disabled
+                        class="btn btn-lg submit border text-center btn-hover">Submitting...</button>
 
                 </div>
 
