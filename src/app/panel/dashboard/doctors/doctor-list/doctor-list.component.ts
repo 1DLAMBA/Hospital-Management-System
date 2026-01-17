@@ -145,10 +145,19 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       otherProfessionals: this.otherProfessionalEndpoint.get()
     }).subscribe({
       next: (responses: any) => {
-        this.doctors = responses.doctors.doctor;
+        // Filter only verified doctors (where user.email_verified_at is not null)
+        const verifiedDoctors = responses.doctors.doctor.filter((doctor: DoctorResource) => 
+          doctor.user && doctor.user.email_verified_at
+        );
+        this.doctors = verifiedDoctors;
         
-        // Combine doctors and other professionals into unified list
-        const doctorsList: ProfessionalResource[] = responses.doctors.doctor.map((doctor: DoctorResource) => ({
+        // Filter only verified other professionals (where user.email_verified_at is not null)
+        const verifiedOtherProfessionals = responses.otherProfessionals.other_professional.filter((op: any) => 
+          op.user && op.user.email_verified_at
+        );
+        
+        // Combine verified doctors and other professionals into unified list
+        const doctorsList: ProfessionalResource[] = verifiedDoctors.map((doctor: DoctorResource) => ({
           id: doctor.id,
           type: 'doctor' as const,
           displayType: 'Doctor',
@@ -162,7 +171,7 @@ export class DoctorListComponent implements OnInit, OnDestroy{
           doctor: doctor
         }));
         
-        const otherProfessionalsList: ProfessionalResource[] = responses.otherProfessionals.other_professional.map((op: any) => ({
+        const otherProfessionalsList: ProfessionalResource[] = verifiedOtherProfessionals.map((op: any) => ({
           id: op.id,
           type: 'other_professional' as const,
           displayType: op.professional_type || 'Other Professional',
