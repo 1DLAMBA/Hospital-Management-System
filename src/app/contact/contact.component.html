@@ -13,6 +13,7 @@
         </div>
     </div>
 </div>
+<p-toast></p-toast>
 <div class="services text-center my-2">
     <p>Contact Us</p>
     <h1 class="px-2">We <span class="">love</span> to hear from<span class=""> you!</span> </h1>
@@ -45,27 +46,42 @@
     <div class="innercard m-5">
         <p class="text-center">Direct questions</p>
         <h3 class="text-center">Leave us your question, enquiries<br> or feedbacks</h3>
-        <div class=" m-5">
-            <label>
-                Your Name
-            </label><br>
-            <input type="text" class="form-control">
-        </div>
-        <div class=" m-5">
-            <label>
-                Your Email
-            </label><br>
-            <input type="text" class="form-control">
-        </div>
-        <div class=" m-5">
-            <label>
-                Your Question
-            </label><br>
-            <textarea  class="form-control"></textarea>
-        </div>
-        <div class=" button m-5">
-            <button class="btn btn-wb btn-lg btn-block">Submit</button>
-        </div>
+        <form [formGroup]="contactForm">
+            <div class=" m-5">
+                <label>
+                    Your Name
+                </label><br>
+                <input type="text" formControlName="name" class="form-control">
+                <small *ngIf="contactForm.get('name')?.touched && contactForm.get('name')?.hasError('required')" class="text-danger">
+                    Field Required
+                </small>
+            </div>
+            <div class=" m-5">
+                <label>
+                    Your Email
+                </label><br>
+                <input type="text" formControlName="email" class="form-control">
+                <small *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.hasError('required')" class="text-danger">
+                    Field Required
+                </small>
+                <small *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.hasError('email')" class="text-danger">
+                    Please enter a valid email address
+                </small>
+            </div>
+            <div class=" m-5">
+                <label>
+                    Your Message
+                </label><br>
+                <textarea formControlName="message" class="form-control"></textarea>
+                <small *ngIf="contactForm.get('message')?.touched && contactForm.get('message')?.hasError('required')" class="text-danger">
+                    Field Required
+                </small>
+            </div>
+            <div class=" button m-5">
+                <button type="button" *ngIf="!submitLoading" class="btn btn-wb btn-lg btn-block" (click)="submit()">Submit</button>
+                <button type="button" *ngIf="submitLoading" disabled class="btn btn-wb btn-lg btn-block">Submitting...</button>
+            </div>
+        </form>
        
     </div>
 </div>
