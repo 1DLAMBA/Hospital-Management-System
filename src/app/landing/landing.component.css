@@ -1,3 +1,37 @@
+/* Hero section layout - desktop */
+.hero .herobody-inner {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 4rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.hero .herotext-col {
+  flex: 1 1 50%;
+  min-width: 0;
+  max-width: 60%;
+}
+
+.hero .herodoctor {
+  flex: 0 1 40%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 280px;
+}
+
+.herodoctor-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 85vh;
+  object-fit: contain;
+  object-position: bottom right;
+}
+
 /* Base styles for hero heading */
 .herotext h1 {
   color: white;
@@ -5,6 +39,11 @@
   line-height: 1.2;
   margin: 0.5em 0;
   font-weight: 600;
+}
+
+.herotext-desc {
+  color: white;
+  margin-bottom: 1rem;
 }
 
 /* Responsive font sizes */
@@ -50,6 +89,91 @@
   }
 }
 
+/* Hero responsive - tablet */
+@media (max-width: 991px) {
+  .hero .herobody-inner {
+    padding: 3rem 1rem;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero .herotext-col {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero .herodoctor {
+    order: 1;
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .hero .herotext {
+    text-align: center;
+  }
+
+  .hero .herobtns {
+    justify-content: center;
+  }
+
+  .herodoctor-img {
+    object-position: center;
+    /* Softer, slower fade – less obvious transition */
+    mask-image: linear-gradient(to bottom, black 0%, black 50%, black 68%, transparent 98%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, black 68%, transparent 98%);
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    mask-position: center;
+    -webkit-mask-position: center;
+  }
+
+  /* Pull text up so it climbs the faded part of the image */
+  .hero .herotext-col {
+    margin-top: -4rem;
+  }
+
+  .hero .herotext {
+    padding-top: 0;
+  }
+}
+
+/* Hero responsive - mobile */
+@media (max-width: 576px) {
+  .hero .herobody-inner {
+    padding: 5rem 0.75rem;
+  }
+
+  .hero .herodoctor {
+    max-width: 260px;
+  }
+
+  /* Stronger overlap on small screens so text sits in the fade */
+  .hero .herotext-col {
+    margin-top: -3.5rem;
+  }
+
+  .herotext-desc br {
+    display: none;
+  }
+}
+
+/* Override global .herodoctor when inside landing .hero (so image stays visible on mobile) */
+@media (max-width: 499px) {
+  .hero .herobody .herodoctor {
+    position: relative !important;
+    width: 100% !important;
+    opacity: 1 !important;
+    right: auto !important;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+
 /* Mobile-specific styles */
 @media (max-width: 499px) {
   .herobtns .btn {
@@ -61,7 +185,8 @@
     font-size: calc(1rem + 1.0vw);
   }
   
-  .herotext p {
+  .herotext p,
+  .herotext-desc {
     font-size: 10px;
   }
   

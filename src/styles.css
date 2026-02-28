@@ -86,19 +86,52 @@ background-image: linear-gradient(#17224d, transparent);
 backdrop-filter: blur(4px);
 }
 
-.hero{
-    background-image: url('assets/bd.png');
-    background-attachment: fixed;
+.hero {
+    position: relative;
     width: 100%;
-    /* height: 100%; */
-    background-size:cover;
+    overflow: hidden;
+}
+
+.hero-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.hero-scene canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.hero-waves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Shorter waves on mobile – avoid "pressed and tall" stretch */
+@media (max-width: 991px) {
+    .hero-waves {
+        height: 48%;
+    }
 }
 .herotext p{
     color: white;
 }
-.herobody{
-    background-color: #17224db6;
-
+.herobody {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(23, 34, 77, 0.6);
 }
 .btn-bw{
     color: #17224d;
