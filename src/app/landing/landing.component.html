@@ -1,53 +1,58 @@
 <!-- ******HERO******* -->
 
-<div class="hero ">
-    <div class="herobody ps-5 pe-5 pt-5 d-flex justify-content-between">
-        <div class="herotext pt-5 col-9 d-flex justify-content-between flex-column">
-            <div class>
-                <h1 class="herotext mt-5">
-                    Your Health is Our Priority <br>here at Phoenix Med
+<div class="hero">
+    <div class="hero-scene">
+        <canvas #heroBg id="heroBg"></canvas>
+        <svg class="hero-waves" viewBox="0 0 1920 760" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="heroLg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#5ca8f5" stop-opacity="1"/>
+                    <stop offset="60%" stop-color="#a8d4ff" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#d0e8ff" stop-opacity="0.4"/>
+                </linearGradient>
+                <filter id="heroGlow">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="5" opacity="0.3">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380; M -100,390 C 150,175 350,590 580,390 C 810,175 1010,590 1250,390 C 1490,175 1690,590 1920,390; M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380"/>
+            </path>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="5" opacity="0.3">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380; M -100,370 C 150,585 350,175 580,370 C 810,585 1010,175 1250,370 C 1490,585 1690,175 1920,370; M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380"/>
+            </path>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="1.6" filter="url(#heroGlow)">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380; M -100,390 C 150,175 350,590 580,390 C 810,175 1010,590 1250,390 C 1490,175 1690,590 1920,390; M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380"/>
+            </path>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="1.6" filter="url(#heroGlow)">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380; M -100,370 C 150,585 350,175 580,370 C 810,585 1010,175 1250,370 C 1490,585 1690,175 1920,370; M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380"/>
+            </path>
+        </svg>
+    </div>
+    <div class="herobody herobody-inner">
+        <div class="herotext-col my-auto order-2 order-lg-1">
+            <div class="herotext pt-lg-5 pt-4">
+                <h1 class="herotext mt-lg-5 mt-2">
+                    Access Licensed Medical Professionals <br>here at Phoenix Med
                 </h1>
-
-                <p>Providing Compassionate care, Cutting-edge technology, and a commitment to your well-being for a <br>
+                <p class="herotext-desc">Providing Compassionate care, Cutting-edge technology, and a commitment to your well-being for a <br>
                     healthier tomorrow and experience excellence in healhcare with our comprehensive services</p>
-                    <div class="herobtns d-flex">
-                        <button class="btn btn-bw" routerLink="login">
-                            Get Started
-                        </button>
-                        <button class="btn btn-wb">
-                            Learn More
-                        </button>
-                    </div>
-            </div>
-            <div class="heroglass text-center   d-flex mt-auto justify-content-around">
-                <div>
-                    <h1>
-                        500+
-                    </h1>
-                    <p>
-                        Hospitals<br> Served
-                    </p>
-                </div>
-                <div>
-                    <h1>
-                        50K+
-                    </h1>
-                    <p>
-                        Active<br> Users
-                    </p>
-                </div>
-                <div>
-                    <h1>
-                        99.9%
-                    </h1>
-                    <p>
-                        System<br> Uptime
-                    </p>
+                <div class="herobtns d-flex flex-wrap gap-2">
+                    <button class="btn btn-bw" routerLink="login">
+                        Get Started
+                    </button>
+                    <button class="btn btn-wb">
+                        Learn More
+                    </button>
                 </div>
             </div>
         </div>
-        <div  class="herodoctor d-flex ">
-            <img [@slide] alt="" class="justify-content-end ms-auto img-fluid" src="../../assets/heroimg2.png">
+        <div class="herodoctor order-1 order-lg-2">
+            <img [@slide] alt="" class="herodoctor-img img-fluid" src="../../assets/mockup.png">
         </div>
     </div>
 </div>
@@ -67,18 +72,17 @@
         </div>
         <div class="border p-3 box-shadow-hover rounded-2 m-5  text-center d-flex flex-column">
             <div class=" mx-auto cardimg p-4 rounded-circle  image-fluid">
-                <img alt="" src="../../assets/uil_ambulance.png">
+                <img alt="" src="../../assets/icons8-document-100.png">
             </div>
-            <h3>Emergency Cases</h3>
-            <p>We value your time and strive to prove timely and efficient care, minimizing risks and waiting.</p>
+            <h3>Medical Record Service</h3>
+            <p>Access and manage your health records securely in one place. View history, share with your care team, and keep everything organized.</p>
         </div>
         <div class="border p-3 box-shadow-hover rounded-2 m-5 text-center d-flex flex-column">
             <div class=" mx-auto cardimg p-4 rounded-circle  image-fluid">
-                <img alt="" src="../../assets/patientapproach.png">
+                <img alt="" src="../../assets/icons8-ai-100.png">
             </div>
-            <h3>Patient-Centered approach</h3>
-            <p>We believe in a patient-centered approach, where you are actively in your healthcare decisions. </p>
-
+            <h3>AI Assistant Service</h3>
+            <p>Get guidance and answers around the clock with our AI assistant. Find information, prepare for visits, and navigate your care with confidence.</p>
         </div>
     </div>
 </div>
