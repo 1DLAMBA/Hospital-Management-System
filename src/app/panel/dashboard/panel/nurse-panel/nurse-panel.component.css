@@ -9,15 +9,40 @@
 
 .sub-card{
     background-color: #17224d80;
-    /* margin: 2%; */
-    width: 30%;
+    width: 45%;
     color: white;
     border-radius: 7px;
-
+    padding: 1rem;
+    gap: 0.75rem;
 }
-.sub-card span{
+
+.sub-card-icon{
     background-color: #0055aa;
     border-radius: 50%;
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sub-card-info h1{
+    margin: 0;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
+.sub-card-info p{
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.85;
+}
+
+@media (max-width: 499px){
+    .sub-card{
+        width: 100% !important;
+        margin-top: 3%;
+    }
 }
 .main-sect{
     width: 49%;

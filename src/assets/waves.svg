@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1520 760" width="1520" height="760">
+  <defs>
+
+    <!-- Background gradient: dark navy left → bright blue right -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#0a1a3a"/>
+      <stop offset="40%"  stop-color="#0d3080"/>
+      <stop offset="75%"  stop-color="#0d52c8"/>
+      <stop offset="100%" stop-color="#1468e8"/>
+      <animate attributeName="x1" values="0%;8%;0%" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+      <animate attributeName="x2" values="100%;92%;100%" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    </linearGradient>
+
+    <!-- Vertical darkening top + bottom -->
+    <linearGradient id="bgVert" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#00081e" stop-opacity="0.4"/>
+      <stop offset="45%"  stop-color="#00081e" stop-opacity="0"/>
+      <stop offset="55%"  stop-color="#00081e" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#00081e" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <!-- Roaming bright spot on the right half -->
+    <radialGradient id="spot" cx="1216" cy="380" r="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#2870f0" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0a1a3a"  stop-opacity="0"/>
+      <animate attributeName="cx" values="1216;1368;1216;1064;1216"
+        keyTimes="0;0.25;0.5;0.75;1" dur="5s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1"/>
+      <animate attributeName="cy" values="380;300;460;300;380"
+        keyTimes="0;0.25;0.5;0.75;1" dur="5s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1"/>
+    </radialGradient>
+
+    <!-- Wave line gradient: vivid blue-white left → ghostly right -->
+    <linearGradient id="waveGrad" x1="0" y1="0" x2="1520" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#6ab0ff" stop-opacity="0.85"/>
+      <stop offset="35%"  stop-color="#92ccff" stop-opacity="1"/>
+      <stop offset="60%"  stop-color="#cce4ff" stop-opacity="0.8"/>
+      <stop offset="82%"  stop-color="#dff0ff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#eef8ff" stop-opacity="0.2"/>
+    </linearGradient>
+
+  </defs>
+
+  <!-- Background layers -->
+  <rect width="1520" height="760" fill="url(#bgGrad)"/>
+  <rect width="1520" height="760" fill="url(#bgVert)"/>
+  <rect width="1520" height="760" fill="url(#spot)"/>
+
+  <!-- Wave 1: peaks up, troughs down -->
+  <path fill="none" stroke="url(#waveGrad)" stroke-width="1.5" stroke-linecap="round">
+    <animate attributeName="d" dur="3s" repeatCount="indefinite" calcMode="spline"
+      keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
+      values="
+        M 0,380 C 190,185 380,575 570,380 C 760,185 950,575 1140,380 C 1330,185 1435,278 1520,338;
+        M 0,388 C 190,176 380,586 570,388 C 760,176 950,586 1140,388 C 1330,176 1435,270 1520,330;
+        M 0,380 C 190,185 380,575 570,380 C 760,185 950,575 1140,380 C 1330,185 1435,278 1520,338
+      "/>
+  </path>
+
+  <!-- Wave 2: opposite phase — troughs down, peaks up -->
+  <path fill="none" stroke="url(#waveGrad)" stroke-width="1.5" stroke-linecap="round">
+    <animate attributeName="d" dur="3s" repeatCount="indefinite" calcMode="spline"
+      keySplines="0.45 0 0.55 1;0.45 0 0.55 1"
+      values="
+        M 0,380 C 190,575 380,185 570,380 C 760,575 950,185 1140,380 C 1330,575 1435,482 1520,422;
+        M 0,372 C 190,586 380,174 570,372 C 760,586 950,174 1140,372 C 1330,586 1435,490 1520,430;
+        M 0,380 C 190,575 380,185 570,380 C 760,575 950,185 1140,380 C 1330,575 1435,482 1520,422
+      "/>
+  </path>
+
+</svg>

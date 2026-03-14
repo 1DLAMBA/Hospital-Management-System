@@ -83,32 +83,26 @@
             </span>
         </div>
 
-        <div class="cards-sect my-5 d-flex justify-content-between">
-            <div class="sub-card d-flex">
-                <div class="m-2 d-flex">
-                    <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
-                    <div class="m-1">
-                        <h1>{{upc_appt?.length}}</h1>
-                        <p>upcoming<br> appointments</p>
-                    </div>
+        <div class="cards-sect my-5 d-flex flex-wrap justify-content-between">
+            <div class="sub-card d-flex align-items-center">
+                <span class="sub-card-icon bi bi-prescription2 fs-5"></span>
+                <div class="sub-card-info">
+                    <h1>{{upc_appt?.length}}</h1>
+                    <p>Upcoming Appointments</p>
                 </div>
             </div>
-            <div class="sub-card d-flex">
-                <div class="m-2 d-flex">
-                    <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
-                    <div class="m-1">
-                        <h1>{{pendingAppointment}}</h1>
-                        <p>New<br> Patients</p>
-                    </div>
+            <div class="sub-card d-flex align-items-center">
+                <span class="sub-card-icon bi bi-person-square fs-5"></span>
+                <div class="sub-card-info">
+                    <h1>{{pendingAppointment}}</h1>
+                    <p>New Patients</p>
                 </div>
             </div>
-            <div class="sub-card d-flex">
-                <div class="m-2 d-flex">
-                    <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
-                    <div class="m-1">
-                        <h1>{{appointment.length}}</h1>
-                        <p>Number of <br> appointments</p>
-                    </div>
+            <div class="sub-card d-flex align-items-center">
+                <span class="sub-card-icon bi bi-heart-pulse-fill fs-5"></span>
+                <div class="sub-card-info">
+                    <h1>{{appointment.length}}</h1>
+                    <p>Total Appointments</p>
                 </div>
             </div>
         </div>

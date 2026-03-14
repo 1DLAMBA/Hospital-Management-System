@@ -1,70 +1,68 @@
 <div class="hero">
+    <div class="hero-scene">
+        <canvas #heroBg id="heroBg"></canvas>
+        <img class="hero-waves" src="assets/waves.svg" alt="Animated waves" />
+    </div>
     <div class="herobody ps-5 pe-5 pt-5 d-flex justify-content-between">
         <div class="herotext col-9 p-5 ms-auto flex-column">
             <h1 class=" mt-5 wh1">
-                Providing Quality HealthCare
+                What You Can Do with Phoenix
             </h1>
-            <p  class="mb-5">We are dedicated to providing exceptional healthcare services to our patients.</p>
+            <p  class="mb-5">Explore the full suite of digital healthcare services designed to help you book, communicate, and stay informed — all from one platform.</p>
    
         </div>
         
     </div>
 </div>
-<div class="features d-flex flex-column mx-auto text-center m-5">
+<div class="features mx-auto text-center m-5">
     <p>Services</p>
-    <h1>We offer a wide range of <span class="">services</span> to meet your needs</h1>
-    <div class="featureset1 p-2 d-flex flex-wrap justify-content-center">
-        <img alt="" class="m-auto img-fluid" src="../../assets/nursewithpatient.png">
-        <div class="set1context p-2 m-auto ">
-            <h4>Specialized <span>Departments</span></h4>
-            <p class="">We are equipped with specialized department staffed by expert<br>
-                 healthcare professionals. Whether you require cadiology, pediatrics, <br>
-                 ortipedics or any other speciality, We have you covered. </p>
-            <button class="btn btn-bw">Learn More</button>
+    <h1>How to use <span class="">Phoenix</span> for your healthcare needs</h1>
+    <div class="services-grid">
+        <div class="service-card">
+            <img alt="Nurse assisting a patient" class="img-fluid" src="../../assets/nursewithpatient.png">
+            <div class="service-card-body">
+                <h4>Book an <span>Appointment</span></h4>
+                <p>Browse our network of available doctors and specialists. Select a doctor based on their specialty and availability, choose a time slot that works for you, and confirm your booking. You will receive a notification once your appointment is confirmed, along with reminders as the date approaches.</p>
+                <button class="btn btn-bw" routerLink="/login">Get Started</button>
+            </div>
+        </div>
+        <div class="service-card">
+            <img alt="Patient receiving care" class="img-fluid" src="../../assets/physiotherapy.png">
+            <div class="service-card-body">
+                <h4>Access <span>Medical</span> Records</h4>
+                <p>Your complete medical history lives in one secure place. View past visits, prescriptions, diagnoses, and doctor notes at any time. Share your records with any doctor on the platform so they have the full picture before your appointment, saving time and improving the quality of your care.</p>
+                <button class="btn btn-bw" routerLink="/login">Get Started</button>
+            </div>
+        </div>
+        <div class="service-card">
+            <img alt="Healthcare professional" class="img-fluid" src="../../assets/masked.png">
+            <div class="service-card-body">
+                <h4>AI <span>Health</span> Assistant</h4>
+                <p>Have a health question at any hour? Our AI assistant is available around the clock to help you understand symptoms, get guided recommendations on which specialist to see, and prepare for your next appointment with relevant insights. Think of it as a knowledgeable companion on your health journey.</p>
+                <button class="btn btn-bw" routerLink="/login">Get Started</button>
+            </div>
+        </div>
+        <div class="service-card">
+            <img alt="Doctor providing urgent care" class="img-fluid" src="../../assets/emergency.png">
+            <div class="service-card-body">
+                <h4>Message Your <span>Doctor</span></h4>
+                <p>Chat directly with your healthcare provider through Phoenix in real time. Ask follow-up questions after a visit, share updates on how you are feeling, or clarify instructions. Track message delivery and read receipts, and receive notifications whenever your doctor replies or your appointment status changes.</p>
+                <button class="btn btn-bw" routerLink="/login">Get Started</button>
+            </div>
+        </div>
+        <div class="service-card service-card-wide">
+            <img alt="Medical professional at work" class="img-fluid" src="../../assets/surgery.png">
+            <div class="service-card-body">
+                <h4>Your <span>Dashboard</span></h4>
+                <p>Everything you need is on your personal dashboard. View upcoming appointments, recent medical records, and unread notifications all in one place. Manage your profile, update your health information, and track your complete healthcare journey on Phoenix from a single screen.</p>
+                <button class="btn btn-bw" routerLink="/login">Get Started</button>
+            </div>
         </div>
     </div>
-    <div class="featureset2 p-3 d-flex flex-wrap  justify-content-center">
-        <div class="setcontext  m-auto ">
-            <h4><span>Diagnostic</span> Imaging</h4>
-            <p>We offer the state-of-art diagnostics imaging services, including X-Rays,<br>
-                 CT scans, MRI scans and ultrasound. Our advanced imaging technology helpsa in<br>
-                  accurate diagnosis and treatment planning </p>
-            <button class="btn btn-bw">Learn More</button>
+</div>
 
-        </div>
-        <img alt class="m-auto" src="../../assets/physiotherapy.png">
-
-    </div>
-    <div class="featureset1 p-2 d-flex flex-wrap justify-content-center">
-        <img alt="" class="m-auto img-fluid" src="../../assets/masked.png">
-        <div class="set1context p-2 m-auto ">
-            <h4>Advanced <span>Treatments</span></h4>
-            <p class="">At Phoenix, we stay at the forefront of medical advancements.<br> 
-                We offer cutting-edge treatments and therapies to address a wide range of<br>
-                 health conditions ensuring that our patients receive the most effective care available </p>
-            <button class="btn btn-bw">Learn More</button>
-        </div>
-    </div>
-    <div class="featureset2 p-3 d-flex flex-wrap  justify-content-center">
-        <div class="setcontext  m-auto ">
-            <h4><span>Emergency</span> Care</h4>
-            <p>Our emergency department is open 24/7, providing immediate medical attention to<br>
-                 patients in critical conditions. Our highly trained emergency medical team is ready 
-                 <br>to handle any medical emergency that comes through our doors. </p>
-            <button class="btn btn-bw">Learn More</button>
-
-        </div>
-        <img alt class="m-auto" src="../../assets/emergency.png">
-
-    </div>
-    <div class="featureset1 p-2 d-flex flex-wrap justify-content-center">
-        <img alt="" class="m-auto img-fluid" src="../../assets/surgery.png">
-        <div class="set1context p-2 m-auto ">
-            <h4>Surgical <span>Services</span></h4>
-            <p class="">Our skilled surgeons perform a variety of procedures, from surgeries <br>
-                to complex interventions. We prioritize patient safety and utilize modern surgical <br>
-                techniques to ensure the best possible outcomes</p>
-            <button class="btn btn-bw">Learn More</button>
-        </div>
-    </div>
+<div class="subscribe text-center rounded-3 ">
+    <p>Ready to get started?</p>
+    <h1>Take control of your <span class="text-blue">health</span> with <span class="text-blue">Phoenix</span></h1>
+    <span class="input p-3 rounded-3"><button class="btn btn-wb mb-3" routerLink="/login">Get Started</button></span>
 </div>
