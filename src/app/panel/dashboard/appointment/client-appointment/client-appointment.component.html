@@ -76,32 +76,32 @@
             </div>
         </div>
     </div> -->
-    <div class="cards-sect my-5 d-flex justify-content-between">
-        <div class="sub-card d-flex">
-            <div class="m-2 d-flex text-warning">
-                <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
-                <div class="m-1 ">
-                        <h1>{{pendingAppointment}}</h1>
-                        <p class="">Pending<br> appointments</p>
-                </div>
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--pending">
+                <span class="bi bi-prescription2"></span>
+            </div>
+            <div class="kpi-info">
+                <span class="kpi-value">{{ pendingAppointment }}</span>
+                <span class="kpi-label">Pending Appointments</span>
             </div>
         </div>
-        <div class="sub-card d-flex">
-            <div class="m-2 d-flex text-success">
-                <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
-                <div class="m-1">
-                    <h1>{{acceptedAppointment}}</h1>
-                    <p>Accepted<br> appointments</p>
-                </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--accepted">
+                <span class="bi bi-person-square"></span>
+            </div>
+            <div class="kpi-info">
+                <span class="kpi-value">{{ acceptedAppointment }}</span>
+                <span class="kpi-label">Accepted Appointments</span>
             </div>
         </div>
-        <div class="sub-card d-flex">
-            <div class="m-2 d-flex text-danger">
-                <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
-                <div class="m-1">
-                    <h1>{{declinedAppointment}}</h1>
-                    <p>Declined <br> appointments</p>
-                </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--declined">
+                <span class="bi bi-heart-pulse-fill"></span>
+            </div>
+            <div class="kpi-info">
+                <span class="kpi-value">{{ declinedAppointment }}</span>
+                <span class="kpi-label">Declined Appointments</span>
             </div>
         </div>
     </div>

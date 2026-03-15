@@ -63,6 +63,25 @@ export class SideNavComponent implements OnInit, OnDestroy {
   loadData(): void {
     this.getUser();
   }
+
+  toggleDropdown(navItem: any): void {
+    if (!navItem?.isDropdown) {
+      return;
+    }
+    navItem.expanded = !navItem.expanded;
+  }
+
+  onNavClick(navItem: any): void {
+    if (navItem?.isDropdown) {
+      this.toggleDropdown(navItem);
+      return;
+    }
+
+    if (navItem?.action) {
+      navItem.action();
+    }
+  }
+
   getUser (){
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
@@ -148,9 +167,30 @@ export class SideNavComponent implements OnInit, OnDestroy {
       routerLink: 'client-appointment'
     },
     {
-      navClassName:'side-btn bi bi-person-square my-2 py-3',
-      title: 'Doctors',
-      routerLink: 'doctors'
+      navClassName:'side-btn bi bi-people-fill my-2 py-3',
+      title: 'Healthcare Staff',
+      isDropdown: true,
+      expanded: false,
+      children: [
+        {
+          navClassName: 'side-btn side-sub-btn bi bi-person-square my-1 py-2',
+          title: 'Doctors',
+          routerLink: 'doctors',
+          queryParams: { type: 'doctor' }
+        },
+        {
+          navClassName: 'side-btn side-sub-btn bi bi-heart-pulse-fill my-1 py-2',
+          title: 'Nurses',
+          routerLink: 'doctors',
+          queryParams: { type: 'nurse' }
+        },
+        {
+          navClassName: 'side-btn side-sub-btn bi bi-person-badge my-1 py-2',
+          title: 'Other Professionals',
+          routerLink: 'doctors',
+          queryParams: { type: 'other_professional' }
+        }
+      ]
     },
     // {
     //   navClassName:'side-btn bi bi-heart-pulse-fill my-2 py-3',
@@ -183,11 +223,11 @@ export class SideNavComponent implements OnInit, OnDestroy {
       title: 'Assignment',
       routerLink: 'assignment'
     },
-    {
-      navClassName:'side-btn bi bi-person-square my-2 py-3',
-      title: 'Clients',
-      routerLink: 'clients'
-    },
+    // {
+    //   navClassName:'side-btn bi bi-person-square my-2 py-3',
+    //   title: 'Clients',
+    //   routerLink: 'clients'
+    // },
     {
       navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
       title: 'Messages',

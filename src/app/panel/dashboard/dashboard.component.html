@@ -222,7 +222,9 @@ header="Edit Profile"
         <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="client-appointment">
 
         </a>
-        <a routerLinkActive="active"  class=" bi bi-heart-pulse-fill" routerLink="doctors">
+        <a class="bi bi-people-fill"
+           [class.active]="isStaffRouteActive() || showStaffPopup"
+           (click)="toggleStaffPopup()">
 
         </a>
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
@@ -230,6 +232,23 @@ header="Edit Profile"
         </a>
         <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
             <span>AI</span>
+        </a>
+    </div>
+    <div class="staff-popup" *ngIf="showStaffPopup && user?.user_type=='client'">
+        <a [class.active]="isSelectedStaffType('doctor')"
+           (click)="selectStaffType('doctor')">
+            <i class="bi bi-person-square"></i>
+            <span>Doctors</span>
+        </a>
+        <a [class.active]="isSelectedStaffType('nurse')"
+           (click)="selectStaffType('nurse')">
+            <i class="bi bi-heart-pulse-fill"></i>
+            <span>Nurses</span>
+        </a>
+        <a [class.active]="isSelectedStaffType('other_professional')"
+           (click)="selectStaffType('other_professional')">
+            <i class="bi bi-person-badge"></i>
+            <span>Other</span>
         </a>
     </div>
 </div>

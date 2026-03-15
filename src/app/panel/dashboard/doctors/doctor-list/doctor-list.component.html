@@ -1,32 +1,32 @@
 
 <section>
 
-    <div class="cards-sect my-5 d-flex justify-content-between">
-        <div class="sub-card d-flex">
-            <div class="m-2 d-flex">
-                <span class="my-auto p-3 bi bi-prescription2 fs-5"></span>
-                <div class="m-1">
-                    <h1>{{(professionals && professionals.length) || 0}}</h1>
-                    <p>Healthcare Professionals</p>
-                </div>
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--total">
+                <span class="bi bi-prescription2"></span>
+            </div>
+            <div class="kpi-info">
+                <span class="kpi-value">{{ (professionals && professionals.length) || 0 }}</span>
+                <span class="kpi-label">{{ getCurrentTypeLabel() }}</span>
             </div>
         </div>
-        <div class="sub-card d-flex">
-            <div class="m-2 d-flex">
-                <span class=" my-auto p-3 bi bi-person-square fs-5"></span>
-                <div class="m-1">
-                    <h1>{{ unavailableCount }}</h1>
-                    <p>Unavailable</p>
-                </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--unavailable">
+                <span class="bi bi-person-square"></span>
+            </div>
+            <div class="kpi-info">
+                <span class="kpi-value">{{ unavailableCount }}</span>
+                <span class="kpi-label">Unavailable</span>
             </div>
         </div>
-        <div class="sub-card d-flex">
-            <div class="m-2 d-flex">
-                <span class="my-auto p-3 bi bi-heart-pulse-fill fs-5"></span>
-                <div class="m-1">
-                    <h1>{{ availableCount }}</h1>
-                    <p>Available</p>
-                </div>
+        <div class="kpi-card">
+            <div class="kpi-icon kpi-icon--available">
+                <span class="bi bi-heart-pulse-fill"></span>
+            </div>
+            <div class="kpi-info">
+                <span class="kpi-value">{{ availableCount }}</span>
+                <span class="kpi-label">Available</span>
             </div>
         </div>
     </div>
@@ -95,7 +95,7 @@
         
         <!-- Empty Message -->
         <div class="empty-message" *ngIf="professionals && (!filteredProfessionals || filteredProfessionals.length === 0)">
-            <p>No healthcare professionals found.</p>
+            <p>No {{ getCurrentTypeLabel().toLowerCase() }} found.</p>
         </div>
     </div>
 </section>

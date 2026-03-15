@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   newNotificationBatch:boolean = false;
   position: string = 'center';
   notifications: Notification[] = [];
+  showStaffPopup: boolean = false;
   private messageSentHandler?: (data: any) => void;
   private notificationSentHandler?: (data: any) => void;
 
@@ -285,6 +286,27 @@ export class DashboardComponent implements OnInit {
   show(firstname: any) {
     // this.messageService.add({ icon: ' bi bi-person', severity: 'success', detail: `Hello, ${firstname}`  });
     // console.log(this.user);
+  }
+
+  toggleStaffPopup(): void {
+    this.showStaffPopup = !this.showStaffPopup;
+  }
+
+  selectStaffType(type: 'doctor' | 'nurse' | 'other_professional'): void {
+    this.router.navigate(['panel/doctors'], {
+      queryParams: { type }
+    });
+    this.showStaffPopup = false;
+  }
+
+  isStaffRouteActive(): boolean {
+    return this.router.url.startsWith('/panel/doctors');
+  }
+
+  isSelectedStaffType(type: 'doctor' | 'nurse' | 'other_professional'): boolean {
+    const queryString = this.router.url.split('?')[1] || '';
+    const selectedType = new URLSearchParams(queryString).get('type') || 'doctor';
+    return selectedType === type;
   }
 
   logout() {

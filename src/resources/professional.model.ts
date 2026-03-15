@@ -1,11 +1,12 @@
 import { UserResource } from "./user.model";
 import { DoctorResource } from "./doctor.model";
 import { OtherProfessionalResource } from "./other-professional.model";
+import { NurseResource } from "./nurse.model";
 
 // Unified interface for both doctors and other professionals
 export interface ProfessionalResource {
     id: number;
-    type: 'doctor' | 'other_professional';
+    type: 'doctor' | 'other_professional' | 'nurse';
     displayType: string; // "Doctor" or the professional_type (e.g., "Public Health", "Physiologist")
     user: UserResource;
     specialization: string;
@@ -19,5 +20,6 @@ export interface ProfessionalResource {
     // Original resources for reference
     doctor?: DoctorResource;
     otherProfessional?: OtherProfessionalResource;
+    nurse?: NurseResource;
 }
 

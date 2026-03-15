@@ -7,13 +7,35 @@
             </span>
         </div>
         <div *ngFor="let navType of nav_type">
-            <button routerLinkActive="active" 
-                    class="{{navType.navClassName}}" 
-                    (click)="navType.action ? navType.action() : null"
-                    [routerLink]="navType.action ? null : navType.routerLink" 
-                    [routerLinkActiveOptions]={exact:true}>
-                &nbsp;&nbsp;{{navType.title}}
-            </button>
+            <ng-container *ngIf="!navType.isDropdown; else dropdownMenu">
+                <button routerLinkActive="active"
+                        class="{{navType.navClassName}}"
+                        (click)="onNavClick(navType)"
+                        [routerLink]="navType.action ? null : navType.routerLink"
+                        [routerLinkActiveOptions]="{exact:true}">
+                    &nbsp;&nbsp;{{navType.title}}
+                </button>
+            </ng-container>
+
+            <ng-template #dropdownMenu>
+                <button class="{{navType.navClassName}} side-dropdown-trigger"
+                        (click)="toggleDropdown(navType)">
+                    <span>&nbsp;&nbsp;{{navType.title}}</span>
+                    <i class="bi"
+                       [ngClass]="navType.expanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                </button>
+
+                <div class="side-dropdown-list" *ngIf="navType.expanded">
+                    <button *ngFor="let child of navType.children"
+                            routerLinkActive="active"
+                            class="{{child.navClassName}}"
+                            [routerLink]="child.routerLink"
+                            [queryParams]="child.queryParams"
+                            [routerLinkActiveOptions]="{exact:true}">
+                        &nbsp;&nbsp;{{child.title}}
+                    </button>
+                </div>
+            </ng-template>
         </div>
     </div>
 

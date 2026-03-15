@@ -9,6 +9,7 @@ export interface NurseResource {
     grad_year: string,
     degree_file: string,
     availability: string,
+    user?: UserResource,
     created_by: UserResource
 }
 
