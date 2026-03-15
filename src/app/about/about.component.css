@@ -4,10 +4,58 @@
         width: 100%;
     
     }
-    .team p{
-        font-size: x-small;
-    }
 }
-.team .card{
-    width: 30%;
+
+.about-intro {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.about-intro-left {
+    flex: 1 1 40%;
+    min-width: 280px;
+}
+
+.about-intro-right {
+    flex: 1 1 50%;
+    min-width: 280px;
+}
+
+.objectives-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem 5%;
+    text-align: left;
+}
+
+.objective-item {
+    padding: 1.5rem;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.objective-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.objective-item h4 {
+    margin-bottom: 0.5rem;
+}
+
+.objective-item h4 span {
+    color: #0055AA;
+}
+
+@media (max-width: 700px) {
+    .about-intro {
+        flex-direction: column;
+    }
+
+    .objectives-grid {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
 }

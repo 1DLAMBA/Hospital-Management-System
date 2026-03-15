@@ -1,3 +1,10 @@
+@media (min-width: 575px) {
+.hero-client{
+  width: 100%;
+  min-height: 5vh !important;
+}
+}
+
 @media (max-width: 575px) {
   .left-profile .inner-profile{
     width: 100% !important;
@@ -10,9 +17,7 @@
     margin-top: 10% !important;
     width: 100% !important;
   }
-  .hero{
-    height: 10vh !important;
-  }
+
   .appointment-container{
     width: 100% !important;
     display: flex !important;
@@ -20,10 +25,7 @@
   }
 }
 
-.hero{
-    width: 100%;
-    height: 30vh;
-}
+
 
 .appt-dialog p{
     font-size: 1.5rem !important;
@@ -41,7 +43,7 @@
 }
 
 .main{
-    margin-top:-13% ;
+    /* margin-top:-13% ; */
     width: 90%;
 }
 .left-profile{
