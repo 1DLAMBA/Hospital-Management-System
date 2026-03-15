@@ -1,38 +1,61 @@
 <main class="d-flex flex-column">
 
-    <section class="hero p-3">
-
-        <!-- <p>{{singleDoctor.user.name}}</p> -->
+    <section class="doc-banner">
+        <div class="doc-banner-overlay"></div>
+        <div class="doc-banner-content" *ngIf="user">
+            <h1 class="doc-banner-name">{{user?.name}}</h1>
+            <p class="doc-banner-subtitle">
+                <i class="pi pi-briefcase"></i>
+                {{user.doctors?.specialization || user.other_professionals?.specialization || 'Medical Professional'}}
+            </p>
+        </div>
     </section>
 
     <section class="main mx-auto d-flex justify-content-between">
         <div class="left-profile gap-2">
             <div class="inner-profile pb-2 mb-2">
-                <app-lazy-image 
-                    [src]="avatar_file + (user?.passport || '')"
-                    [alt]="user?.name || 'Profile'"
-                    width="150px"
-                    height="150px"
-                    borderRadius="50%">
-                </app-lazy-image>
-                <p-skeleton *ngIf="!user" shape="circle" size="150px"></p-skeleton>
+                <div class="avatar-ring">
+                    <app-lazy-image 
+                        [src]="avatar_file + (user?.passport || '')"
+                        [alt]="user?.name || 'Profile'"
+                        width="130px"
+                        height="130px"
+                        borderRadius="50%">
+                    </app-lazy-image>
+                    <p-skeleton *ngIf="!user" shape="circle" size="130px"></p-skeleton>
+                </div>
                 
-                <h1 class="m-2">{{user?.name}}</h1>
+                <h1 class="profile-card-name">{{user?.name}}</h1>
+                <span class="profile-card-role" *ngIf="professionalType === 'doctor'">
+                    <i class="pi pi-heart-fill"></i> Doctor
+                </span>
+                <span class="profile-card-role" *ngIf="professionalType === 'other_professional'">
+                    <i class="pi pi-star-fill"></i> {{user.other_professionals?.professional_type || 'Specialist'}}
+                </span>
                 
-                <div class="d-flex justify-content-between m-2" *ngIf="professionalType === 'doctor'">
-                    <span class="text-secondary">Availability:</span>
-                    <div>
-                        
-                        <form [formGroup]="availabilityGroup">
-                            <p-inputSwitch formControlName="checked" />
-                        </form>
+                <div class="status-row" *ngIf="professionalType === 'doctor'">
+                    <span class="status-label">Availability</span>
+                    <form [formGroup]="availabilityGroup">
+                        <p-inputSwitch formControlName="checked" />
+                    </form>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <i class="pi pi-id-card"></i>
+                        <div>
+                            <span class="stat-value">{{user.doctors?.license_number || user.other_professionals?.license_number || '—'}}</span>
+                            <span class="stat-label">License</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="pi pi-calendar"></i>
+                        <div>
+                            <span class="stat-value">{{user.doctors?.grad_year || user.other_professionals?.grad_year || '—'}}</span>
+                            <span class="stat-label">Since</span>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between m-2" *ngIf="professionalType === 'other_professional'">
-                    <span class="text-secondary">Professional Type:</span>
-                    <span class="fw-bold">{{user.other_professionals?.professional_type}}</span>
-                </div>
-                
             </div>
             
             <span class="m-2 d-flex gap-2">
@@ -41,47 +64,60 @@
         </div>
         <div class="right-profile p-2">
             
-            <div class="m-2">
-                <div class="d-flex justify-content-between col-12">
-                    <div class="col-12">
-
-                        <h1 class="col-12">Profile</h1>
+            <div class="info-cards-grid">
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <i class="pi pi-user"></i>
+                        <h2>Profile</h2>
                     </div>
-                    <div class="row col-12">
-
-                        <p class="col-6"> <span class="text-secondary">Primary Specialty:</span><br>
-                        {{user.doctors?.specialization || user.other_professionals?.specialization}}</p>
-                   
-    
-                        <p class="col-6"><span class="text-secondary">License Number:</span><br>
-                        {{user.doctors?.license_number || user.other_professionals?.license_number}}</p>
-                    </div>
-                    <div class="row col-12" *ngIf="user.other_professionals">
-                        <p class="col-12"><span class="text-secondary">Professional Type:</span><br>
-                        {{user.other_professionals.professional_type}}</p>
+                    <div class="info-card-body">
+                        <div class="info-field">
+                            <span class="info-field-label">Primary Specialty</span>
+                            <span class="info-field-value">{{user.doctors?.specialization || user.other_professionals?.specialization}}</span>
+                        </div>
+                        <div class="info-field" *ngIf="user.other_professionals">
+                            <span class="info-field-label">Professional Type</span>
+                            <span class="info-field-value">{{user.other_professionals.professional_type}}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-field-label">License Number</span>
+                            <span class="info-field-value mono">{{user.doctors?.license_number || user.other_professionals?.license_number}}</span>
+                        </div>
                     </div>
                 </div>
-                <hr>
-                <div class="d-flex justify-content-between col-12">
-                    <b class="col-12">Contact Details</b>
 
-                    <p class="col-3"><span class="text-secondary">Email:</span><br>
-                    {{user.email}}</p>
-                
-
-                    <p class="col-3"><span class="text-secondary">Phone Number:</span><br>
-                    {{user.phoneno}}</p>
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <i class="pi pi-phone"></i>
+                        <h2>Contact</h2>
+                    </div>
+                    <div class="info-card-body">
+                        <div class="info-field">
+                            <span class="info-field-label">Email</span>
+                            <span class="info-field-value email-val">{{user.email}}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-field-label">Phone Number</span>
+                            <span class="info-field-value">{{user.phoneno}}</span>
+                        </div>
+                    </div>
                 </div>
-                <hr>
-                <div class="d-flex justify-content-between col-12">
-                    <b class="col-3">Experience</b>
 
-                    <p class="col-12"><span class="text-secondary">Education:</span><br>
-                    {{user.doctors?.med_school || user.other_professionals?.med_school}}</p>
-              
-    
-                    <p class="col-6"><span class="text-secondary">Practicing since:</span><br>
-                    {{user.doctors?.grad_year || user.other_professionals?.grad_year}}</p>
+                <div class="info-card span-full">
+                    <div class="info-card-header">
+                        <i class="pi pi-book"></i>
+                        <h2>Experience</h2>
+                    </div>
+                    <div class="info-card-body horizontal">
+                        <div class="info-field">
+                            <span class="info-field-label">Education</span>
+                            <span class="info-field-value">{{user.doctors?.med_school || user.other_professionals?.med_school}}</span>
+                        </div>
+                        <div class="info-field">
+                            <span class="info-field-label">Practicing Since</span>
+                            <span class="info-field-value">{{user.doctors?.grad_year || user.other_professionals?.grad_year}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="m-2">

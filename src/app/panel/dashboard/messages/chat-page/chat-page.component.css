@@ -401,6 +401,8 @@
 
 /* Chat Body */
 .chat-body {
+  flex: 1;
+  min-height: 0;
   padding: 1.5rem;
   background: #f8f9fa;
   overflow-y: auto;
@@ -506,11 +508,11 @@
 
 /* Composer */
 .composer {
+  flex-shrink: 0;
   border-top: 1px solid #e9ecef;
   background: #ffffff;
   padding: 1rem 1.5rem;
   z-index: 7;
-
 }
 
 .composer-bar {
@@ -693,10 +695,7 @@ textarea:focus{
   }
 }
 footer{
-  width:55%;
-  position: fixed;
-  bottom: 2%;
-  
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -706,10 +705,7 @@ footer{
   }
 
   footer {
-  width:100%;
-  position: fixed;
-  bottom: 0;
-
+    width: 100%;
   }
   
   .chat-container {

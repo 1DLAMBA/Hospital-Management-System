@@ -15,6 +15,7 @@ import { NursesService } from '../endpoints/nurses.service';
 import { OtherProfessionalsService } from '../endpoints/other-professionals.service';
 import { MessageService } from 'primeng/api';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from '../auth.service';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -52,6 +53,8 @@ export class RegisterComponent implements OnInit {
   showOtpVerification: boolean = false;
   registeredUserEmail: string = '';
   registeredUserType: string = '';
+  /** Store register API response so we can set localStorage and route for non-OTP users (e.g. client). */
+  registerResponse: any = null;
 
   // Professional types for other_professional user type
   professionalTypes = [
@@ -78,8 +81,7 @@ export class RegisterComponent implements OnInit {
     private readonly router: Router,
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
-
-
+    private authService: AuthService,
   ) {
     this.RegisterForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -111,6 +113,29 @@ export class RegisterComponent implements OnInit {
 
     this.messageService.add({ severity: 'error', detail: message });
   }
+
+  /**
+   * Extracts a user-friendly error message from backend validation/error response.
+   * Handles shape: { message: string, errors?: { [field: string]: string[] } }
+   */
+  getBackendErrorMessage(error: any): string {
+    const body = error?.error;
+    if (!body) return 'Please try again';
+
+    if (typeof body.message === 'string' && body.message.trim()) {
+      return body.message.trim();
+    }
+    const errors = body.errors;
+    if (errors && typeof errors === 'object') {
+      const firstKey = Object.keys(errors)[0];
+      const messages = firstKey ? errors[firstKey] : null;
+      if (Array.isArray(messages) && messages.length > 0 && typeof messages[0] === 'string') {
+        return messages[0].trim();
+      }
+    }
+    return 'Please try again';
+  }
+
   // Logic For stepper
   next() {
     if (this.RegisterForm.value.user_type &&
@@ -210,6 +235,7 @@ export class RegisterComponent implements OnInit {
       next: (response: any) => {
         console.log(response);
         this.userId = response.user.id;
+        this.registerResponse = response;
 
         // Check if OTP verification is required
         if (response.requires_verification) {
@@ -222,7 +248,7 @@ export class RegisterComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.submitLoader = false;
-        this.degreeError(error.error.error)
+        this.degreeError(this.getBackendErrorMessage(error));
       }
     })
   }
@@ -302,6 +328,7 @@ export class RegisterComponent implements OnInit {
           error: (err) => {
             console.log(err);
             this.submitLoader = false;
+            this.degreeError(this.getBackendErrorMessage(err));
           },
         })
         break;
@@ -329,6 +356,7 @@ export class RegisterComponent implements OnInit {
           error: (err) => {
             console.log(err);
             this.submitLoader = false;
+            this.degreeError(this.getBackendErrorMessage(err));
           },
         })
         break;
@@ -356,11 +384,11 @@ export class RegisterComponent implements OnInit {
           error: (err) => {
             console.log(err);
             this.submitLoader = false;
+            this.degreeError(this.getBackendErrorMessage(err));
           },
         })
         break;
       case 'client':
-
         const client = {
           user_id: userId,
           date_of_birth: this.clientForm.value.date_of_birth
@@ -368,9 +396,19 @@ export class RegisterComponent implements OnInit {
         this.clientEndpoint.create(client).subscribe({
           next: (response) => {
             console.log(response);
-            this.router.navigate(['login'])
-          }, error(err) {
-
+            this.submitLoader = false;
+            // Set up localStorage like login (client does not use OTP)
+            if (this.registerResponse?.user) {
+              this.authService.login(this.registerResponse);
+              localStorage.setItem('id', String(this.userId));
+              this.router.navigate(['panel/client-panel']);
+            } else {
+              this.router.navigate(['login']);
+            }
+          },
+          error: (err) => {
+            this.submitLoader = false;
+            this.degreeError(this.getBackendErrorMessage(err));
           },
         })
         break;
@@ -458,10 +496,11 @@ export class RegisterComponent implements OnInit {
       },
       error: (error: any) => {
         this.loader = false;
-        this.degreeError('Please try again')
         this.passportLoader = false;
         this.signatureLoader = false;
         this.idCardLoader = false;
+        const message = this.getBackendErrorMessage(error);
+        this.degreeError(message);
       }
 
     })
