@@ -3,7 +3,6 @@
     <section class="doc-banner">
         <div class="doc-banner-overlay"></div>
         <div class="doc-banner-content" *ngIf="user">
-            <h1 class="doc-banner-name">{{user?.name}}</h1>
             <p class="doc-banner-subtitle">
                 <i class="pi pi-briefcase"></i>
                 {{user.doctors?.specialization || user.other_professionals?.specialization || 'Medical Professional'}}
