@@ -116,24 +116,96 @@ export class RegisterComponent implements OnInit {
 
   /**
    * Extracts a user-friendly error message from backend validation/error response.
-   * Handles shape: { message: string, errors?: { [field: string]: string[] } }
+   * Handles Laravel default / custom file upload response shapes.
+   * Example shapes:
+   * - { message: string, errors?: { [field: string]: string[] } }
+   * - { success: false, message: string }
    */
   getBackendErrorMessage(error: any): string {
-    const body = error?.error;
-    if (!body) return 'Please try again';
+    if (!error) {
+      return 'Please try again';
+    }
 
-    if (typeof body.message === 'string' && body.message.trim()) {
+    // Axios-style or raw error body
+    const body = error.error ?? error;
+
+    if (error?.status === 0) {
+      return 'Unable to reach server. Please check your connection.';
+    }
+
+    if (body?.success === false && typeof body.message === 'string' && body.message.trim()) {
       return body.message.trim();
     }
-    const errors = body.errors;
+
+    if (typeof body === 'string' && body.trim()) {
+      return body.trim();
+    }
+
+    if (body?.message && typeof body.message === 'string' && body.message.trim()) {
+      return body.message.trim();
+    }
+
+    const errors = body?.errors;
     if (errors && typeof errors === 'object') {
+      // Laravel validation errors shape
       const firstKey = Object.keys(errors)[0];
       const messages = firstKey ? errors[firstKey] : null;
       if (Array.isArray(messages) && messages.length > 0 && typeof messages[0] === 'string') {
         return messages[0].trim();
       }
+
+      // Some APIs return {errors: {file: '...'}}
+      if (typeof messages === 'string' && messages.trim()) {
+        return messages.trim();
+      }
     }
+
     return 'Please try again';
+  }
+
+  /**
+   * File-upload-specific error message mapping.
+   * This ensures validation errors from FileUploadController are shown cleanly.
+   */
+  getFileUploadErrorMessage(error: any): string {
+    const body = error?.error ?? error;
+    if (body?.errors?.file) {
+      const fileErrors = body.errors.file;
+      if (Array.isArray(fileErrors) && fileErrors.length > 0) {
+        return fileErrors[0];
+      }
+      if (typeof fileErrors === 'string') {
+        return fileErrors;
+      }
+    }
+
+    if (body?.success === false && typeof body.message === 'string') {
+      return body.message;
+    }
+
+    return this.getBackendErrorMessage(error);
+  }
+
+  resetFileUploadLoaders(type: string): void {
+    this.loader = false;
+    this.passportLoader = false;
+    this.signatureLoader = false;
+    this.idCardLoader = false;
+
+    switch (type) {
+      case 'degree':
+        this.loader = false;
+        break;
+      case 'passport':
+        this.passportLoader = false;
+        break;
+      case 'signature':
+        this.signatureLoader = false;
+        break;
+      case 'id_card':
+        this.idCardLoader = false;
+        break;
+    }
   }
 
   // Logic For stepper
@@ -433,15 +505,33 @@ export class RegisterComponent implements OnInit {
       default:
         window.alert('something went wrong')
         break;
-
     }
-    let file = e.target.files[0];
+
+    const file = e?.target?.files?.[0];
+    if (!file) {
+      // User canceled file selection or no file selected; reset loader and exit.
+      this.resetFileUploadLoaders(type);
+      return;
+    }
+
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('visibility', 'public');
 
     this._http.post(`${environment.apiUrl}/upload`, formData).subscribe({
       next: (response: any) => {
+        if (response?.success === false) {
+          this.resetFileUploadLoaders(type);
+          this.degreeError(response?.message || 'File upload failed');
+          return;
+        }
+
+        if (!response?.data) {
+          this.resetFileUploadLoaders(type);
+          this.degreeError('File upload did not return expected data.');
+          return;
+        }
+
         const file = response.data;
         this.loader = false;
 
@@ -499,7 +589,7 @@ export class RegisterComponent implements OnInit {
         this.passportLoader = false;
         this.signatureLoader = false;
         this.idCardLoader = false;
-        const message = this.getBackendErrorMessage(error);
+        const message = this.getFileUploadErrorMessage(error);
         this.degreeError(message);
       }
 
