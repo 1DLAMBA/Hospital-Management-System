@@ -137,6 +137,10 @@ backdrop-filter: blur(4px);
     z-index: 0;
 }
 
+body{
+    font-size: 0.6em;
+}
+
 /* Shorter waves on mobile – avoid "pressed and tall" stretch */
 @media (max-width: 991px) {
     .hero-waves {

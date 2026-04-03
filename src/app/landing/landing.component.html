@@ -3,27 +3,56 @@
 <div class="hero">
     <div class="hero-scene">
         <canvas #heroBg id="heroBg"></canvas>
-        <img class="hero-waves" src="assets/waves.svg" alt="Animated waves" />
+        <svg class="hero-waves" viewBox="0 0 1920 760" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="heroLg1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#5ca8f5" stop-opacity="1"/>
+                    <stop offset="60%" stop-color="#a8d4ff" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#d0e8ff" stop-opacity="0.4"/>
+                </linearGradient>
+                <filter id="heroGlow">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="5" opacity="0.3">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380; M -100,390 C 150,175 350,590 580,390 C 810,175 1010,590 1250,390 C 1490,175 1690,590 1920,390; M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380"/>
+            </path>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="5" opacity="0.3">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380; M -100,370 C 150,585 350,175 580,370 C 810,585 1010,175 1250,370 C 1490,585 1690,175 1920,370; M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380"/>
+            </path>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="1.6" filter="url(#heroGlow)">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380; M -100,390 C 150,175 350,590 580,390 C 810,175 1010,590 1250,390 C 1490,175 1690,590 1920,390; M -100,380 C 150,190 350,570 580,380 C 810,190 1010,570 1250,380 C 1490,190 1690,570 1920,380"/>
+            </path>
+            <path fill="none" stroke="url(#heroLg1)" stroke-width="1.6" filter="url(#heroGlow)">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+                    values="M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380; M -100,370 C 150,585 350,175 580,370 C 810,585 1010,175 1250,370 C 1490,585 1690,175 1920,370; M -100,380 C 150,570 350,190 580,380 C 810,570 1010,190 1250,380 C 1490,570 1690,190 1920,380"/>
+            </path>
+        </svg>
     </div>
     <div class="herobody herobody-inner">
         <div class="herotext-col my-auto order-2 order-lg-1">
             <div class="herotext pt-lg-5 pt-4">
                 <h1 class="herotext mt-lg-5 mt-2">
-                    Your Health, One Platform Away <br>Welcome to Phoenix
+                    Access Licensed Medical Professionals <br>here at Phoenix Med
                 </h1>
-                <p class="herotext-desc">Book appointments, access your medical records, and get instant health guidance from our AI assistant — all from one place. Phoenix puts your healthcare journey in your hands.</p>
+                <p class="herotext-desc">Providing Compassionate care, Cutting-edge technology, and a commitment to your well-being for a <br>
+                    healthier tomorrow and experience excellence in healhcare with our comprehensive services</p>
                 <div class="herobtns d-flex flex-wrap gap-2">
                     <button class="btn btn-bw" routerLink="login">
                         Get Started
                     </button>
-                    <button class="btn btn-wb" routerLink="services">
+                    <button class="btn btn-wb">
                         Learn More
                     </button>
                 </div>
             </div>
         </div>
         <div class="herodoctor order-1 order-lg-2">
-            <img [@slide] alt="Phoenix app mockup" class="herodoctor-img img-fluid" src="../../assets/mockup.png">
+            <img [@slide] alt="" class="herodoctor-img img-fluid" src="../../assets/mockup.png">
         </div>
     </div>
 </div>
@@ -32,74 +61,80 @@
 
 <div class="services text-center my-2">
     <p>Services</p>
-    <h1 class="px-2">Everything you need in <span class="">one platform</span></h1>
+    <h1 class="px-2">We offer you the best <span class="">services</span></h1>
     <div class="servicecards flex-wrap co-12 d-flex">
-        <div class="p-3 box-shadow-hover rounded-2 m-5 text-center d-flex flex-column">
+        <div class="border p-3 box-shadow-hover rounded-2 m-5   text-center d-flex flex-column">
             <div class=" mx-auto cardimg p-4 rounded-circle  image-fluid">
-                <img alt="Online appointment icon" src="../../assets/onlineappointment.png">
+                <img alt="" src="../../assets/onlineappointment.png">
             </div>
             <h3>Online Appointment</h3>
-            <p>Browse available doctors by specialty, choose a time slot that works for you, and book your appointment in just a few clicks. Receive instant confirmation and reminders.</p>
+            <p>We are equipped with advanced technology (E-Health) to ensure effective treatments procedures.</p>
         </div>
-        <div class="p-3 box-shadow-hover rounded-2 m-5 text-center d-flex flex-column">
+        <div class="border p-3 box-shadow-hover rounded-2 m-5  text-center d-flex flex-column">
             <div class=" mx-auto cardimg p-4 rounded-circle  image-fluid">
-                <img alt="Medical records icon" src="../../assets/icons8-document-100.png">
+                <img alt="" src="../../assets/icons8-document-100.png">
             </div>
-            <h3>Medical Records</h3>
-            <p>View your complete medical history, past prescriptions, and doctor notes all in one secure place. Share records with your care team whenever you need to.</p>
+            <h3>Medical Record Service</h3>
+            <p>Access and manage your health records securely in one place. View history, share with your care team, and keep everything organized.</p>
         </div>
-        <div class="p-3 box-shadow-hover rounded-2 m-5 text-center d-flex flex-column">
+        <div class="border p-3 box-shadow-hover rounded-2 m-5 text-center d-flex flex-column">
             <div class=" mx-auto cardimg p-4 rounded-circle  image-fluid">
-                <img alt="AI assistant icon" src="../../assets/icons8-ai-100.png">
+                <img alt="" src="../../assets/icons8-ai-100.png">
             </div>
-            <h3>AI Health Assistant</h3>
-            <p>Ask health-related questions any time of the day. Our AI assistant helps you understand symptoms, find the right specialist, and prepare for your next visit.</p>
+            <h3>AI Assistant Service</h3>
+            <p>Get guidance and answers around the clock with our AI assistant. Find information, prepare for visits, and navigate your care with confidence.</p>
         </div>
     </div>
 </div>
 
 <!-- ******FEATURES******* -->
 
-<div pAnimateOnScroll enterClass="fadein" leaveClass="fadeout" class="features mx-auto text-center m-5">
+<div pAnimateOnScroll enterClass="fadein" leaveClass="fadeout" class="features d-flex flex-column mx-auto text-center m-5">
     <p>Features</p>
-    <h1>How <span class="">Phoenix</span> works</h1>
-    <div class="features-grid">
-        <div class="feature-card">
-            <img alt="Healthcare professional with patient" class="img-fluid" src="../../assets/servicenurse1.png">
-            <div class="feature-card-body">
-                <h4>How <span>Appointments</span> Work</h4>
-                <p>Sign up and browse our network of licensed doctors and specialists. Select a doctor, pick an available time slot, and confirm your booking. You will receive a notification once your appointment is confirmed, and reminders as the date approaches.</p>
-                <button class="btn btn-bw" routerLink="services">Learn More</button>
-            </div>
+    <h1>Why <span class="">choose</span> us</h1>
+    <div class="featureset1 p-2 d-flex flex-wrap justify-content-center">
+        <img alt="" class="m-auto img-fluid" src="../../assets/servicenurse1.png">
+        <div class="set1context p-2 m-auto ">
+            <h4>Advancing <span>HealthCare</span> with Technology</h4>
+            <p class="">Simplify appointment scheduling, minimize wait times and optimize<br> resource allocation for improved
+                patient flow and satisfaction by digitalizing <br>and securely storing patient records and focusing on
+                quality care for patients </p>
+            <button class="btn btn-bw">Learn More</button>
         </div>
-        <div class="feature-card">
-            <img alt="Healthcare team collaboration" class="img-fluid" src="../../assets/servicenurse2.png">
-            <div class="feature-card-body">
-                <h4>Real-Time <span>Doctor</span> Communication</h4>
-                <p>Message your doctor directly through Phoenix with our built-in chat. Send and receive messages in real time, track delivery and read receipts, and stay informed with instant notifications for replies and appointment updates.</p>
-                <button class="btn btn-bw" routerLink="services">Learn More</button>
-            </div>
+    </div>
+    <div class="featureset2 p-2 d-flex flex-wrap  justify-content-center">
+        <div class="setcontext  m-auto ">
+            <h4>Expertise and <span>Excellence</span> in HealthCare</h4>
+            <p>With a team of highly skilled doctors, nurses, and specialists, <br>we offer exceptional medical
+                expertise and strive for excellence in every aspect of patient <br>care therefore giving them the best
+                care they require </p>
+            <button class="btn btn-bw">Learn More</button>
+
         </div>
+        <img alt class="m-auto" src="../../assets/servicenurse2.png">
+
     </div>
 </div>
 <!-- ******TESTIMONIALS******* -->
 
 <div class="testimonials text-center  ">
     <p>Testimonials</p>
-    <h1>What our <span class="text-blue">Users</span> say about us</h1>
+    <h1>What our <span class="text-blue">Patients</span> say about us</h1>
     <div class=" bghold ">
         <p class=" testimonialbg text-center ">
-            I used to spend hours on the phone trying to book a doctor's appointment.
-            With Phoenix, I found a specialist, picked a time, and had my booking
-            confirmed in under two minutes. Being able to check my medical records
-            and chat with the AI assistant before my visit made me feel so much
-            more prepared. The whole experience is smooth and stress-free.
-            I honestly cannot imagine going back to the old way.
-            <br><span class="float-right"><b>Adaeze Nwosu, 34</b></span>
+            From the moment I stepped into Phoenix, I was greeted with warmth
+            and compassion. The doctors and nurses took excellent care of me making
+            sure I understood every step of the treatment. However, what amazed me
+            most is the efficiency of their hospital
+            management system. It made my experience smoother and hassle-free.
+            The way the system ensured that my appointments were scheduled promptly,
+            and my medical records made easily accessible really shocked me.
+            The whole process was seamless and I’m really grateful. Highly recommended!
+            <br><span class="float-right"><b>Mary Jane, 46</b></span>
 
         </p>
     </div>
-    <button class="btn btn-wb" routerLink="login">Get Started</button>
+    <button class="btn btn-wb">Get Started</button>
 </div>
 
 <!-- ******ABOUT******* -->
@@ -107,16 +142,21 @@
 <div class="about ">
     <p class="text-center">About Us</p>
     <h1 class="text-center">Get to <span class="text-blue">know us</span></h1>
-    <div class="about-grid">
-        <img alt="Doctor smiling" class="about-grid-img" src="../../assets/laughingdoc.png">
-        <div class="about-grid-text">
+    <div class="aboutbod m-5 d-flex flex-wrap gap-4 justify-content-center">
+        <img alt="" class="ms-auto image-fluid" src="../../assets/laughingdoc.png">
+        <div class="abouttext  me-auto my-auto ">
             <h4>
-                Your digital healthcare companion, built by <span class="text-blue">Phoenix.</span>
+                Elevate your Health with streamlined <br>
+                processes here at <span class="text-blue">Phoenix.</span>
             </h4>
             <p>
-                Phoenix is a healthcare platform that connects patients with licensed medical professionals through technology. Book appointments online, access your medical records securely, chat with doctors in real time, and get AI-powered health guidance — all from your dashboard.
+                We are a leading healthcare institution committed to providing exceptional <br>
+                medical care and medical care and improving the well-being of our patients.<br>
+                With a team of highly skilled healthcare professionals and state-of-the-art <br>
+                facilities, we strive to deliver compassionate and personalized care to each <br>
+                and every individual who walks through our doors.
             </p>
-            <button class="btn btn-bw" routerLink="about">Learn More</button>
+            <button class="btn btn-bw">Learn More</button>
         </div>
     </div>
 </div>
@@ -126,5 +166,5 @@
 <div class="subscribe text-center rounded-3 ">
     <p>Subscribe to our NewsLetter</p>
     <h1>Get the <span class="text-blue">latest</span> health<span class="text-blue"> updates</span> from us</h1>
-    <span class="input p-3 rounded-3"><input type="email" placeholder="Enter your email"/><button class="btn btn-wb mb-3">Subscribe</button></span>
+    <span class="input p-3 rounded-3"><input type="text" placeholder="Enter your email"/><button class="btn btn-wb mb-3">Subscribe</button></span>
 </div>
