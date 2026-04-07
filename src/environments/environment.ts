@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:8000/api",
+  apiUrl: "http://localhost:8001/api",
   // apiUrl: 'https://coestudycenter.com.ng/phoenix/Phoenix-api/public/api',
   // apiUrl: 'https://aandbcleaner.org/phoenix/Phoenix-api/public/api',
   pusher: {

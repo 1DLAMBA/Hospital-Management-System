@@ -43,6 +43,17 @@
         width: 100% !important;
         margin-top: 3%;
     }
+
+    .nurse-panel-layout{
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .main-sect,
+    .appt-sect{
+        width: 100% !important;
+        margin: 0 !important;
+    }
 }
 .main-sect{
     width: 49%;
