@@ -1,13 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
-import { DoctorsService } from '../../../../endpoints/doctors.service';
-import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
-import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { JsonPipe } from '@angular/common';
+import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { ClientsService } from '../../../../endpoints/clients.service';
@@ -34,6 +31,7 @@ export class ProfileNurseComponent implements OnInit {
   date: Date[] | undefined;
   visible: boolean = false;
   availabilityGroup!: FormGroup;
+  apptFormGroup!: FormGroup;
   appointments!: AppointmentResource[] | any;
   user_id: any;
   formData: any;
@@ -47,6 +45,7 @@ export class ProfileNurseComponent implements OnInit {
   createAssignDiag: boolean = false;
   assignForm!: FormGroup;
   assignments!: any[];
+  submitting: boolean = false;
 
 
   constructor(
@@ -57,7 +56,8 @@ export class ProfileNurseComponent implements OnInit {
     private nurseEndpoint: NursesService,
     private clientEndpoint: ClientsService,
     private medicalEndpoint: MedicalService,
-    private assignmentEndpoint: AssignmentsService
+    private assignmentEndpoint: AssignmentsService,
+    private appointmentEndppoint: AppointmentsService
   ) {
     this.availabilityGroup = new FormGroup({
       checked: new FormControl<boolean>(true)
@@ -66,6 +66,11 @@ export class ProfileNurseComponent implements OnInit {
     this.assignForm = new FormGroup({
       assignment_message: new FormControl('', Validators.required),
       // diagnosis: new FormControl('', Validators.required)
+    })
+
+    this.apptFormGroup = new FormGroup({
+      symptoms: new FormControl('', Validators.required),
+      date: new FormControl('', Validators.required)
     })
   }
 
@@ -83,7 +88,7 @@ export class ProfileNurseComponent implements OnInit {
   }
   dangerAlert(message: any) {
 
-    this.messageService.add({ severity: 'success', detail: message });
+    this.messageService.add({ severity: 'error', detail: message });
   }
 
 
@@ -93,6 +98,53 @@ export class ProfileNurseComponent implements OnInit {
 
   showDialog() {
     this.visible = true;
+  }
+
+  proceed() {
+    if (!this.user_id) {
+      this.dangerAlert('User not found');
+      return;
+    }
+
+    this.submitting = true;
+
+    this.userEndpoint.get(this.user_id).subscribe({
+      next: (response: any) => {
+        const currentUser = response.user;
+
+        if (!currentUser?.clients?.id) {
+          this.dangerAlert('Client information not found');
+          this.submitting = false;
+          return;
+        }
+
+        this.formData = {
+          symptoms: this.apptFormGroup.value.symptoms,
+          date_time: moment(this.apptFormGroup.value.date).format('YYYY-MM-DD HH:mm'),
+          status: 'pending',
+          nurse_id: this.singleNurse?.id ?? this.singleNurse,
+          doctor_id: null,
+          other_professional_id: null,
+          client_id: currentUser.clients.id,
+        };
+
+        this.appointmentEndppoint.create(this.formData).subscribe({
+          next: () => {
+            this.visible = false;
+            this.submitting = false;
+            this.successAlert('Appointment request sent');
+          },
+          error: () => {
+            this.submitting = false;
+            this.dangerAlert('Failed to create appointment');
+          }
+        });
+      },
+      error: () => {
+        this.submitting = false;
+        this.dangerAlert('Failed to load user');
+      }
+    })
   }
   assign() {
     this.clientEndpoint.get().subscribe({

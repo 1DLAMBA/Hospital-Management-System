@@ -110,7 +110,7 @@
 
 
     <p-table #dt1 [tableStyle]="{'min-width': '50rem'}" [value]="appointment" dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
-        [globalFilterFields]="['doctor.user.name', 'other_professional.user.name', 'other_professional.professional_type', 'status']">
+        [globalFilterFields]="['doctor.user.name', 'other_professional.user.name', 'nurse.user.name', 'nurse.specialization', 'other_professional.professional_type', 'status']">
 
 
         <ng-template pTemplate="caption">
@@ -184,11 +184,12 @@
                 </td>
                 <td class="d-flex">
                     <div class="passport">
-                        <img src="{{ avatar_file + (appointments.doctor?.user?.passport || appointments.other_professional?.user?.passport) }}">
+                        <img src="{{ avatar_file + (appointments.doctor?.user?.passport || appointments.other_professional?.user?.passport || appointments.nurse?.user?.passport) }}">
                     </div>
                     <div>
-                        {{ appointments.doctor?.user?.name || appointments.other_professional?.user?.name}}
+                        {{ appointments.doctor?.user?.name || appointments.other_professional?.user?.name || appointments.nurse?.user?.name }}
                         <small *ngIf="appointments.other_professional" class="d-block text-secondary">{{ appointments.other_professional.professional_type }}</small>
+                        <small *ngIf="appointments.nurse" class="d-block text-secondary">{{ appointments.nurse.specialization }}</small>
                     </div>
                 </td>
                 <td>

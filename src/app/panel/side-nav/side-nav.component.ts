@@ -220,6 +220,11 @@ export class SideNavComponent implements OnInit, OnDestroy {
     },
     {
       navClassName:'side-btn bi bi-prescription2 my-2 py-3',
+      title: 'Appointment',
+      routerLink: 'doctor-appointment'
+    },
+    {
+      navClassName:'side-btn bi bi-prescription2 my-2 py-3',
       title: 'Assignment',
       routerLink: 'assignment'
     },

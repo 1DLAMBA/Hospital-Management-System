@@ -1,4 +1,32 @@
 <!-- ////DIALOG -->
+<p-toast></p-toast>
+<div class="flex appt-dialog justify-content-center">
+    <p-dialog header="Schedule an appointment" [(visible)]="visible" [modal]="true"
+        [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
+        [draggable]="false" [resizable]="false">
+        <form *ngIf="!preview" action="" [formGroup]="apptFormGroup" class="d-flex m-auto justify-content-between">
+            <div class=" calendar justify-content-center">
+                <p-calendar class="" formControlName="date" [inline]="true" [showWeek]="false" [showTime]="true"
+                    panelStyle="background-color:blue" />
+            </div>
+            <div class="diag-text my-auto d-flex justify-content-between flex-column">
+                <span class="bi bi-calendar4-week mb-5"></span>
+                <p class="mb-5">
+                    Booking an Appointment <br><br> with {{user?.name}}<br>
+                </p>
+                <label for="symptoms">Complaints</label><br>
+                <textarea formControlName="symptoms" placeholder="Symptoms you are experiencing" name="symptoms"
+                    type="name" pInputText id="name" aria-describedby="username-help"></textarea>
+                <small *ngIf="apptFormGroup.get('symptoms')?.touched && apptFormGroup.get('name')?.hasError('required')"
+                    class="text-danger">
+                    Field Required
+                </small><br>
+                <p-button [disabled]="this.apptFormGroup.invalid || submitting" [loading]="submitting" label="Proceed" (click)="proceed()" severity="info" [raised]="true" [rounded]="true" />
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
 <p-dialog header="Assign Nurse" [(visible)]="createAssignDiag" [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '40vw', display: 'flex'}"
     [draggable]="false" [resizable]="false">
@@ -147,7 +175,7 @@
             </div>
             
 
-               <button pButton label="Message" class="message-button" icon="bi bi-chat-left-text-fill" severity="success" (click)="navigateToChat()"></button>
+               <!-- <button pButton label="Message" class="message-button" icon="bi bi-chat-left-text-fill" severity="success" (click)="navigateToChat()"></button> -->
         </div>
         <div class="right-profile p-2">
             
@@ -162,7 +190,7 @@
                     {{singleNurse.license_number}}</p>
                 </div>
                 <hr>
-                <div class="d-flex justify-content-between flex-wrap col-12">
+                <!-- <div class="d-flex justify-content-between flex-wrap col-12">
                     <b class="col-12 col-md-3">Contact Details</b>
 
                     <p class="col-12 col-md-4"><span class="text-secondary">Email:</span><br>
@@ -171,7 +199,7 @@
 
                     <p class="col-12 col-md-4"><span class="text-secondary">Phone Number:</span><br>
                     {{user.phoneno}}</p>
-                </div>
+                </div> -->
                 <hr>
                 <div class="d-flex justify-content-between flex-wrap col-12">
                     <b class="col-12 col-md-3">Experience</b>
@@ -187,7 +215,7 @@
            
 
             <div class="table-responsive-wrapper">
-                <p-table
+                <!-- <p-table
                     #dt1
                     [value]="assignments"            
                     dataKey="id"
@@ -199,21 +227,12 @@
                 >
                 
                 
-                <!-- <ng-template pTemplate="caption">
-                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
-                        <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash" size="small" />
-                        <span class="p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" [(ngModel)]="searchValue" (input)="dt1.filterGlobal($event.target?.addEventListener, 'contains')" placeholder="Search keyword" />
-                        </span>
-                    </div>
-                </ng-template> -->
+               
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="min-width:7rem">
                             <div class="flex align-items-center">
                                 Client Name
-                                <!-- <p-columnFilter type="text" field="name" display="menu" /> -->
                             </div>
                         </th>
                         <th style="min-width:15rem">
@@ -254,12 +273,16 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="7">NoAssignments found.</td>
+                        <td colspan="7">No Assignments found.</td>
                     </tr>
                 </ng-template>
                 
                 
-                </p-table>
+                </p-table> -->
+            </div>
+
+            <div class="mt-3">
+                <p-button label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true" [rounded]="true" />
             </div>
 
            

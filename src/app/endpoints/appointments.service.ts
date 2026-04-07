@@ -30,6 +30,10 @@ export class AppointmentsService {
         return this.httpClient.get(`${this.baseUrl}/other-professional/get/${id}`)
 
         break;
+      case 'nurse':
+        return this.httpClient.get(`${this.baseUrl}/nurse/get/${id}`)
+
+        break;
       case 'admin':
         return this.httpClient.get(`${this.baseUrl}/admin/get/${id}`)
 

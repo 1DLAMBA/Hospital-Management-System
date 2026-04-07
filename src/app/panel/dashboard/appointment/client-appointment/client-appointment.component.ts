@@ -149,11 +149,13 @@ export class ClientAppointmentComponent implements OnInit {
       this.router.navigate(['panel/doctors/profile/', appointment.doctor.id], { queryParams: { type: 'doctor' } });
     } else if (appointment.other_professional?.id) {
       this.router.navigate(['panel/doctors/profile/', appointment.other_professional.id], { queryParams: { type: 'other_professional' } });
+    } else if (appointment.nurse?.id) {
+      this.router.navigate(['panel/nurses/profile/', appointment.nurse.id]);
     }
   }
 
   getProfessionalId(appointment: any): number | null {
-    return appointment.doctor?.id || appointment.other_professional?.id || null;
+    return appointment.doctor?.id || appointment.other_professional?.id || appointment.nurse?.id || null;
   }
 }
 

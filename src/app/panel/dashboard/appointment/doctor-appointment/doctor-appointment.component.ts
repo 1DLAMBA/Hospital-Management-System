@@ -62,8 +62,8 @@ export class DoctorAppointmentComponent implements OnInit {
 
   loadAppointments(): void {
     // Handle both doctors and other_professionals
-    const professionalId = this.user.doctors?.id || this.user.other_professionals?.id;
-    const userType = this.user.doctors ? 'doctor' : 'other_professional';
+    const professionalId = this.user.doctors?.id || this.user.other_professionals?.id || this.user.nurses?.id;
+    const userType = this.user.doctors ? 'doctor' : (this.user.other_professionals ? 'other_professional' : 'nurse');
     
     if (!professionalId) {
       console.error('No professional ID found');
