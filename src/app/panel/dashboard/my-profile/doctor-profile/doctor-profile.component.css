@@ -1,7 +1,7 @@
 /* --- Doctor Profile Banner --- */
 .doc-banner {
     width: 100%;
-    height: 200px;
+    height: 50px;
     background: linear-gradient(135deg, #17224d 0%, #1a3a6a 50%, #0055aa 100%);
     position: relative;
     overflow: hidden;
@@ -50,7 +50,7 @@
 
 /* --- Layout --- */
 .main {
-    margin-top: -60px;
+    margin-top: -100px;
     width: 95%;
     display: flex;
     flex-wrap: wrap;
@@ -74,9 +74,12 @@
     margin-bottom: 1.5rem;
     min-width: 260px;
     width: 24%;
-    position: relative;
-    overflow: hidden;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
     gap: 0.5rem;
+    z-index: 10;
 }
 
 .left-profile::before {
@@ -94,7 +97,6 @@
 .avatar-ring {
     padding: 5px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0055aa, #00bcd4);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -104,7 +106,7 @@
 
 .avatar-ring ::ng-deep img,
 .avatar-ring ::ng-deep .lazy-loaded-image {
-    border: 3px solid #17224d;
+  
     border-radius: 50%;
 }
 
@@ -432,6 +434,12 @@
         margin-bottom: 1.5rem;
     }
     .left-profile {
+        position: relative !important;
+        top: unset !important;
+        max-height: unset !important;
+        overflow-y: visible !important;
+    }
+    .left-profile {
         padding: 1.5rem 1rem 1rem 1rem;
     }
     .info-cards-grid {
@@ -462,10 +470,16 @@
     .main {
         width: 100%;
         padding: 0 0.5rem;
-        margin-top: -40px;
+        margin-top: -60px;
     }
     .right-profile, .left-profile {
         padding: 1rem 0.8rem;
+    }
+    .left-profile {
+        position: relative !important;
+        top: unset !important;
+        max-height: unset !important;
+        overflow-y: visible !important;
     }
     .right-profile .d-flex {
         flex-direction: column;
@@ -474,9 +488,7 @@
     .profile-card-name {
         font-size: 1.1rem;
     }
-    .quick-stats {
-        flex-direction: column;
-    }
+  
     .info-cards-grid {
         grid-template-columns: 1fr;
     }
@@ -491,6 +503,15 @@
         font-size: 1rem;
         padding: 0.5rem 0 !important;
     }
+    
+    /* Full width dialog on mobile */
+    ::ng-deep .p-dialog {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        margin: 0 !important;
+        left: 2.5vw !important;
+        top: 2.5vh !important;
+    }
 }
 
 
@@ -503,3 +524,98 @@
     ::ng-deep .p-dialog{
         flex-direction: column;
     }
+
+/* Bank Account Section Styles */
+.bank-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.fee-value {
+  color: #28a745;
+  font-weight: 700;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: rgba(40, 167, 69, 0.15);
+  color: #28a745;
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #856404;
+}
+
+.fee-breakdown {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 85, 170, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.breakdown-item.highlight {
+  font-weight: 700;
+  color: #17224d;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(0, 85, 170, 0.2);
+}
+
+.no-bank-account {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.no-bank-account i {
+  font-size: 2rem;
+  color: #00bcd4;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.no-bank-account p {
+  margin: 0;
+  font-size: 1rem;
+  color: #17224d;
+}
+
+.no-bank-account .sub-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+
+/* Header button alignment */
+.info-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.info-card-header h2 {
+  flex: 1;
+  margin: 0;
+}
+
+::ng-deep .info-card-header .p-button-sm {
+  padding: 0.4rem 0.8rem !important;
+  font-size: 0.85rem !important;
+}

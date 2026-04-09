@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { OtherProfessionalsService } from '../../../../endpoints/other-professionals.service';
+import { BankAccountService } from '../../../../endpoints/bank-account.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +17,7 @@ import { ClientResource } from '../../../../../resources/client.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { MedicalService } from '../../../../endpoints/medical.service';
 import { AuthService } from '../../../../auth.service';
+import { BankAccount } from '../../../../models/bank-account.model';
 
 
 
@@ -43,6 +45,11 @@ export class DoctorProfileComponent implements OnInit {
   appointment: boolean = true;
   medicalRecords!: any[];
 
+  // Bank Account
+  bankAccount: BankAccount | null = null;
+  showBankDialog: boolean = false;
+  bankDialogMode: 'add' | 'edit' = 'add';
+
 
   
   constructor(
@@ -54,6 +61,7 @@ export class DoctorProfileComponent implements OnInit {
     private otherProfessionalEndpoint: OtherProfessionalsService,
     private medicalEndpoint: MedicalService,
     private authService: AuthService,
+    private bankAccountService: BankAccountService,
   ) {
     this.availabilityGroup = new FormGroup({
       checked: new FormControl<boolean>(false)
@@ -104,6 +112,9 @@ export class DoctorProfileComponent implements OnInit {
           this.professionalType = 'other_professional';
           this.getsingleOtherProfessional(this.user.other_professionals.id);
         }
+        
+        // Load bank account for all professional types
+        this.loadBankAccount();
       }
     })
   }
@@ -231,6 +242,46 @@ export class DoctorProfileComponent implements OnInit {
     localStorage.clear();
     // Navigate to login page
     this.router.navigate(['/login']);
+  }
+
+  // Bank Account Methods
+  loadBankAccount(): void {
+    // Set user_id for the service
+    if (this.user_id) {
+      this.bankAccountService.setUserId(this.user_id);
+    }
+    this.bankAccountService.getBankAccount().subscribe({
+      next: (response: any) => {
+        this.bankAccount = response.bank_account;
+      },
+      error: () => {
+        // Bank account not found is okay, just means none set up yet
+        this.bankAccount = null;
+      }
+    });
+  }
+
+  openBankDialog(mode: 'add' | 'edit'): void {
+    this.bankDialogMode = mode;
+    this.showBankDialog = true;
+  }
+
+  closeBankDialog(): void {
+    this.showBankDialog = false;
+  }
+
+  onBankAccountSaved(bankAccount: BankAccount): void {
+    this.bankAccount = bankAccount;
+    this.showBankDialog = false;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: this.bankDialogMode === 'add' ? 'Bank account added successfully' : 'Bank account updated successfully'
+    });
+  }
+
+  get professionalName(): string {
+    return this.user?.name || '';
   }
 
 }

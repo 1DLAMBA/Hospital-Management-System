@@ -1,0 +1,239 @@
+.bank-form-container {
+  padding: 1.5rem;
+}
+
+.bank-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #17224d;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.required {
+  color: #dc3545;
+}
+
+.form-field input,
+.form-field ::ng-deep .p-dropdown {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 85, 170, 0.2);
+  padding: 0.75rem;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-field input:focus,
+.form-field ::ng-deep .p-dropdown.p-focus {
+  border-color: #0055aa;
+  box-shadow: 0 0 0 3px rgba(0, 85, 170, 0.1);
+  outline: none;
+}
+
+.form-field input.ng-invalid.ng-touched,
+.form-field ::ng-deep .p-dropdown.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+.account-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.account-input-wrapper input {
+  flex: 1;
+}
+
+::ng-deep .verify-btn .p-button {
+  background: #00bcd4 !important;
+  border: none !important;
+  padding: 0.75rem 1.25rem !important;
+  font-size: 0.9rem !important;
+  white-space: nowrap;
+}
+
+::ng-deep .verify-btn .p-button:hover {
+  background: #00acc1 !important;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.hint {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.success-message {
+  color: #28a745;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.success-message i {
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 85, 170, 0.1);
+}
+
+::ng-deep .cancel-btn .p-button {
+  background: transparent !important;
+  color: #6c757d !important;
+  border: 1px solid #d1d5db !important;
+  padding: 0.75rem 1.5rem !important;
+}
+
+::ng-deep .cancel-btn .p-button:hover {
+  background: #f8f9fa !important;
+  color: #495057 !important;
+}
+
+::ng-deep .save-btn .p-button {
+  background: #17224d !important;
+  border: none !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+::ng-deep .save-btn .p-button:hover {
+  background: #1e2f5e !important;
+}
+
+.info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(0, 188, 212, 0.08);
+  border-left: 4px solid #00bcd4;
+  padding: 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 0.5rem;
+}
+
+.info-note i {
+  color: #00bcd4;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.info-note span {
+  color: #495057;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Bank dropdown styling */
+::ng-deep .bank-dropdown {
+  width: 100% !important;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-label {
+  padding: 0.75rem !important;
+}
+
+/* Dropdown filter/search styling */
+::ng-deep .bank-dropdown .p-dropdown-filter-container {
+  padding: 0.5rem;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-filter {
+  border-radius: 6px;
+  border: 1px solid rgba(0, 85, 170, 0.2);
+  padding: 0.5rem 0.75rem;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-filter:focus {
+  border-color: #0055aa;
+  box-shadow: 0 0 0 3px rgba(0, 85, 170, 0.1);
+  outline: none;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-filter-icon {
+  color: #0055aa;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-items-wrapper {
+  max-height: 250px !important;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-item {
+  padding: 0.75rem 1rem;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-item.p-highlight {
+  background: rgba(0, 85, 170, 0.1);
+  color: #17224d;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-item:hover {
+  background: rgba(0, 85, 170, 0.05);
+}
+
+::ng-deep .bank-dropdown .p-dropdown-clear-icon {
+  color: #6c757d;
+}
+
+::ng-deep .bank-dropdown .p-dropdown-clear-icon:hover {
+  color: #dc3545;
+}
+
+/* Mobile responsive dropdown */
+@media (max-width: 576px) {
+  ::ng-deep .bank-dropdown {
+    position: relative;
+  }
+
+  ::ng-deep .bank-dropdown .p-dropdown-panel {
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: 90vw !important;
+    max-width: 320px !important;
+    margin-top: 0.5rem;
+  }
+
+  ::ng-deep .bank-dropdown .p-dropdown-items-wrapper {
+    max-height: 180px !important;
+  }
+
+  ::ng-deep .bank-dropdown .p-dropdown-item {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  ::ng-deep .bank-dropdown .p-dropdown-filter-container {
+    padding: 0.4rem;
+  }
+
+  ::ng-deep .bank-dropdown .p-dropdown-filter {
+    font-size: 0.9rem;
+  }
+}
