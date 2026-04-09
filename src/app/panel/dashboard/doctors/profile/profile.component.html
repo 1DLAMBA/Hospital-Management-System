@@ -78,14 +78,15 @@
         <div class="left-profile ">
             <div class="inner-profile d-flex flex-column pb-2">
                 <app-lazy-image 
+                    *ngIf="avatar_file && (professional?.user?.passport || SingleDoctor?.user?.passport)"
                     class="m-auto"
-                    [src]="avatar_file + (professional?.user?.passport || SingleDoctor?.user?.passport || '')"
+                    [src]="avatar_file + (professional?.user?.passport || SingleDoctor?.user?.passport)"
                     [alt]="(professional?.user?.name || SingleDoctor?.user?.name) || 'Profile'"
                     width="150px"
                     height="150px"
                     borderRadius="50%">
                 </app-lazy-image>
-                <p-skeleton *ngIf="!professional && !SingleDoctor" shape="circle" size="150px" styleClass="m-auto"></p-skeleton>
+                <p-skeleton *ngIf="!avatar_file || (!professional && !SingleDoctor)" shape="circle" size="150px" styleClass="m-auto"></p-skeleton>
                 <h1 class="m-2">{{professional?.user?.name || SingleDoctor?.user?.name}}</h1>
                 <p class="m-2">{{professional?.specialization || SingleDoctor?.specialization}}</p>
                 <p class="m-2" *ngIf="professionalType === 'other_professional'">{{professional?.professional_type}}</p>

@@ -111,13 +111,18 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       return;
     }
 
+    // First filter out professionals with 'demo' in their name
+    let professionalsWithoutDemo = this.professionals.filter(professional => 
+      !professional.user.name.toLowerCase().includes('demo')
+    );
+
     if (!this.searchValue || this.searchValue.trim() === '') {
-      this.filteredProfessionals = this.professionals;
+      this.filteredProfessionals = professionalsWithoutDemo;
       return;
     }
 
     const searchTerm = this.searchValue.toLowerCase().trim();
-    this.filteredProfessionals = this.professionals.filter(professional => 
+    this.filteredProfessionals = professionalsWithoutDemo.filter(professional => 
       professional.user.name.toLowerCase().includes(searchTerm) ||
       professional.specialization?.toLowerCase().includes(searchTerm) ||
       professional.displayType.toLowerCase().includes(searchTerm) ||
@@ -158,7 +163,7 @@ export class DoctorListComponent implements OnInit, OnDestroy{
         this.doctorEndpoint.get().subscribe({
           next: (response: any) => {
             const verifiedDoctors = (response.doctor || []).filter((doctor: DoctorResource) =>
-              doctor.user && doctor.user.email_verified_at
+              doctor.user && doctor.user.email_verified_at && !doctor.user.name.toLowerCase().includes('demo')
             );
             this.doctors = verifiedDoctors;
             this.professionals = this.mapDoctors(verifiedDoctors);
@@ -179,7 +184,7 @@ export class DoctorListComponent implements OnInit, OnDestroy{
         this.nurseEndpoint.get(undefined, 1, 1000).subscribe({
           next: (response: any) => {
             const verifiedNurses = (response.nurse || []).filter((nurse: NurseResource) =>
-              nurse.user && nurse.user.email_verified_at
+              nurse.user && nurse.user.email_verified_at && !nurse.user.name.toLowerCase().includes('demo')
             );
             this.professionals = this.mapNurses(verifiedNurses);
             this.professionals = this.sortProfessionalsByName(this.professionals);
@@ -199,7 +204,7 @@ export class DoctorListComponent implements OnInit, OnDestroy{
         this.otherProfessionalEndpoint.get().subscribe({
           next: (response: any) => {
             const verifiedOtherProfessionals = (response.other_professional || []).filter((op: any) =>
-              op.user && op.user.email_verified_at
+              op.user && op.user.email_verified_at && !op.user.name.toLowerCase().includes('demo')
             );
             this.professionals = this.mapOtherProfessionals(verifiedOtherProfessionals);
             this.professionals = this.sortProfessionalsByName(this.professionals);
@@ -222,11 +227,11 @@ export class DoctorListComponent implements OnInit, OnDestroy{
         }).subscribe({
           next: (responses: any) => {
             const verifiedDoctors = (responses.doctors.doctor || []).filter((doctor: DoctorResource) =>
-              doctor.user && doctor.user.email_verified_at
+              doctor.user && doctor.user.email_verified_at && !doctor.user.name.toLowerCase().includes('demo')
             );
             this.doctors = verifiedDoctors;
             const verifiedOtherProfessionals = (responses.otherProfessionals.other_professional || []).filter((op: any) =>
-              op.user && op.user.email_verified_at
+              op.user && op.user.email_verified_at && !op.user.name.toLowerCase().includes('demo')
             );
 
             const doctorsList = this.mapDoctors(verifiedDoctors);

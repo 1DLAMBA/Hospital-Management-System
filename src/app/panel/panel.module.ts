@@ -51,6 +51,7 @@ import { MessagesComponent } from './dashboard/messages/messages.component';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DropdownModule } from 'primeng/dropdown';
 import { MessagesService } from '../endpoints/messages.service';
 import { ConversationService } from '../endpoints/conversation.service';
 import { LoaderComponent } from '../components/loader/loader.component';
@@ -61,6 +62,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ChatPageComponent } from './dashboard/messages/chat-page/chat-page.component';
 import { SharedModule } from '../shared.module';
 import { MedicalRecordViewComponent } from '../shared/components/medical-record-view/medical-record-view.component';
+import { BankAccountFormComponent } from '../shared/bank-account-form/bank-account-form.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,8 @@ import { MedicalRecordViewComponent } from '../shared/components/medical-record-
     ChatPageComponent,
     LoaderComponent,
     PanelLoaderComponent,
-    PanelSkeletonComponent
+    PanelSkeletonComponent,
+    BankAccountFormComponent
   ],
   imports: [
     CommonModule,
@@ -127,6 +130,7 @@ import { MedicalRecordViewComponent } from '../shared/components/medical-record-
     OverlayPanelModule,
     SharedModule,
     MedicalRecordViewComponent,
+    DropdownModule,
     
   ],
   exports: [PanelLoaderComponent],

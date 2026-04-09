@@ -118,7 +118,91 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Bank Account Section -->
+                <div class="info-card span-full">
+                    <div class="info-card-header">
+                        <i class="pi pi-credit-card"></i>
+                        <h2>Bank Account & Consultation Fee</h2>
+                        <p-button 
+                            *ngIf="bankAccount" 
+                            icon="pi pi-pencil" 
+                            label="Edit Fee" 
+                            styleClass="p-button-sm p-button-outlined"
+                            (onClick)="openBankDialog('edit')">
+                        </p-button>
+                        <p-button 
+                            *ngIf="!bankAccount" 
+                            icon="pi pi-plus" 
+                            label="Add Bank Account" 
+                            styleClass="p-button-sm"
+                            (onClick)="openBankDialog('add')">
+                        </p-button>
+                    </div>
+                    <div class="info-card-body" *ngIf="bankAccount; else noBankAccount">
+                        <div class="bank-details-grid">
+                            <div class="info-field">
+                                <span class="info-field-label">Account Name</span>
+                                <span class="info-field-value">{{bankAccount.account_name}}</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-field-label">Account Number</span>
+                                <span class="info-field-value mono">{{bankAccount.account_number}}</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-field-label">Bank</span>
+                                <span class="info-field-value">{{bankAccount.bank_name}}</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-field-label">Consultation Fee</span>
+                                <span class="info-field-value fee-value">₦{{bankAccount.consultation_fee | number:'1.2-2'}}</span>
+                            </div>
+                            <div class="info-field">
+                                <span class="info-field-label">Status</span>
+                                <span class="info-field-value">
+                                    <span class="status-badge" [class.active]="bankAccount.status === 'active'" [class.pending]="bankAccount.status === 'pending_activation'">
+                                        {{bankAccount.status === 'active' ? 'Active' : 'Pending Activation'}}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="fee-breakdown" *ngIf="bankAccount.consultation_fee > 0">
+                            <div class="breakdown-item">
+                                <span>Platform Fee (15%)</span>
+                                <span>₦{{bankAccount.consultation_fee * 0.15 | number:'1.2-2'}}</span>
+                            </div>
+                            <div class="breakdown-item highlight">
+                                <span>You Receive (85%)</span>
+                                <span>₦{{bankAccount.consultation_fee * 0.85 | number:'1.2-2'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-template #noBankAccount>
+                        <div class="no-bank-account">
+                            <i class="pi pi-info-circle"></i>
+                            <p>No bank account set up yet.</p>
+                            <p class="sub-text">Add your bank account to receive consultation payments.</p>
+                        </div>
+                    </ng-template>
+                </div>
             </div>
+
+            <!-- Bank Account Dialog -->
+            <p-dialog 
+                [(visible)]="showBankDialog" 
+                [modal]="true"
+                [closable]="true"
+                [draggable]="false"
+                [resizable]="false"
+                [style]="{width: '50%'}"
+                [header]="bankDialogMode === 'add' ? 'Add Bank Account' : 'Edit Consultation Fee'">
+                <app-bank-account-form
+                    [bankAccount]="bankDialogMode === 'edit' ? bankAccount : null"
+                    [professionalName]="professionalName"
+                    (saved)="onBankAccountSaved($event)"
+                    (cancelled)="closeBankDialog()">
+                </app-bank-account-form>
+            </p-dialog>
             <div class="m-2">
                 <h1 class="primary-color">Clients' Medical Records</h1>
                 <p-table #dt1 dataKey="id" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"

@@ -1,0 +1,103 @@
+<div class="bank-form-container">
+  <form [formGroup]="bankForm" (ngSubmit)="onSubmit()" class="bank-form">
+    
+    <!-- Bank Selection -->
+    <div class="form-field" *ngIf="!isEditing">
+      <label for="bank_code">Select Bank <span class="required">*</span></label>
+      <p-dropdown
+        id="bank_code"
+        formControlName="bank_code"
+        [options]="banks"
+        optionLabel="name"
+        optionValue="code"
+        placeholder="Select a bank"
+        [filter]="true"
+        filterBy="name"
+        filterPlaceholder="Search banks..."
+        [showClear]="true"
+        (onChange)="onBankChange()"
+        [class.ng-invalid]="bankForm.get('bank_code')?.invalid && bankForm.get('bank_code')?.touched"
+        styleClass="bank-dropdown">
+      </p-dropdown>
+      <small class="error-message" *ngIf="bankCodeError">{{ bankCodeError }}</small>
+    </div>
+
+    <!-- Account Number -->
+    <div class="form-field" *ngIf="!isEditing">
+      <label for="account_number">Account Number <span class="required">*</span></label>
+      <div class="account-input-wrapper">
+        <input
+          id="account_number"
+          type="text"
+          pInputText
+          formControlName="account_number"
+          placeholder="Enter 10-digit account number"
+          maxlength="10"
+          [class.ng-invalid]="bankForm.get('account_number')?.invalid && bankForm.get('account_number')?.touched">
+        <p-button
+          type="button"
+          icon="pi pi-check"
+          label="Verify"
+          (onClick)="resolveAccount()"
+          [loading]="resolving"
+          styleClass="verify-btn">
+        </p-button>
+      </div>
+      <small class="error-message" *ngIf="accountNumberError">{{ accountNumberError }}</small>
+      <small class="hint">Enter your 10-digit NUBAN account number</small>
+    </div>
+
+    <!-- Account Name (Resolved) -->
+    <div class="form-field">
+      <label for="account_name">Account Name <span class="required">*</span></label>
+      <input
+        id="account_name"
+        type="text"
+        pInputText
+        formControlName="account_name"
+        placeholder="Click 'Verify' to resolve account name"
+        readonly>
+      <small class="success-message" *ngIf="bankForm.get('account_name')?.value">
+        <i class="pi pi-check-circle"></i> Account verified successfully
+      </small>
+    </div>
+
+    <!-- Consultation Fee -->
+    <div class="form-field">
+      <label for="consultation_fee">Consultation Fee (₦) <span class="required">*</span></label>
+      <input
+        id="consultation_fee"
+        type="number"
+        pInputText
+        formControlName="consultation_fee"
+        placeholder="Enter consultation fee"
+        min="0"
+        step="100"
+        [class.ng-invalid]="bankForm.get('consultation_fee')?.invalid && bankForm.get('consultation_fee')?.touched">
+      <small class="error-message" *ngIf="consultationFeeError">{{ consultationFeeError }}</small>
+      <small class="hint" *ngIf="isEditing">Platform fee: 15% | You receive: 85%</small>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="form-actions">
+      <p-button
+        type="button"
+        label="Cancel"
+        (onClick)="onCancel()"
+        styleClass="p-button-outlined cancel-btn">
+      </p-button>
+      <p-button
+        type="submit"
+        [label]="isEditing ? 'Update Fee' : 'Save Bank Account'"
+        [loading]="loading"
+        styleClass="save-btn">
+      </p-button>
+    </div>
+
+    <!-- Info Note -->
+    <div class="info-note" *ngIf="!isEditing">
+      <i class="pi pi-info-circle"></i>
+      <span>Your bank details will be verified with Paystack. The subaccount will be created when you receive your first payment.</span>
+    </div>
+  </form>
+</div>

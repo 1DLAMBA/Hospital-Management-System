@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
+import { BankAccountService } from '../../../../endpoints/bank-account.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +17,7 @@ import { AppointmentResource } from '../../../../../resources/appointment.model'
 import { NursesService } from '../../../../endpoints/nurses.service';
 import { NurseResource } from '../../../../../resources/nurse.model';
 import { AuthService } from '../../../../auth.service';
+import { BankAccount } from '../../../../models/bank-account.model';
 
 
 @Component({
@@ -38,6 +40,11 @@ export class NurseProfileComponent  implements OnInit {
   user: any;
   appointment: boolean = true;
 
+  // Bank Account
+  bankAccount: BankAccount | null = null;
+  showBankDialog: boolean = false;
+  bankDialogMode: 'add' | 'edit' = 'add';
+
 
   
   constructor(
@@ -47,6 +54,7 @@ export class NurseProfileComponent  implements OnInit {
     private messageService: MessageService,
     private nurseEndpoint: NursesService,
     private authService: AuthService,
+    private bankAccountService: BankAccountService,
   ) {
     this.availabilityGroup = new FormGroup({
       checked: new FormControl<boolean>(true)
@@ -103,9 +111,51 @@ export class NurseProfileComponent  implements OnInit {
         // }
         
         this.avatar_file = environment.apiUrl + '/file/get/';
+        
+        // Load bank account
+        this.loadBankAccount();
         // this.router.navigate([`/doctors/profile/${this.SingleDoctor.id}`])
       }
     })
+  }
+
+  // Bank Account Methods
+  loadBankAccount(): void {
+    // Set user_id for the service
+    if (this.user?.id) {
+      this.bankAccountService.setUserId(this.user.id);
+    }
+    this.bankAccountService.getBankAccount().subscribe({
+      next: (response: any) => {
+        this.bankAccount = response.bank_account;
+      },
+      error: () => {
+        this.bankAccount = null;
+      }
+    });
+  }
+
+  openBankDialog(mode: 'add' | 'edit'): void {
+    this.bankDialogMode = mode;
+    this.showBankDialog = true;
+  }
+
+  closeBankDialog(): void {
+    this.showBankDialog = false;
+  }
+
+  onBankAccountSaved(bankAccount: BankAccount): void {
+    this.bankAccount = bankAccount;
+    this.showBankDialog = false;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: this.bankDialogMode === 'add' ? 'Bank account added successfully' : 'Bank account updated successfully'
+    });
+  }
+
+  get professionalName(): string {
+    return this.user?.name || '';
   }
 
   back() {
@@ -130,6 +180,12 @@ export class NurseProfileComponent  implements OnInit {
         detail: 'Unable to start chat. User information is not available.'
       });
     }
+  }
+
+  editProfile() {
+    // Navigate to edit profile page or open edit dialog
+    // For now, we'll navigate to an edit profile route
+    this.router.navigate(['/panel/dashboard/my-profile/nurse-profile/edit']);
   }
 
   logout() {
