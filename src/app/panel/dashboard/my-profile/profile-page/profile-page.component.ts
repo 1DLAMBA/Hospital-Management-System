@@ -14,8 +14,6 @@ import { ClientsService } from '../../../../endpoints/clients.service';
 import { ClientResource } from '../../../../../resources/client.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { MedicalService } from '../../../../endpoints/medical.service';
-import { AuthService } from '../../../../auth.service';
-
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
@@ -52,8 +50,7 @@ export class ProfilePageComponent implements OnInit {
     private readonly router: Router,
     private messageService: MessageService,
     private clientEndpoint: ClientsService,
-    private medicalEndpoint: MedicalService,
-    private authService: AuthService
+    private medicalEndpoint: MedicalService
   ) {
     this.apptFormGroup = new FormGroup({
       symptoms: new FormControl('', Validators.required),
@@ -118,15 +115,6 @@ export class ProfilePageComponent implements OnInit {
     // this.visible = false;
     this.preview = false;
 
-  }
-
-  logout() {
-    // Call auth service logout (which clears localStorage)
-    this.authService.logout();
-    // Clear all localStorage (including id)
-    localStorage.clear();
-    // Navigate to login page
-    this.router.navigate(['/login']);
   }
 
 }

@@ -181,3 +181,21 @@ section {
 .active .sub{
     width: 100%;
 }
+
+.appt-actions-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    vertical-align: middle;
+}
+
+.appt-chat-tooltip-wrap {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+::ng-deep .appt-chat-btn.p-button {
+    padding: 0.45rem 0.5rem !important;
+    min-width: 2.1rem;
+}

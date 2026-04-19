@@ -1,14 +1,15 @@
 <main class="d-flex flex-column">
+    <p-toast></p-toast>
 
   
     <section class="main mx-auto d-flex justify-content-between">
         <div class="left-profile gap-2">
             <div class="inner-profile pb-2 mb-2">
-                <img src="{{ avatar_file + user.passport }}">
+                <img *ngIf="user" [src]="avatar_file + (user.passport || '')" alt="">
                 
-                <h1 class="m-2">{{user.name}}</h1>
+                <h1 class="m-2" *ngIf="user">{{user.name}}</h1>
                 
-                <div class="d-flex justify-content-between m-2">
+                <div class="d-flex justify-content-between m-2" *ngIf="user?.registration_complete">
                     <span class="text-secondary">Availability:</span>
                     <div>
                         
@@ -20,29 +21,89 @@
                 </div>
                 
             </div>
-            
-            <span class="m-2 d-flex gap-2">
-                <button class="custom-btn edit-btn" (click)="editProfile()">
-                    <i class="pi pi-user-edit"></i>
-                    Edit profile
-                </button>
-                <button class="custom-btn logout-btn" (click)="logout()">
-                    <i class="pi pi-sign-out"></i>
-                    Logout
-                </button>
-            </span>
         </div>
         <div class="right-profile p-2">
+
+            <div *ngIf="showRegistrationCompletion" class="reg-completion-card mb-3">
+                <div class="reg-completion-card__header">
+                    <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+                    <h2>Complete your registration</h2>
+                </div>
+                <div class="reg-completion-card__body">
+                    <p class="reg-completion-intro">Add your credentials, uploads, and bank account so you can accept assignments. You remain visible in the directory while you finish this step.</p>
+                    <form [formGroup]="completionForm" class="reg-completion-form">
+                        <div class="reg-form-grid">
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="nurse-reg-license">License number</label>
+                                <input id="nurse-reg-license" pInputText formControlName="license_number" class="w-full" />
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="nurse-reg-med-school">Medical school</label>
+                                <input id="nurse-reg-med-school" pInputText formControlName="med_school" class="w-full" />
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="nurse-reg-spec">Specialization</label>
+                                <input id="nurse-reg-spec" pInputText formControlName="specialization" class="w-full" />
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="nurse-reg-grad">Graduation year</label>
+                                <input id="nurse-reg-grad" pInputText formControlName="grad_year" class="w-full" inputmode="numeric" />
+                            </div>
+                        </div>
+
+                        <div class="reg-uploads-block">
+                            <p class="reg-completion-section-title">Documents and photo</p>
+                            <div class="reg-uploads-grid">
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Degree certificate</span>
+                                    <input type="file" hidden #nDeg accept="image/jpeg,image/png,application/pdf" (change)="handleCompletionUpload($event, 'degree')" />
+                                    <p-button type="button" styleClass="w-full" [label]="degreeLoader ? 'Uploading…' : 'Upload degree'" [loading]="degreeLoader" (onClick)="nDeg.click()"></p-button>
+                                </div>
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Passport photo</span>
+                                    <input type="file" hidden #nPass accept="image/jpeg,image/png" (change)="handleCompletionUpload($event, 'passport')" />
+                                    <p-button type="button" styleClass="w-full" [label]="passportLoader ? 'Uploading…' : 'Upload passport'" [loading]="passportLoader" (onClick)="nPass.click()"></p-button>
+                                </div>
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Signature</span>
+                                    <input type="file" hidden #nSig accept="image/jpeg,image/png,application/pdf" (change)="handleCompletionUpload($event, 'signature')" />
+                                    <p-button type="button" styleClass="w-full" [label]="signatureLoader ? 'Uploading…' : 'Upload signature'" [loading]="signatureLoader" (onClick)="nSig.click()"></p-button>
+                                </div>
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Government ID</span>
+                                    <input type="file" hidden #nId accept="image/jpeg,image/png,application/pdf" (change)="handleCompletionUpload($event, 'id_card')" />
+                                    <p-button type="button" styleClass="w-full" [label]="idCardLoader ? 'Uploading…' : 'Upload ID'" [loading]="idCardLoader" (onClick)="nId.click()"></p-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reg-completion-actions">
+                            <p-button type="button" label="Save professional details" [outlined]="true" [loading]="completionSubmitting" (onClick)="submitRegistrationCompletion()"></p-button>
+                            <p-button
+                                *ngIf="showAddBankAccountShortcut"
+                                type="button"
+                                label="Add bank account"
+                                icon="pi pi-arrow-down"
+                                [outlined]="true"
+                                pTooltip="Scrolls to Bank account and fee so you can add payout details."
+                                tooltipPosition="top"
+                                [showDelay]="200"
+                                (onClick)="scrollToBankAccountSection()">
+                            </p-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             
-            <div class="m-2">
+            <div class="m-2" *ngIf="user && singleNurse">
                 <div class="d-flex justify-content-between flex-wrap col-12">
                     <h1 class="col-12 col-md-3">Profile</h1>
                     <p class="col-12 col-md-4"> <span class="text-secondary">Primary Specialty:</span><br>
-                    {{singleNurse.specialization}}</p>
+                    {{singleNurse?.specialization}}</p>
               
 
                     <p class="col-12 col-md-4"><span class="text-secondary">License Number:</span><br>
-                    {{singleNurse.license_number}}</p>
+                    {{singleNurse?.license_number}}</p>
                 </div>
                 <hr>
                 <div class="d-flex justify-content-between flex-wrap col-12">
@@ -60,25 +121,18 @@
                     <b class="col-12 col-md-3">Experience</b>
 
                     <p class="col-12 col-md-4"><span class="text-secondary">Education:</span><br>
-                    {{singleNurse.med_school}}</p>
+                    {{singleNurse?.med_school}}</p>
               
 
                     <p class="col-12 col-md-4"><span class="text-secondary">Practicing since:</span><br>
-                    {{singleNurse.grad_year}}</p>
+                    {{singleNurse?.grad_year}}</p>
                 </div>
                 <hr>
                 
                 <!-- Bank Account Section -->
-                <div class="d-flex justify-content-between flex-wrap col-12">
+                <div id="profile-bank-account-section" class="d-flex justify-content-between flex-wrap col-12">
                     <div class="col-12 col-md-3 d-flex align-items-center justify-content-between">
                         <b>Bank Account & Fee</b>
-                        <p-button 
-                            *ngIf="bankAccount" 
-                            icon="pi pi-pencil" 
-                            label="Edit Fee" 
-                            styleClass="p-button-sm p-button-outlined"
-                            (onClick)="openBankDialog('edit')">
-                        </p-button>
                         <p-button 
                             *ngIf="!bankAccount" 
                             icon="pi pi-plus" 
@@ -97,10 +151,6 @@
                         {{bankAccount.bank_name}}</p>
                         <p class="col-12 col-md-4"><span class="text-secondary">Consultation Fee:</span><br>
                         ₦{{bankAccount.consultation_fee | number:'1.2-2'}}</p>
-                        <p class="col-12 col-md-4"><span class="text-secondary">Status:</span><br>
-                        <span class="status-badge" [class.active]="bankAccount.status === 'active'" [class.pending]="bankAccount.status === 'pending_activation'">
-                            {{bankAccount.status === 'active' ? 'Active' : 'Pending Activation'}}
-                        </span></p>
                         <p class="col-12 col-md-4" *ngIf="bankAccount.consultation_fee > 0">
                             <span class="text-secondary">You Receive (85%):</span><br>
                             <strong style="color: #28a745;">₦{{bankAccount.consultation_fee * 0.85 | number:'1.2-2'}}</strong>

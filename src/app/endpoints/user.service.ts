@@ -32,4 +32,8 @@ export class UserService{
     return this.httpClient.post(`${this.baseUrl}/regenerate-otp`, data);
   }
 
+  patchProfile(userId: number | string, body: { passport?: string }) {
+    return this.httpClient.put(`${this.baseUrl}/patch/${userId}`, body);
+  }
+
 }

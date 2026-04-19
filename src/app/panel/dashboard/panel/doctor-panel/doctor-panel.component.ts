@@ -91,12 +91,10 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
           this.doctorEndpoint.getDocUser(this.id).subscribe({
             next: (docResponse: any) => {
               this.doctor = docResponse.doctor;
-              
-              // Load appointments
-              if (this.user?.doctors?.id) {
-                this.loadAppointments(this.user.doctors.id, 'doctor');
+              const pid = this.user?.doctors?.id;
+              if (pid) {
+                this.loadAppointments(String(pid), 'doctor');
               } else {
-                console.error('Doctor ID not available');
                 this.loading = false;
               }
             },
@@ -111,12 +109,10 @@ export class DoctorPanelComponent implements OnInit, OnDestroy {
             next: (opResponse: any) => {
               // Store other professional data in doctor property for compatibility
               this.doctor = opResponse.other_professional;
-              
-              // Load appointments
-              if (this.user?.other_professionals?.id) {
-                this.loadAppointments(this.user.other_professionals.id, 'other_professional');
+              const pid = this.user?.other_professionals?.id;
+              if (pid) {
+                this.loadAppointments(String(pid), 'other_professional');
               } else {
-                console.error('Other Professional ID not available');
                 this.loading = false;
               }
             },

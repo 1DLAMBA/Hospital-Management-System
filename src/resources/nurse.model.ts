@@ -10,7 +10,9 @@ export interface NurseResource {
     degree_file: string,
     availability: string,
     user?: UserResource,
-    created_by: UserResource
+    created_by: UserResource,
+    /** From API when listing nurses (full registration incl. docs & bank rules) */
+    registration_complete?: boolean,
 }
 
 export interface NurseRequest {

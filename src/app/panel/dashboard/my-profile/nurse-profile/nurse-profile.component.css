@@ -86,83 +86,6 @@
     font-size: 0.98rem;
 }
 
-.left-profile span.m-2 {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1.2rem;
-    flex-wrap: wrap;
-}
-
-/* Custom Button Styles */
-.custom-btn {
-    flex: 1;
-    min-width: 120px;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 12px;
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
-}
-
-.custom-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.custom-btn:hover::before {
-    left: 100%;
-}
-
-.edit-btn {
-    background: linear-gradient(135deg, #00bcd4, #0097a7);
-    color: white;
-}
-
-.edit-btn:hover {
-    background: linear-gradient(135deg, #00acc1, #00838f);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,188,212,0.3);
-}
-
-.logout-btn {
-    background: linear-gradient(135deg, #f44336, #d32f2f);
-    color: white;
-}
-
-.logout-btn:hover {
-    background: linear-gradient(135deg, #e53935, #c62828);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(244,67,54,0.3);
-}
-
-.custom-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-.custom-btn i {
-    font-size: 1.1rem;
-}
-
 /* --- Modern Right Profile Info --- */
 .right-profile {
     width: 70%;
@@ -328,17 +251,6 @@
         height: 90px;
     }
     
-    .left-profile p-button {
-        font-size: 1rem;
-        padding: 0.5rem 0 !important;
-        width: 100%;
-        min-width: unset;
-    }
-    
-    .left-profile span.m-2 {
-        flex-direction: column;
-    }
-    
     .right-profile h1, .right-profile b {
         font-size: 1rem;
     }
@@ -412,8 +324,18 @@
         color: white !important;
         border: 0;
         border-radius: 5px;
-    } 
-    
+    }
+
+    ::ng-deep .reg-completion-actions .p-button.p-button-outlined {
+        background-color: transparent !important;
+        color: #17224d !important;
+        border: 1px solid #17224d !important;
+    }
+
+    ::ng-deep .reg-completion-actions .p-button.p-button-outlined:hover:not(:disabled) {
+        background: rgba(23, 34, 77, 0.08) !important;
+    }
+
     ::ng-deep .p-dialog {
         flex-direction: column;
     }
@@ -427,23 +349,4 @@
         padding: 0.75rem;
         font-size: 0.9rem;
     }
-}
-
-/* Bank Account Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.status-badge.active {
-  background: rgba(40, 167, 69, 0.15);
-  color: #28a745;
-}
-
-.status-badge.pending {
-  background: rgba(255, 193, 7, 0.15);
-  color: #856404;
 }

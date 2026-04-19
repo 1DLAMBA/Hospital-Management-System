@@ -101,6 +101,16 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.authService.login(response)
         // Ensure ID is available to routed components during their ngOnInit
         localStorage.setItem('id', response.user.id)
+        const u = response.user;
+        const profTypes = ['doctor', 'other_professional', 'nurse'];
+        if (profTypes.includes(u.user_type) && u.registration_complete === false) {
+          if (u.user_type === 'nurse') {
+            this.router.navigate(['/panel/my-profile/nurse', u.id]);
+          } else {
+            this.router.navigate(['/panel/my-profile/doctor', u.id]);
+          }
+          return;
+        }
         switch (response.user.user_type) {
           case 'doctor':
           case 'other_professional':

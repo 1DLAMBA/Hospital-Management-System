@@ -71,8 +71,11 @@
                 <div class="card-content">
                     <div class="card-header">
                         <h3 class="card-name">{{ professional.user.name }}</h3>
-                        <span class="verified-badge" *ngIf="professional.type === 'doctor'">
-                            <i class="pi pi-check"></i>
+                        <span
+                            *ngIf="professional.registration_complete === true"
+                            class="registration-verified-badge"
+                            title="Profile, licenses, and documents verified">
+                            <i class="pi pi-check" aria-hidden="true"></i>
                         </span>
                     </div>
                     <p class="card-title">{{ professional.specialization || professional.displayType }}</p>

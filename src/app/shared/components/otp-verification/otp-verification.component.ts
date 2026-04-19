@@ -5,6 +5,7 @@ import { UserService } from '../../../endpoints/user.service';
 import { MessageService } from 'primeng/api';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../auth.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
@@ -32,7 +33,8 @@ export class OtpVerificationComponent implements OnInit {
     private userService: UserService,
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
   ) {
     this.otpForm = new FormGroup({
       digit0: new FormControl('', [Validators.required, Validators.pattern(/^\d$/)]),
@@ -171,19 +173,30 @@ export class OtpVerificationComponent implements OnInit {
         
         // Emit verified event
         this.verified.emit();
-        
+
+        const user = response.user;
+        this.authService.login({ user });
+        localStorage.setItem('id', String(user.id));
+
         // Navigate based on user type
         setTimeout(() => {
+          const profTypes = ['doctor', 'nurse', 'other_professional'];
+          if (profTypes.includes(user.user_type) && user.registration_complete === false) {
+            if (user.user_type === 'nurse') {
+              this.router.navigate(['/panel/my-profile/nurse', user.id]);
+            } else {
+              this.router.navigate(['/panel/my-profile/doctor', user.id]);
+            }
+            return;
+          }
+
           switch (this.userType) {
             case 'doctor':
             case 'other_professional':
               this.router.navigate(['panel/doctor-panel', this.userId]);
-              localStorage.setItem('id', this.userId);
-
               break;
             case 'nurse':
               this.router.navigate(['panel/nurse-panel']);
-              localStorage.setItem('id', this.userId);
               break;
             default:
               this.router.navigate(['login']);

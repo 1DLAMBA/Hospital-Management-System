@@ -15,6 +15,10 @@ export class OtherProfessionalsService {
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
 
+  update(id: number | string, data: Partial<OtherProfessionalRequest>) {
+    return this.httpClient.put(`${this.baseUrl}/update/${id}`, data);
+  }
+
   get(search?: string, page: number = 1, perPage: number = 10){
     let params: any = {
       page: page.toString(),

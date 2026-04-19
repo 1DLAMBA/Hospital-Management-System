@@ -7,7 +7,6 @@ import { DoctorResource } from '../../../../../resources/doctor.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { environment } from '../../../../../environments/environment';
 import { Table } from 'primeng/table';
-import { response } from 'express';
 import { Router } from '@angular/router';
 
 @Component({
@@ -31,7 +30,7 @@ export class ClientAppointmentComponent implements OnInit {
   futureAppointment!: AppointmentResource | any;
   today: Date = new Date();
 
-
+  readonly chatDisabledTooltip = 'Chat is available after the appointment is accepted.';
 
   constructor(
     private userEndpoint: UserService,
@@ -156,6 +155,42 @@ export class ClientAppointmentComponent implements OnInit {
 
   getProfessionalId(appointment: any): number | null {
     return appointment.doctor?.id || appointment.other_professional?.id || appointment.nurse?.id || null;
+  }
+
+  getProfessionalUserIdForChat(appointment: any): number | null {
+    const raw =
+      appointment?.doctor?.user?.id ??
+      appointment?.other_professional?.user?.id ??
+      appointment?.nurse?.user?.id;
+    if (raw === null || raw === undefined) {
+      return null;
+    }
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  openChatWithProfessional(appointment: any): void {
+    if (appointment?.status !== 'Accepted') {
+      return;
+    }
+    const uid = this.getProfessionalUserIdForChat(appointment);
+    if (!uid) {
+      return;
+    }
+    const u =
+      appointment.doctor?.user ||
+      appointment.other_professional?.user ||
+      appointment.nurse?.user;
+    this.router.navigate([`/panel/messages/${uid}`], {
+      queryParams: {
+        name: u?.name ?? undefined,
+        dp: u?.passport ?? undefined,
+        email: u?.email ?? undefined,
+        phoneno: u?.phoneno ?? undefined,
+        gender: u?.gender ?? undefined,
+        user_type: u?.user_type ?? undefined,
+      },
+    });
   }
 }
 

@@ -1,4 +1,5 @@
 <main class="d-flex flex-column">
+    <p-toast></p-toast>
 
     <section class="doc-banner">
         <div class="doc-banner-overlay"></div>
@@ -32,7 +33,7 @@
                     <i class="pi pi-star-fill"></i> {{user.other_professionals?.professional_type || 'Specialist'}}
                 </span>
                 
-                <div class="status-row" *ngIf="professionalType === 'doctor'">
+                <div class="status-row" *ngIf="professionalType === 'doctor' && user?.registration_complete">
                     <span class="status-label">Availability</span>
                     <form [formGroup]="availabilityGroup">
                         <p-inputSwitch formControlName="checked" />
@@ -56,12 +57,86 @@
                     </div>
                 </div>
             </div>
-            
-            <span class="m-2 d-flex gap-2">
-                <p-button label="Logout" icon="pi pi-sign-out" severity="danger" [raised]="true" [rounded]="true" (click)="logout()" />
-            </span>
         </div>
         <div class="right-profile p-2">
+
+            <div *ngIf="showRegistrationCompletion" class="reg-completion-card mb-3">
+                <div class="reg-completion-card__header">
+                    <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+                    <h2>Complete your registration</h2>
+                </div>
+                <div class="reg-completion-card__body">
+                    <p class="reg-completion-intro">Finish your credentials, uploads, and bank account so you can accept consultations. You are already visible to clients in the directory.</p>
+                    <form [formGroup]="completionForm" class="reg-completion-form">
+                        <div class="reg-form-grid">
+                            <div *ngIf="professionalType === 'other_professional'" class="reg-field reg-field--full">
+                                <label class="reg-field__label" for="reg-prof-type">Professional type</label>
+                                <p-dropdown inputId="reg-prof-type" formControlName="professional_type" [options]="professionalTypes"
+                                    optionLabel="label" optionValue="value" placeholder="Select type" styleClass="w-full"></p-dropdown>
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="reg-license">License number
+                                    <span *ngIf="professionalType === 'other_professional'" class="reg-field__hint">(optional)</span>
+                                </label>
+                                <input id="reg-license" pInputText formControlName="license_number" class="w-full" />
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="reg-med-school">Medical school</label>
+                                <input id="reg-med-school" pInputText formControlName="med_school" class="w-full" />
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="reg-spec">Specialization</label>
+                                <input id="reg-spec" pInputText formControlName="specialization" class="w-full" />
+                            </div>
+                            <div class="reg-field">
+                                <label class="reg-field__label" for="reg-grad-year">Graduation year</label>
+                                <input id="reg-grad-year" pInputText formControlName="grad_year" class="w-full" inputmode="numeric" />
+                            </div>
+                        </div>
+
+                        <div class="reg-uploads-block">
+                            <p class="reg-completion-section-title">Documents and photo</p>
+                            <div class="reg-uploads-grid">
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Degree certificate</span>
+                                    <input type="file" hidden #degreeIn accept="image/jpeg,image/png,application/pdf" (change)="handleCompletionUpload($event, 'degree')" />
+                                    <p-button type="button" styleClass="w-full" [label]="degreeLoader ? 'Uploading…' : 'Upload degree'" [loading]="degreeLoader" (onClick)="degreeIn.click()"></p-button>
+                                </div>
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Passport photo</span>
+                                    <input type="file" hidden #passIn accept="image/jpeg,image/png" (change)="handleCompletionUpload($event, 'passport')" />
+                                    <p-button type="button" styleClass="w-full" [label]="passportLoader ? 'Uploading…' : 'Upload passport'" [loading]="passportLoader" (onClick)="passIn.click()"></p-button>
+                                </div>
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Signature</span>
+                                    <input type="file" hidden #sigIn accept="image/jpeg,image/png,application/pdf" (change)="handleCompletionUpload($event, 'signature')" />
+                                    <p-button type="button" styleClass="w-full" [label]="signatureLoader ? 'Uploading…' : 'Upload signature'" [loading]="signatureLoader" (onClick)="sigIn.click()"></p-button>
+                                </div>
+                                <div class="reg-upload-field">
+                                    <span class="reg-field__label">Government ID</span>
+                                    <input type="file" hidden #idIn accept="image/jpeg,image/png,application/pdf" (change)="handleCompletionUpload($event, 'id_card')" />
+                                    <p-button type="button" styleClass="w-full" [label]="idCardLoader ? 'Uploading…' : 'Upload ID'" [loading]="idCardLoader" (onClick)="idIn.click()"></p-button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reg-completion-actions">
+                            <p-button type="button" label="Save professional details" [outlined]="true" [loading]="completionSubmitting" (onClick)="submitRegistrationCompletion()"></p-button>
+                            <p-button
+                                *ngIf="showAddBankAccountShortcut"
+                                type="button"
+                                label="Add bank account"
+                                icon="pi pi-arrow-down"
+                                [outlined]="true"
+                                pTooltip="Scrolls to Bank account and consultation fee so you can add payout details."
+                                tooltipPosition="top"
+                                [showDelay]="200"
+                                (onClick)="scrollToBankAccountSection()">
+                            </p-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
             
             <div class="info-cards-grid">
                 <div class="info-card">
@@ -120,17 +195,10 @@
                 </div>
 
                 <!-- Bank Account Section -->
-                <div class="info-card span-full">
+                <div id="profile-bank-account-section" class="info-card span-full">
                     <div class="info-card-header">
                         <i class="pi pi-credit-card"></i>
                         <h2>Bank Account & Consultation Fee</h2>
-                        <p-button 
-                            *ngIf="bankAccount" 
-                            icon="pi pi-pencil" 
-                            label="Edit Fee" 
-                            styleClass="p-button-sm p-button-outlined"
-                            (onClick)="openBankDialog('edit')">
-                        </p-button>
                         <p-button 
                             *ngIf="!bankAccount" 
                             icon="pi pi-plus" 
@@ -156,14 +224,6 @@
                             <div class="info-field">
                                 <span class="info-field-label">Consultation Fee</span>
                                 <span class="info-field-value fee-value">₦{{bankAccount.consultation_fee | number:'1.2-2'}}</span>
-                            </div>
-                            <div class="info-field">
-                                <span class="info-field-label">Status</span>
-                                <span class="info-field-value">
-                                    <span class="status-badge" [class.active]="bankAccount.status === 'active'" [class.pending]="bankAccount.status === 'pending_activation'">
-                                        {{bankAccount.status === 'active' ? 'Active' : 'Pending Activation'}}
-                                    </span>
-                                </span>
                             </div>
                         </div>
                         <div class="fee-breakdown" *ngIf="bankAccount.consultation_fee > 0">

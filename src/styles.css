@@ -365,3 +365,200 @@ body{ margin: 0;   font-family: "Nunito Sans", sans-serif; }
 .main-sect div{
     width: 100%;
 }
+
+/* Shared: complete registration form (doctor / nurse profile) */
+.reg-completion-card {
+    background: linear-gradient(180deg, #fffdf8 0%, #f8fafd 100%);
+    border: 1px solid rgba(0, 85, 170, 0.1);
+    border-radius: 14px;
+    padding: 1.2rem 1.25rem 1.35rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 18px rgba(23, 34, 77, 0.07);
+}
+
+.reg-completion-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #0055aa;
+}
+
+.reg-completion-card__header i {
+    font-size: 1.1rem;
+    color: #b8860b;
+    background: rgba(0, 85, 170, 0.08);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.reg-completion-card__header h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #17224d;
+    margin: 0;
+    flex: 1;
+}
+
+.reg-completion-intro {
+    font-size: 0.95rem;
+    color: #3d4a63;
+    line-height: 1.45;
+    margin: 0 0 1.1rem 0;
+}
+
+.reg-completion-section-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0055aa;
+    text-transform: uppercase;
+    letter-spacing: 0.45px;
+    margin: 0 0 0.65rem 0;
+}
+
+.reg-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+    margin-bottom: 1.15rem;
+}
+
+.reg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.reg-field--full {
+    grid-column: 1 / -1;
+}
+
+.reg-field__label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0055aa;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    line-height: 1.2;
+}
+
+.reg-field__hint {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #6c757d;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.reg-field input.p-inputtext,
+.reg-field .p-inputtext {
+    width: 100%;
+}
+
+.reg-field .p-dropdown {
+    width: 100%;
+}
+
+.reg-uploads-block {
+    margin-top: 0.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 85, 170, 0.12);
+}
+
+.reg-uploads-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem 1.25rem;
+}
+
+.reg-upload-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.reg-upload-field .p-button {
+    width: 100%;
+    justify-content: center;
+}
+
+.reg-completion-actions {
+    margin-top: 1.15rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 85, 170, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+#profile-bank-account-section {
+    scroll-margin-top: 5.5rem;
+}
+
+/* Doctor / nurse directory: completed professional registration */
+.registration-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    min-width: 1.35rem;
+    border-radius: 50%;
+    margin-left: 0.35rem;
+    background: linear-gradient(145deg, #22c55e, #15803d);
+    color: #fff;
+    font-size: 0.65rem;
+    line-height: 1;
+    box-shadow: 0 1px 4px rgba(22, 163, 74, 0.45);
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+.registration-verified-badge i {
+    font-size: 0.6rem;
+    font-weight: 700;
+}
+
+.reg-completion-actions .p-button {
+    min-width: 220px;
+}
+
+@media (min-width: 900px) {
+    .reg-uploads-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .reg-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reg-field--full {
+        grid-column: 1;
+    }
+
+    .reg-uploads-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .reg-completion-actions {
+        flex-direction: column;
+    }
+
+    .reg-completion-actions .p-button {
+        width: 100%;
+        min-width: unset;
+    }
+}

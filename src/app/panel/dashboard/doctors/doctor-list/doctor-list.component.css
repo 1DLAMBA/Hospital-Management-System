@@ -218,22 +218,6 @@ section {
     line-height: 1.2;
 }
 
-.verified-badge {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.verified-badge i {
-    color: #000;
-    font-size: 0.9rem;
-    font-weight: bold;
-}
 
 /* Card Title */
 .card-title {

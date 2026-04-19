@@ -263,7 +263,8 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       grad_year: doctor.grad_year,
       degree_file: doctor.degree_file,
       availability: doctor.availability,
-      doctor: doctor
+      doctor: doctor,
+      registration_complete: (doctor as any).registration_complete === true,
     }));
   }
 
@@ -279,7 +280,8 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       grad_year: nurse.grad_year,
       degree_file: nurse.degree_file,
       availability: nurse.availability,
-      nurse: nurse
+      nurse: nurse,
+      registration_complete: (nurse as any).registration_complete === true,
     }));
   }
 
@@ -295,7 +297,8 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       grad_year: op.grad_year,
       degree_file: op.degree_file,
       professional_type: op.professional_type,
-      otherProfessional: op
+      otherProfessional: op,
+      registration_complete: op.registration_complete === true,
     }));
   }
 

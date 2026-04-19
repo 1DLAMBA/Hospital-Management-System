@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-dialog header="Appointment Details" [(visible)]="apptDetails" [modal]="true"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
     [draggable]="false" [resizable]="false">
@@ -68,14 +69,17 @@
 
             </div>
             <span *ngIf="singleAppt.status=='pending'">
-                <button [disabled]="btnDisable" class="accept me-2" pButton icon="bi bi-check-circle-fill" severity="success" (click)="status(singleAppt.id, 'done')" > </button>
-                <button  [disabled]="btnDisable" class="decline" pButton icon="bi bi-x-circle-fill" severity="warning" (click)="status(singleAppt.id, 'Declined')" ></button>
+                <button [disabled]="btnDisable || !canRespondToConsultations" class="accept me-2" pButton icon="bi bi-check-circle-fill" severity="success" (click)="status(singleAppt.id, 'done')" > </button>
+                <button  [disabled]="btnDisable || !canRespondToConsultations" class="decline" pButton icon="bi bi-x-circle-fill" severity="warning" (click)="status(singleAppt.id, 'Declined')" ></button>
             </span>
            
         </div>
     </div>
 
 </p-dialog>
+<section *ngIf="user && canRespondToConsultations === false" class="px-2">
+    <div class="alert alert-info">Complete your registration under <strong>My profile</strong> to view assignment details and to mark assignments done or declined.</div>
+</section>
 <section>
     <div class="cards-sect my-5 d-flex justify-content-between">
         <div class="sub-card d-flex">
@@ -165,9 +169,19 @@
         <ng-template pTemplate="body" let-appointments>
             <tr>
                 <td>
-                    <p-button label="View" severity="info" [raised]="true" [rounded]="true"
-                        (onClick)="viewAppt(appointments.id)"/>
-                        
+                    <span
+                        class="appt-view-tooltip-wrap"
+                        [pTooltip]="registrationRequiredTooltip"
+                        [tooltipDisabled]="canRespondToConsultations"
+                        tooltipPosition="top">
+                        <p-button
+                            label="View"
+                            severity="info"
+                            [raised]="true"
+                            [rounded]="true"
+                            [disabled]="!canRespondToConsultations"
+                            (onClick)="viewAppt(appointments.id)" />
+                    </span>
                 </td>
                 <td class="d-flex">
                     <div class="passport">

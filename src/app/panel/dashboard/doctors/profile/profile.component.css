@@ -137,8 +137,11 @@
     height: 100%;
 }
 
-.diag-text {
-    width: 45%;
+.appt-dialog form .diag-text {
+    width: 100%;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .diag-text span {
@@ -181,8 +184,9 @@
         flex-direction: column !important;
         gap: 1rem;
     }
-    .appt-dialog .calendar, .diag-text {
+    .appt-dialog form .diag-text {
         width: 100% !important;
+        max-width: none;
     }
     .appt-dialog .p-button {
         font-size: 1rem;

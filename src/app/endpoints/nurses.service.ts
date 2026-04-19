@@ -15,6 +15,14 @@ export class NursesService {
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
 
+  update(id: number | string, data: Partial<NurseRequest>) {
+    return this.httpClient.put(`${this.baseUrl}/update/${id}`, data);
+  }
+
+  getNurseByUser(userId: number | string) {
+    return this.httpClient.get(`${this.baseUrl}/user/get/${userId}`);
+  }
+
   get(search?: string, page: number = 1, perPage: number = 10){
     let params: any = {
       page: page.toString(),

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { UserResource } from '../../../../../resources/user.model';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
@@ -7,11 +8,13 @@ import { DoctorResource } from '../../../../../resources/doctor.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
 import { environment } from '../../../../../environments/environment';
 import { Table } from 'primeng/table';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-doctor-appointment',
   templateUrl: './doctor-appointment.component.html',
-  styleUrl: './doctor-appointment.component.css'
+  styleUrl: './doctor-appointment.component.css',
+  providers: [MessageService],
 })
 export class DoctorAppointmentComponent implements OnInit {
   apptDetails: boolean = false;
@@ -27,12 +30,20 @@ export class DoctorAppointmentComponent implements OnInit {
   btnDisable: boolean = false;
   loading: boolean = true;
   acceptLoading: boolean = false;
+  canRespondToConsultations = true;
 
+  /** Shown when View is disabled for incomplete registration */
+  readonly registrationRequiredTooltip =
+    'Complete your registration under My profile before you can view appointment details or accept requests.';
+
+  readonly chatDisabledTooltip = 'Chat is available after the appointment is accepted.';
 
   constructor(
     private userEndpoint: UserService,
     private doctorEndpoint: DoctorsService,
     private appointmentEndpoint: AppointmentsService,
+    private messageService: MessageService,
+    private router: Router,
   ) {
 
   }
@@ -50,6 +61,7 @@ export class DoctorAppointmentComponent implements OnInit {
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user;
+        this.canRespondToConsultations = response.user?.registration_complete !== false;
         this.avatar_file = environment.apiUrl + '/file/get/';
         this.loadAppointments();
       },
@@ -85,6 +97,9 @@ export class DoctorAppointmentComponent implements OnInit {
   }
 
   viewAppt(id: any) {
+    if (!this.canRespondToConsultations) {
+      return;
+    }
     this.appointmentEndpoint.getSingle(id).subscribe({
       next: (response: any) => {
         this.apptDetails = true;
@@ -97,6 +112,37 @@ export class DoctorAppointmentComponent implements OnInit {
     this.pendingAppointment = this.appointment.filter(appt => appt.status === 'pending').length;
     this.acceptedAppointment = this.appointment.filter(appt => appt.status === 'Accepted').length;
     this.declinedAppointment = this.appointment.filter(appt => appt.status === 'Declined').length;
+  }
+
+  getClientUserIdForChat(appt: any): number | null {
+    const raw = appt?.client?.user?.id;
+    if (raw === null || raw === undefined) {
+      return null;
+    }
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  isAppointmentChatEnabled(appt: any): boolean {
+    return appt?.status === 'Accepted' && this.getClientUserIdForChat(appt) != null;
+  }
+
+  openAppointmentChat(appt: any): void {
+    if (!this.isAppointmentChatEnabled(appt)) {
+      return;
+    }
+    const uid = this.getClientUserIdForChat(appt)!;
+    const u = appt.client?.user;
+    this.router.navigate([`/panel/messages/${uid}`], {
+      queryParams: {
+        name: u?.name ?? undefined,
+        dp: u?.passport ?? undefined,
+        email: u?.email ?? undefined,
+        phoneno: u?.phoneno ?? undefined,
+        gender: u?.gender ?? undefined,
+        user_type: u?.user_type ?? undefined,
+      },
+    });
   }
 
   clear(table: Table) {
@@ -153,6 +199,12 @@ export class DoctorAppointmentComponent implements OnInit {
         console.error('Error updating appointment status:', error);
         this.btnDisable = false;
         this.acceptLoading = false;
+        const msg = error?.error?.error || error?.error?.message || 'Could not update appointment';
+        if (error?.status === 403) {
+          this.messageService.add({ severity: 'warn', summary: 'Action blocked', detail: msg });
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: msg });
+        }
       }
     })
   }

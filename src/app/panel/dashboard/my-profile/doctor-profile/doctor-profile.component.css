@@ -202,25 +202,6 @@
     letter-spacing: 0.5px;
 }
 
-.left-profile span.m-2 {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 0.8rem;
-}
-
-.left-profile p-button {
-    width: 100%;
-    font-size: 1rem;
-    border-radius: 8px !important;
-    box-shadow: 0 2px 8px rgba(0,188,212,0.10);
-    margin: 0 auto;
-    transition: box-shadow 0.2s;
-}
-.left-profile p-button:hover, .left-profile p-button:focus {
-    box-shadow: 0 4px 16px rgba(0,188,212,0.18);
-}
-
 /* --- Right Profile --- */
 .right-profile {
     width: 70%;
@@ -499,11 +480,6 @@
         flex-direction: column;
         gap: 0.8rem;
     }
-    .left-profile p-button {
-        font-size: 1rem;
-        padding: 0.5rem 0 !important;
-    }
-    
     /* Full width dialog on mobile */
     ::ng-deep .p-dialog {
         width: 95vw !important;
@@ -520,7 +496,18 @@
         color: white !important;
         border: 0;
         border-radius: 5px;
-    } 
+    }
+
+    ::ng-deep .reg-completion-actions .p-button.p-button-outlined {
+        background-color: transparent !important;
+        color: #17224d !important;
+        border: 1px solid #17224d !important;
+    }
+
+    ::ng-deep .reg-completion-actions .p-button.p-button-outlined:hover:not(:disabled) {
+        background: rgba(23, 34, 77, 0.08) !important;
+    }
+
     ::ng-deep .p-dialog{
         flex-direction: column;
     }
@@ -535,24 +522,6 @@
 .fee-value {
   color: #28a745;
   font-weight: 700;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.status-badge.active {
-  background: rgba(40, 167, 69, 0.15);
-  color: #28a745;
-}
-
-.status-badge.pending {
-  background: rgba(255, 193, 7, 0.15);
-  color: #856404;
 }
 
 .fee-breakdown {
