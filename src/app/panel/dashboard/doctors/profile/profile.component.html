@@ -4,29 +4,22 @@
         [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '60vw', display: 'flex'}"
         [draggable]="false" [resizable]="false">
         <form *ngIf="!preview" action="" [formGroup]="apptFormGroup" class="d-flex m-auto justify-content-between">
-
-
-            <div class=" calendar justify-content-center">
-                <p-calendar class="" formControlName="date" [inline]="true" [showWeek]="false" [showTime]="true"
-                    [minDate]="minDate" panelStyle="background-color:blue" />
-
-
-            </div>
-            <div class="diag-text my-auto d-flex justify-content-between flex-column">
-                <span class="bi bi-calendar4-week mb-5"></span>
-                <p class="mb-5">
-                    Booking an Appointment <br><br> with {{professional?.user?.name || SingleDoctor?.user?.name}}<br>
+            <div class="diag-text my-auto d-flex justify-content-between flex-column w-100">
+                <span class="bi bi-calendar4-week mb-3"></span>
+                <p class="mb-3">
+                    Consultation Request <br><br> with {{professional?.user?.name || SingleDoctor?.user?.name}}<br>
                 </p>
-
+                <p class="mb-3 text-muted small">
+                    Date and time are recorded automatically when you submit this request.
+                </p>
 
                 <label for="symptoms">Complaints</label><br>
                 <textarea formControlName="symptoms" placeholder="Symptoms you are experiencing" name="symptoms"
-                    type="name" pInputText id="name" aria-describedby="username-help"></textarea>
-                <small *ngIf="apptFormGroup.get('symptoms')?.touched && apptFormGroup.get('name')?.hasError('required')"
+                    type="name" pInputText id="symptoms" aria-describedby="symptoms-help"></textarea>
+                <small *ngIf="apptFormGroup.get('symptoms')?.touched && apptFormGroup.get('symptoms')?.hasError('required')"
                     class="text-danger">
                     Field Required
                 </small><br>
-
 
                 <p-button [disabled]="this.apptFormGroup.invalid || loading" [loading]="loading" label="Proceed"  (click)="proceed()" severity="info" [raised]="true" [rounded]="true" />
             </div>

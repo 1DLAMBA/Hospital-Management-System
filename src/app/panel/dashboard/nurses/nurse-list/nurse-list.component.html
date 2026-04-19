@@ -86,11 +86,17 @@
                     <td>
                     <p-button label="view" icon="bi bi-eye" severity="info" [raised]="true"  [rounded]="true" routerLink="nurse-profile/{{nurse.id}}"/>
                     </td>
-                    <td class="d-flex">
+                    <td class="d-flex align-items-center">
                         <div class="passport">
                             <img  src="{{ avatar_file + nurse.user.passport }}">
                         </div>
-                        {{ nurse.user.name}}
+                        <span class="vertical-align-middle">{{ nurse.user.name }}</span>
+                        <span
+                            *ngIf="nurse.registration_complete === true"
+                            class="registration-verified-badge"
+                            title="Profile, licenses, and documents verified">
+                            <i class="pi pi-check" aria-hidden="true"></i>
+                        </span>
                     </td>
                     <td>
                         <!-- <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + nurses.country.code" style="width: 20px" /> -->

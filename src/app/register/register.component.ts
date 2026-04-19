@@ -208,6 +208,44 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  /**
+   * Health professionals: save account (step 1 only), then OTP — complete profile in my-profile.
+   */
+  registerProfessionalStepOne(): void {
+    if (this.RegisterForm.value.password != this.RegisterForm.value.confirm_password) {
+      window.alert('Passwords dont match');
+      return;
+    }
+
+    this.submitLoader = true;
+    const formData: any = {
+      name: this.RegisterForm.value.name,
+      email: this.RegisterForm.value.email,
+      password: this.RegisterForm.value.password,
+      phoneno: this.RegisterForm.value.phoneno,
+      user_type: this.RegisterForm.value.user_type,
+      gender: this.RegisterForm.value.gender,
+      passport: '',
+    };
+
+    this.userEndpoint.register(formData).subscribe({
+      next: (response: any) => {
+        this.userId = response.user.id;
+        this.registerResponse = response;
+        this.submitLoader = false;
+        if (response.requires_verification) {
+          this.registeredUserEmail = this.RegisterForm.value.email;
+          this.registeredUserType = this.RegisterForm.value.user_type;
+          this.showOtpVerification = true;
+        }
+      },
+      error: (error) => {
+        this.submitLoader = false;
+        this.degreeError(this.getBackendErrorMessage(error));
+      },
+    });
+  }
+
   // Logic For stepper
   next() {
     if (this.RegisterForm.value.user_type &&
@@ -230,19 +268,7 @@ export class RegisterComponent implements OnInit {
       if (this.RegisterForm.value.user_type == 'doctor' ||
         this.RegisterForm.value.user_type == 'nurse' ||
         this.RegisterForm.value.user_type == 'other_professional') {
-        // Set professional_type as required for other_professional
-        if (this.RegisterForm.value.user_type === 'other_professional') {
-          this.RegisterForm.get('professional_type')?.setValidators([Validators.required]);
-          this.RegisterForm.get('license_number')?.clearValidators();
-        } else {
-          this.RegisterForm.get('professional_type')?.clearValidators();
-          this.RegisterForm.get('license_number')?.setValidators([Validators.required]);
-        }
-        this.RegisterForm.get('professional_type')?.updateValueAndValidity();
-        this.RegisterForm.get('license_number')?.updateValueAndValidity();
-
-        this.secondstep = true;
-        this.firststep = false;
+        this.registerProfessionalStepOne();
       }
     }
     else {

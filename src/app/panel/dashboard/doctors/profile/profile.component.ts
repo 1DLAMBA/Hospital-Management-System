@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
@@ -8,8 +8,6 @@ import { OtherProfessionalResource } from '../../../../../resources/other-profes
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
-import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { JsonPipe } from '@angular/common';
 import moment from 'moment';
 import { MessageService } from 'primeng/api';
 import { ClientsService } from '../../../../endpoints/clients.service';
@@ -26,14 +24,12 @@ import { ClientsService } from '../../../../endpoints/clients.service';
 
 })
 export class ProfileComponent implements OnInit {
-  today = inject(NgbCalendar).getToday();
   id: string = this.route.snapshot.params['id'];
   professionalType: 'doctor' | 'other_professional' = 'doctor'; // Default to doctor
   SingleDoctor!: DoctorResource;
   singleOtherProfessional!: OtherProfessionalResource;
   professional: any; // Unified professional object
   avatar_file!: string;
-  date: Date[] | undefined;
   visible: boolean = false;
   apptFormGroup!: FormGroup;
   user_id: any;
@@ -42,10 +38,6 @@ export class ProfileComponent implements OnInit {
   user: any;
   appointment!: boolean;
   loading: boolean = false;
-  minDate: Date = new Date();
-
-
-
 
   constructor(
     private route: ActivatedRoute,
@@ -59,7 +51,6 @@ export class ProfileComponent implements OnInit {
   ) {
     this.apptFormGroup = new FormGroup({
       symptoms: new FormControl('', Validators.required),
-      date: new FormControl('', Validators.required)
     })
   }
 
@@ -180,7 +171,7 @@ export class ProfileComponent implements OnInit {
     // Create appointment data based on professional type
     this.formData = {
       symptoms: this.apptFormGroup.value.symptoms,
-      date_time: moment(this.apptFormGroup.value.date).format('YYYY-MM-DD HH:mm'),
+      date_time: moment().format('YYYY-MM-DD HH:mm'),
       status: 'pending',
       doctor_id: this.professionalType === 'doctor' ? this.professional.id : null,
       other_professional_id: this.professionalType === 'other_professional' ? this.professional.id : null,
@@ -192,6 +183,7 @@ export class ProfileComponent implements OnInit {
         console.log(res);
         this.loading = false;
         this.visible = false;
+        this.apptFormGroup.reset();
         this.successAlert('Appointment request sent');
         // Refresh user data to get updated appointment information
         this.getUser(this.user_id);

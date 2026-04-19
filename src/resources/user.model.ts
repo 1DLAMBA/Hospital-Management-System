@@ -13,6 +13,11 @@ export interface UserResource{
     created_at: Date;
     updated_at: Date;
     other_professionals?: OtherProfessionalResource;
+    doctors?: any;
+    nurses?: any;
+    requires_professional_profile?: boolean;
+    registration_complete?: boolean;
+    can_respond_to_consultations?: boolean;
 };
 
 export interface UserDTO{
@@ -22,7 +27,7 @@ export interface UserDTO{
     phoneno: number;
     gender: string;
     user_type: string;
-    passport: string;
+    passport?: string;
 }
 
 export interface UserRequest{

@@ -21,5 +21,6 @@ export interface ProfessionalResource {
     doctor?: DoctorResource;
     otherProfessional?: OtherProfessionalResource;
     nurse?: NurseResource;
+    registration_complete?: boolean;
 }
 

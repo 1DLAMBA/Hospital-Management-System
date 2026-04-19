@@ -52,6 +52,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DropdownModule } from 'primeng/dropdown';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessagesService } from '../endpoints/messages.service';
 import { ConversationService } from '../endpoints/conversation.service';
 import { LoaderComponent } from '../components/loader/loader.component';
@@ -131,7 +132,7 @@ import { BankAccountFormComponent } from '../shared/bank-account-form/bank-accou
     SharedModule,
     MedicalRecordViewComponent,
     DropdownModule,
-    
+    TooltipModule,
   ],
   exports: [PanelLoaderComponent],
   bootstrap: [DashboardComponent],

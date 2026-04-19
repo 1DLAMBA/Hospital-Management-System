@@ -23,6 +23,104 @@
 }
 
 /* Container styling */
+.appt-view-tooltip-wrap,
+.appt-chat-tooltip-wrap {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.appt-actions-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: nowrap;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* —— Appointments table: aligned headers, one line per row —— */
+:host ::ng-deep .doctor-appt-table.p-datatable .p-datatable-wrapper {
+    overflow-x: auto;
+}
+
+:host ::ng-deep .doctor-appt-table col.appt-col-actions {
+    width: 11rem;
+}
+:host ::ng-deep .doctor-appt-table col.appt-col-client {
+    width: 36%;
+}
+:host ::ng-deep .doctor-appt-table col.appt-col-datetime {
+    width: 15rem;
+}
+:host ::ng-deep .doctor-appt-table col.appt-col-status {
+    width: 7.5rem;
+}
+:host ::ng-deep .doctor-appt-table col.appt-col-phone {
+    width: 11rem;
+}
+
+:host ::ng-deep .doctor-appt-table .p-datatable-thead > tr > th.appt-th {
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: none;
+    letter-spacing: normal;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.75rem 1rem;
+}
+
+:host ::ng-deep .doctor-appt-table .p-datatable-tbody > tr.appt-data-row > td {
+    vertical-align: middle;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.appt-cell-nowrap {
+    white-space: nowrap;
+}
+
+.appt-client-cell {
+    max-width: 0; /* lets ellipsis work with table-layout: fixed */
+}
+
+.appt-client-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.appt-client-passport {
+    flex-shrink: 0;
+    margin-right: 0 !important;
+}
+
+.appt-client-name {
+    min-width: 0;
+    flex: 1 1 0%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.35;
+}
+
+/* Match client-appointment table action buttons (navy pButtons in Actions column) */
+::ng-deep .appt-actions-cell .p-button {
+    background-color: #17224d !important;
+    color: white !important;
+    border: 0 !important;
+    border-radius: 5px;
+}
+
+::ng-deep .appt-chat-btn.p-button {
+    padding: 0.45rem 0.5rem !important;
+    min-width: 2.1rem;
+}
+
 .appointment-container {
     padding: 1.5rem;
 }
@@ -226,13 +324,13 @@ section{
 }
 
 
-    ::ng-deep .view-button {
+    ::ng-deep .view-button,
+    ::ng-deep .view-profile-btn {
         background-color: #17224d !important;
         color: white !important;
         border: 0;
         border-radius: 5px;
-        
-    } 
+    }
     ::ng-deep .p-calender{
 
     }

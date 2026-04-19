@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { OtherProfessionalsService } from '../../../../endpoints/other-professionals.service';
@@ -25,7 +26,8 @@ import { BankAccount } from '../../../../models/bank-account.model';
 @Component({
   selector: 'app-doctor-profile',
   templateUrl: './doctor-profile.component.html',
-  styleUrl: './doctor-profile.component.css'
+  styleUrl: './doctor-profile.component.css',
+  providers: [MessageService],
 })
 export class DoctorProfileComponent implements OnInit {
   today = inject(NgbCalendar).getToday();
@@ -50,8 +52,35 @@ export class DoctorProfileComponent implements OnInit {
   showBankDialog: boolean = false;
   bankDialogMode: 'add' | 'edit' = 'add';
 
+  completionForm!: FormGroup;
+  completionSubmitting = false;
+  degreeLoader = false;
+  passportLoader = false;
+  signatureLoader = false;
+  idCardLoader = false;
+  degreeFileKey: string | null = null;
+  passportFileKey: string | null = null;
+  signatureFileKey: string | null = null;
+  idCardFileKey: string | null = null;
+  uploadedDegreeUrl: string | null = null;
+  uploadedPassportUrl: string | null = null;
+  uploadedSignatureUrl: string | null = null;
+  uploadedIdCardUrl: string | null = null;
 
-  
+  professionalTypes = [
+    { label: 'Public Health', value: 'Public Health' },
+    { label: 'Physiologist', value: 'Physiologist' },
+    { label: 'Pharmacist', value: 'Pharmacist' },
+    { label: 'Physical Therapist', value: 'Physical Therapist' },
+    { label: 'Occupational Therapist', value: 'Occupational Therapist' },
+    { label: 'Radiologist', value: 'Radiologist' },
+    { label: 'Laboratory Technician', value: 'Laboratory Technician' },
+    { label: 'Medical Social Worker', value: 'Medical Social Worker' },
+    { label: 'Nutritionist', value: 'Nutritionist' },
+    { label: 'Respiratory Therapist', value: 'Respiratory Therapist' },
+    { label: 'Other', value: 'Other' },
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private userEndpoint: UserService,
@@ -62,25 +91,34 @@ export class DoctorProfileComponent implements OnInit {
     private medicalEndpoint: MedicalService,
     private authService: AuthService,
     private bankAccountService: BankAccountService,
+    private http: HttpClient,
   ) {
     this.availabilityGroup = new FormGroup({
       checked: new FormControl<boolean>(false)
-    })
+    });
+    this.completionForm = new FormGroup({
+      license_number: new FormControl(''),
+      med_school: new FormControl('', Validators.required),
+      specialization: new FormControl('', Validators.required),
+      grad_year: new FormControl('', Validators.required),
+      professional_type: new FormControl(''),
+    });
   }
 
   ngOnInit(): void {
     this.user_id = localStorage.getItem('id');
-    // First get user to determine type, then load professional data
+    this.id = this.route.snapshot.params['id'] || this.user_id || '';
     this.getUser();
-    
-    // Subscribe to availability toggle changes
-    this.availabilityGroup.get('checked')?.valueChanges.subscribe((checked: boolean) => {
-      if (this.singleDoctor?.id && this.professionalType === 'doctor') {
-        this.toggleAvailability(checked);
-      }
-      // Note: other_professionals don't have availability toggle
+    this.route.params.subscribe((p) => {
+      this.id = p['id'] || this.user_id || '';
+      this.getUser();
     });
 
+    this.availabilityGroup.get('checked')?.valueChanges.subscribe((checked: boolean) => {
+      if (this.user?.registration_complete && this.singleDoctor?.id && this.professionalType === 'doctor') {
+        this.toggleAvailability(checked);
+      }
+    });
   }
 
   successAlert(message: any) {
@@ -88,23 +126,20 @@ export class DoctorProfileComponent implements OnInit {
     this.messageService.add({ severity: 'success', detail: message });
   }
   dangerAlert(message: any) {
-
-    this.messageService.add({ severity: 'success', detail: message });
+    this.messageService.add({ severity: 'error', detail: message });
   }
 
-  getUser (){
-    this.userEndpoint.get(this.user_id).subscribe({
+  getUser(): void {
+    const uid = this.id || this.user_id;
+    this.userEndpoint.get(uid as any).subscribe({
       next: (response: any) => {
         this.user = response.user;
-        
         this.avatar_file = environment.apiUrl + '/file/get/';
-        
-        // Determine professional type and load professional data
+
         if (this.user.user_type === 'doctor' && this.user.doctors?.id) {
           this.professionalType = 'doctor';
           this.getsingleDoctor(this.user.doctors.id);
-          // Initialize availability toggle with current doctor availability from user
-          if (this.user.doctors.availability !== undefined && this.user.doctors.availability !== null) {
+          if (this.user.registration_complete && this.user.doctors.availability !== undefined && this.user.doctors.availability !== null) {
             const availability = this.convertToBoolean(this.user.doctors.availability);
             this.availabilityGroup.patchValue({ checked: availability }, { emitEvent: false });
           }
@@ -112,11 +147,256 @@ export class DoctorProfileComponent implements OnInit {
           this.professionalType = 'other_professional';
           this.getsingleOtherProfessional(this.user.other_professionals.id);
         }
-        
-        // Load bank account for all professional types
+
+        this.patchCompletionFormFromUser();
         this.loadBankAccount();
+        if (this.authService.user) {
+          this.authService.login({ user: this.user });
+        }
       }
-    })
+    });
+  }
+
+  get showRegistrationCompletion(): boolean {
+    return !!this.user && this.user.registration_complete === false;
+  }
+
+  /** Credentials/uploads satisfied; only bank (or API lag) keeps registration incomplete */
+  get showAddBankAccountShortcut(): boolean {
+    return this.showRegistrationCompletion && !this.bankAccount && this.isNonBankProfileComplete();
+  }
+
+  scrollToBankAccountSection(): void {
+    document.getElementById('profile-bank-account-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  private isNonBankProfileComplete(): boolean {
+    const row = this.user?.doctors || this.user?.other_professionals;
+    if (!this.user || !row) {
+      return false;
+    }
+    const fv = this.completionForm?.value;
+    const med = (fv?.med_school ?? row.med_school ?? '') as string;
+    const spec = (fv?.specialization ?? row.specialization ?? '') as string;
+    const grad = fv?.grad_year ?? row.grad_year;
+
+    if (!this.filledProfessionalValue(med) || !this.filledProfessionalValue(spec) || !this.gradYearOk(grad)) {
+      return false;
+    }
+
+    if (this.professionalType === 'other_professional') {
+      const pt = (fv?.professional_type ?? (row as { professional_type?: string }).professional_type ?? '') as string;
+      if (!this.filledProfessionalValue(pt)) {
+        return false;
+      }
+    } else {
+      const lic = (fv?.license_number ?? row.license_number ?? '') as string;
+      if (!this.filledProfessionalValue(lic)) {
+        return false;
+      }
+    }
+
+    const hasDegree = this.filledProfessionalValue(row.degree_file) || !!this.degreeFileKey;
+    const hasSig = this.filledProfessionalValue(row.signature) || !!this.signatureFileKey;
+    const hasId = this.filledProfessionalValue(row.id_card) || !!this.idCardFileKey;
+    const hasPassport = this.filledProfessionalValue(this.user.passport) || !!this.passportFileKey;
+
+    return hasDegree && hasSig && hasId && hasPassport;
+  }
+
+  private filledProfessionalValue(v: unknown): boolean {
+    if (v === null || v === undefined) {
+      return false;
+    }
+    if (typeof v === 'string') {
+      return v.trim() !== '';
+    }
+    if (typeof v === 'number') {
+      return Number.isFinite(v);
+    }
+    if (typeof v === 'boolean') {
+      return v;
+    }
+    return false;
+  }
+
+  private gradYearOk(v: unknown): boolean {
+    if (v === null || v === undefined || v === '') {
+      return false;
+    }
+    const n = Number(v);
+    return Number.isFinite(n) && n > 0;
+  }
+
+  private patchCompletionFormFromUser(): void {
+    if (!this.user) {
+      return;
+    }
+    const d = this.user.doctors;
+    const o = this.user.other_professionals;
+    const row = d || o;
+    if (!row) {
+      return;
+    }
+    this.completionForm.patchValue({
+      license_number: row.license_number || '',
+      med_school: row.med_school || '',
+      specialization: row.specialization || '',
+      grad_year: row.grad_year != null ? String(row.grad_year) : '',
+      professional_type: o?.professional_type || '',
+    }, { emitEvent: false });
+    if (this.user.user_type === 'other_professional') {
+      this.completionForm.get('professional_type')?.setValidators([Validators.required]);
+      this.completionForm.get('license_number')?.clearValidators();
+    } else {
+      this.completionForm.get('professional_type')?.clearValidators();
+      this.completionForm.get('license_number')?.setValidators([Validators.required]);
+    }
+    this.completionForm.get('professional_type')?.updateValueAndValidity();
+    this.completionForm.get('license_number')?.updateValueAndValidity();
+  }
+
+  private stripFileKey(fullUrl: string | null): string | null {
+    if (!fullUrl) {
+      return null;
+    }
+    const prefix = environment.apiUrl + '/file/get/';
+    if (fullUrl.startsWith(prefix)) {
+      return fullUrl.slice(prefix.length);
+    }
+    return fullUrl;
+  }
+
+  handleCompletionUpload(event: Event, kind: 'degree' | 'passport' | 'signature' | 'id_card'): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.setLoader(kind, true);
+    if (!file) {
+      this.setLoader(kind, false);
+      return;
+    }
+    const fd = new FormData();
+    fd.append('file', file, file.name);
+    fd.append('visibility', 'public');
+    this.http.post(`${environment.apiUrl}/upload`, fd).subscribe({
+      next: (response: any) => {
+        this.setLoader(kind, false);
+        if (response?.success === false || !response?.data) {
+          this.dangerAlert(response?.message || 'Upload failed');
+          return;
+        }
+        const key = response.data as string;
+        const url = environment.apiUrl + '/file/get/' + key;
+        if (kind === 'degree') {
+          this.degreeFileKey = key;
+          this.uploadedDegreeUrl = url;
+        } else if (kind === 'passport') {
+          this.passportFileKey = key;
+          this.uploadedPassportUrl = url;
+          this.userEndpoint.patchProfile(this.user.id, { passport: key }).subscribe({
+            next: (r: any) => {
+              this.user = r.user;
+              this.successAlert('Passport saved');
+            },
+            error: () => this.dangerAlert('Could not save passport'),
+          });
+        } else if (kind === 'signature') {
+          this.signatureFileKey = key;
+          this.uploadedSignatureUrl = url;
+        } else {
+          this.idCardFileKey = key;
+          this.uploadedIdCardUrl = url;
+        }
+        this.successAlert('Uploaded');
+      },
+      error: () => {
+        this.setLoader(kind, false);
+        this.dangerAlert('Upload failed');
+      },
+    });
+    input.value = '';
+  }
+
+  private setLoader(kind: 'degree' | 'passport' | 'signature' | 'id_card', on: boolean): void {
+    if (kind === 'degree') {
+      this.degreeLoader = on;
+    } else if (kind === 'passport') {
+      this.passportLoader = on;
+    } else if (kind === 'signature') {
+      this.signatureLoader = on;
+    } else {
+      this.idCardLoader = on;
+    }
+  }
+
+  submitRegistrationCompletion(): void {
+    if (this.completionForm.invalid) {
+      this.completionForm.markAllAsTouched();
+      this.dangerAlert('Please fill all required fields');
+      return;
+    }
+    if (!this.degreeFileKey && !this.user?.doctors?.degree_file && !this.user?.other_professionals?.degree_file) {
+      this.dangerAlert('Please upload your degree certificate');
+      return;
+    }
+    if (!this.signatureFileKey && !this.user?.doctors?.signature && !this.user?.other_professionals?.signature) {
+      this.dangerAlert('Please upload your signature');
+      return;
+    }
+    if (!this.idCardFileKey && !this.user?.doctors?.id_card && !this.user?.other_professionals?.id_card) {
+      this.dangerAlert('Please upload your ID card');
+      return;
+    }
+    if (!this.user?.passport && !this.passportFileKey) {
+      this.dangerAlert('Please upload your passport photo');
+      return;
+    }
+
+    const degree = this.stripFileKey(this.uploadedDegreeUrl) || this.user?.doctors?.degree_file || this.user?.other_professionals?.degree_file;
+    const signature = this.stripFileKey(this.uploadedSignatureUrl) || this.user?.doctors?.signature || this.user?.other_professionals?.signature;
+    const idCard = this.stripFileKey(this.uploadedIdCardUrl) || this.user?.doctors?.id_card || this.user?.other_professionals?.id_card;
+
+    const base: any = {
+      license_number: this.completionForm.value.license_number || null,
+      med_school: this.completionForm.value.med_school,
+      specialization: this.completionForm.value.specialization,
+      grad_year: parseInt(String(this.completionForm.value.grad_year), 10),
+      degree_file: degree,
+      signature,
+      id_card: idCard,
+    };
+
+    this.completionSubmitting = true;
+
+    const done = () => {
+      this.completionSubmitting = false;
+      this.successAlert('Profile updated');
+      this.getUser();
+    };
+
+    if (this.professionalType === 'doctor' && this.user.doctors?.id) {
+      this.doctorEndpoint.update(this.user.doctors.id, base).subscribe({
+        next: () => done(),
+        error: (err) => {
+          this.completionSubmitting = false;
+          this.dangerAlert(err?.error?.error || 'Update failed');
+        },
+      });
+    } else if (this.professionalType === 'other_professional' && this.user.other_professionals?.id) {
+      this.otherProfessionalEndpoint.update(this.user.other_professionals.id, {
+        ...base,
+        professional_type: this.completionForm.value.professional_type,
+      }).subscribe({
+        next: () => done(),
+        error: (err) => {
+          this.completionSubmitting = false;
+          this.dangerAlert(err?.error?.error || 'Update failed');
+        },
+      });
+    } else {
+      this.completionSubmitting = false;
+      this.dangerAlert('No professional profile found');
+    }
   }
 
   // Helper function to properly convert availability value to boolean
@@ -144,7 +424,9 @@ export class DoctorProfileComponent implements OnInit {
     this.doctorEndpoint.getSingle(id).subscribe({
       next: (response: any) => {
         this.singleDoctor = response.doctor;
-        this.loadMedicalRecords(this.singleDoctor.id);
+        if (this.user?.registration_complete) {
+          this.loadMedicalRecords(this.singleDoctor.id);
+        }
 
         this.appointments = this.singleDoctor.appointments;
         if (this.appointments && this.appointments.date_time) {
@@ -233,15 +515,6 @@ export class DoctorProfileComponent implements OnInit {
     // this.visible = false;
     this.preview = false;
 
-  }
-
-  logout() {
-    // Call auth service logout (which clears localStorage)
-    this.authService.logout();
-    // Clear all localStorage (including id)
-    localStorage.clear();
-    // Navigate to login page
-    this.router.navigate(['/login']);
   }
 
   // Bank Account Methods

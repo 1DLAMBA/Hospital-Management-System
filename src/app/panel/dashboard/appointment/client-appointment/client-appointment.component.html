@@ -166,9 +166,9 @@
                 </p-columnFilter> -->
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th style="min-width:11rem">
                     <div class="flex align-items-center">
-                        View
+                        Actions
                         <!-- <p-columnFilter type="date" field="date" display="menu" /> -->
                     </div>
                 </th>
@@ -206,18 +206,37 @@
                     <span *ngIf="appointments.status=='Declined'" class="ml-1 vertical-align-middle text-danger">{{
                         appointments.status }}</span>
                 </td>
-                <td>
-                    <button 
-                        *ngIf="getProfessionalId(appointments)"
-                        pButton 
-                        label="View" 
-                        icon="pi pi-eye" 
-                        severity="info" 
-                        size="small"
-                        (click)="viewProfile(appointments)"
-                        class="view-profile-btn">
-                    </button>
-                    <span *ngIf="!getProfessionalId(appointments)" class="text-muted">N/A</span>
+                <td class="appt-actions-cell">
+                    <ng-container *ngIf="getProfessionalId(appointments); else noProviderActions">
+                        <button
+                            pButton
+                            label="View"
+                            icon="pi pi-eye"
+                            severity="info"
+                            size="small"
+                            (click)="viewProfile(appointments)"
+                            class="view-profile-btn">
+                        </button>
+                        <span
+                            class="appt-chat-tooltip-wrap"
+                            [pTooltip]="chatDisabledTooltip"
+                            [tooltipDisabled]="appointments.status === 'Accepted'"
+                            tooltipPosition="top">
+                            <button
+                                type="button"
+                                pButton
+                                icon="pi pi-comments"
+                                severity="secondary"
+                                size="small"
+                                class="appt-chat-btn"
+                                [disabled]="appointments.status !== 'Accepted'"
+                                (click)="openChatWithProfessional(appointments)">
+                            </button>
+                        </span>
+                    </ng-container>
+                    <ng-template #noProviderActions>
+                        <span class="text-muted">N/A</span>
+                    </ng-template>
                 </td>
 
 

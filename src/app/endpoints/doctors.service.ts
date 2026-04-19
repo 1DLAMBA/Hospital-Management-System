@@ -15,6 +15,9 @@ export class DoctorsService {
     return this.httpClient.post(`${this.baseUrl}/create`, data);
   }
 
+  update(id: number | string, data: Partial<DoctorRequest>) {
+    return this.httpClient.put(`${this.baseUrl}/update/${id}`, data);
+  }
 
   get(){
     return this.httpClient.get(`${this.baseUrl}/get`);
