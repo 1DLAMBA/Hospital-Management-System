@@ -10,6 +10,9 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { SlideElement, slideInAnimation } from './animate';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { SeoService } from './services/seo.service';
+import { StructuredDataService } from './services/structured-data.service';
+import { getSeoConfigByRoute } from './config/seo-config';
 
 
 
@@ -34,9 +37,17 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private router: Router,
      private activatedRoute: ActivatedRoute,
      private spinner: NgxSpinnerService,
-     private contexts: ChildrenOutletContexts) {}
+     private contexts: ChildrenOutletContexts,
+     private seoService: SeoService,
+     private structuredDataService: StructuredDataService) {}
 
     ngOnInit(): void {
+      // Initialize SEO with default metadata
+      this.seoService.resetToDefaults();
+      this.structuredDataService.addStructuredData(
+        this.structuredDataService.generateOrganizationSchema()
+      );
+
       this.spinner.show();
     setTimeout(() => {
       /** spinner ends after 5 seconds */
@@ -45,12 +56,14 @@ export class AppComponent implements OnInit, OnDestroy {
     
     // Check initial route
     this.updateNavbarFooterVisibility();
+    this.updatePageSeo();
     
     // Subscribe to route changes
     this.routerSubscription = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.updateNavbarFooterVisibility();
+      this.updatePageSeo();
     });
     }
     
@@ -78,6 +91,48 @@ export class AppComponent implements OnInit, OnDestroy {
         route = route.firstChild;
       }
       this.showNavbarAndFooter = true;
+    }
+
+    /**
+     * Update page SEO metadata based on current route
+     */
+    private updatePageSeo(): void {
+      const currentPath = this.router.url;
+      
+      // Get route data for custom SEO metadata
+      let route = this.activatedRoute.firstChild;
+      let seoData = null;
+      
+      while (route) {
+        if (route.snapshot.data?.['seo']) {
+          seoData = route.snapshot.data['seo'];
+          break;
+        }
+        route = route.firstChild;
+      }
+      
+      // Use custom SEO data from route or fall back to config
+      const metadata = seoData || getSeoConfigByRoute(currentPath);
+      this.seoService.updatePageSeo(metadata);
+
+      // Update structured data based on route
+      if (currentPath === '/') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateHomePageSchema()
+        );
+      } else if (currentPath === '/services') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateServicePageSchema()
+        );
+      } else if (currentPath === '/about') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateAboutPageSchema()
+        );
+      } else if (currentPath === '/contact') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateContactPageSchema()
+        );
+      }
     }
     
     getRouteAnimationData() {

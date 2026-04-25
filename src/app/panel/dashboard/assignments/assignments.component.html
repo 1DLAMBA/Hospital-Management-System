@@ -6,7 +6,7 @@
         <div class="m-auto">
             <div class="d-flex justify-content-between">
                 <div class="img m-3">
-                    <img src="{{ avatar_file + singleAppt.client.user.passport }}">
+                    <img [alt]="singleAppt.client.user.name + ' profile picture'" src="{{ avatar_file + singleAppt.client.user.passport }}">
                 </div>
 
                 <div class="m-auto d-flex border-left ">
@@ -185,7 +185,7 @@
                 </td>
                 <td class="d-flex">
                     <div class="passport">
-                        <img src="{{ avatar_file + appointments.client.user.passport }}">
+                        <img [alt]="appointments.client.user.name + ' profile picture'" src="{{ avatar_file + appointments.client.user.passport }}">
                     </div>
                     {{ appointments.client.user.name}}
                 </td>

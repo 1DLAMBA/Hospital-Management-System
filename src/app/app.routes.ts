@@ -37,7 +37,9 @@ export const routes: Routes = [
     {
         path: '',
         component: LandingComponent,
-        data: { animation: 'HomePage' }
+        data: { 
+          animation: 'HomePage'
+        }
       },
       {
         path: 'services',
