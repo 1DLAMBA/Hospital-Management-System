@@ -120,11 +120,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       routerLink: 'messages'
     },
     {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
-    },
-    {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
       routerLink: `my-profile/doctor/${this.id}`
@@ -144,11 +139,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
       title: 'Messages',
       routerLink: 'messages'
-    },
-    {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
     },
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
@@ -203,11 +193,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       routerLink: 'messages'
     },
     {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
-    },
-    {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
       routerLink: `my-profile/client/${this.id}`
@@ -237,11 +222,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
       title: 'Messages',
       routerLink: 'messages'
-    },
-    {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
     },
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',

@@ -167,7 +167,8 @@ header="Edit Profile"
 
             <router-outlet></router-outlet>
         </div>
-    </div>   
+    </div>
+
     <!-- ADD NG IF HERE TO CHECK USER TYPE BEFORE RENDERING MOBILE NAV -->
     <div *ngIf="user?.user_type=='doctor'" class="mob-nav">
         <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel/{{this.id}}">
@@ -182,9 +183,6 @@ header="Edit Profile"
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
         </a>
-        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
-            <span>AI</span>
-        </a>
     </div>
     <div *ngIf="user?.user_type=='other_professional'" class="mob-nav">
         <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel/{{this.id}}">
@@ -195,9 +193,6 @@ header="Edit Profile"
         </a>
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
-        </a>
-        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
-            <span>AI</span>
         </a>
     </div>
     <div *ngIf="user?.user_type=='nurse'" class="mob-nav">
@@ -210,9 +205,6 @@ header="Edit Profile"
     
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
-        </a>
-        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
-            <span>AI</span>
         </a>
     </div>
     <div *ngIf="user?.user_type=='client'" class="mob-nav">
@@ -229,9 +221,6 @@ header="Edit Profile"
         </a>
         <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
 
-        </a>
-        <a routerLinkActive="active"  class="bi bi-robot" routerLink="medical-ai">
-            <span>AI</span>
         </a>
     </div>
     <div class="staff-popup" *ngIf="showStaffPopup && user?.user_type=='client'">
@@ -251,4 +240,81 @@ header="Edit Profile"
             <span>Other</span>
         </a>
     </div>
+</div>
+
+<div class="medical-ai-launcher">
+  <button
+    type="button"
+    class="medical-ai-fab"
+    [class.medical-ai-fab--hidden]="medicalAiOpen"
+    (click)="openMedicalAi()"
+    aria-label="Open Medical AI assistant"
+    title="Medical AI">
+    <i class="bi bi-robot"></i>
+  </button>
+
+  <p-dialog
+    [(visible)]="medicalAiOpen"
+    (visibleChange)="onMedicalAiVisibleChange($event)"
+    [appendTo]="'body'"
+    position="bottomright"
+    [modal]="true"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [blockScroll]="false"
+    [draggable]="false"
+    [resizable]="false"
+    [showHeader]="true"
+    [style]="medicalAiDialogStyle"
+    [breakpoints]="medicalAiDialogBreakpoints"
+    [contentStyle]="{ overflow: 'hidden', padding: '0', background: 'transparent' }"
+    styleClass="medical-ai-dialog medical-ai-dialog--light"
+    maskStyleClass="medical-ai-dialog-mask">
+    <ng-template pTemplate="header">
+      <span class="medical-ai-dialog-title">
+        <i class="medical-ai-dialog-heart"></i>
+        Medical AI Assistant
+      </span>
+    </ng-template>
+    <div class="medical-ai-dialog-body">
+      <div class="medical-ai-skeleton" *ngIf="medicalAiOpening" aria-hidden="true">
+        <div class="medical-ai-skeleton-toolbar">
+          <p-skeleton width="70%" height="0.85rem"></p-skeleton>
+          <p-skeleton shape="circle" size="2rem"></p-skeleton>
+        </div>
+        <div class="medical-ai-skeleton-messages">
+          <div class="medical-ai-skeleton-bubble medical-ai-skeleton-bubble--ai">
+            <p-skeleton shape="circle" size="2rem"></p-skeleton>
+            <div class="medical-ai-skeleton-lines">
+              <p-skeleton width="85%" height="0.9rem" styleClass="mb-2"></p-skeleton>
+              <p-skeleton width="60%" height="0.9rem"></p-skeleton>
+            </div>
+          </div>
+          <div class="medical-ai-skeleton-bubble medical-ai-skeleton-bubble--user">
+            <div class="medical-ai-skeleton-lines medical-ai-skeleton-lines--end">
+              <p-skeleton width="55%" height="0.9rem"></p-skeleton>
+            </div>
+            <p-skeleton shape="circle" size="2rem"></p-skeleton>
+          </div>
+          <div class="medical-ai-skeleton-bubble medical-ai-skeleton-bubble--ai">
+            <p-skeleton shape="circle" size="2rem"></p-skeleton>
+            <div class="medical-ai-skeleton-lines">
+              <p-skeleton width="75%" height="0.9rem" styleClass="mb-2"></p-skeleton>
+              <p-skeleton width="90%" height="0.9rem" styleClass="mb-2"></p-skeleton>
+              <p-skeleton width="40%" height="0.9rem"></p-skeleton>
+            </div>
+          </div>
+        </div>
+        <div class="medical-ai-skeleton-input">
+          <p-skeleton width="100%" height="2.5rem" borderRadius="1.25rem"></p-skeleton>
+          <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+        </div>
+      </div>
+      <app-medical-ai
+        *ngIf="medicalAiEverOpened"
+        [hidden]="medicalAiOpening"
+        (ready)="onMedicalAiReady()"
+        class="medical-ai-embedded"></app-medical-ai>
+    </div>
+  </p-dialog>
 </div>

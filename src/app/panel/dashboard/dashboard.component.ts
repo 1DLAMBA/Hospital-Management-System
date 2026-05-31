@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { UserResource } from '../../../resources/user.model';
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { PusherService } from '../../services/pusher.service';
 import { AuthService } from '../../auth.service';
 import { NotificationsService, Notification } from '../../endpoints/notifications.service';
+import { MedicalAiUiService } from '../../services/medical-ai-ui.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,12 +19,26 @@ import { NotificationsService, Notification } from '../../endpoints/notification
   styleUrls: ['./dashboard.component.css'],
   providers: [MessageService]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   id: any;
   user!: UserResource
   firstName!: string;
   avatar_file: string = environment.apiUrl + '/file/get/';
   visible: boolean = false;
+  medicalAiOpen = false;
+  medicalAiOpening = false;
+  medicalAiEverOpened = false;
+  medicalAiReady = false;
+  medicalAiDialogStyle = {
+    width: '50vw',
+    height: '82.5vh',
+    maxWidth: '50rem',
+    maxHeight: '52.8rem',
+  };
+  medicalAiDialogBreakpoints = {
+    '768px': { width: '90vw', height: '92vh', maxWidth: 'none', maxHeight: 'none' },
+  };
+  private medicalAiSub?: Subscription;
   newNotificationBatch:boolean = false;
   position: string = 'center';
   notifications: Notification[] = [];
@@ -38,13 +54,38 @@ export class DashboardComponent implements OnInit {
     private pusherService: PusherService,
     private router: Router,
     private authService: AuthService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private medicalAiUi: MedicalAiUiService
   ){}
   ngOnInit(): void {
     this.id = localStorage.getItem('id');
     this.getUser();
     this.loadNotifications();
     this.initializePusher();
+    this.medicalAiSub = this.medicalAiUi.isOpen$.subscribe((open) => {
+      this.medicalAiOpen = open;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.medicalAiSub?.unsubscribe();
+  }
+
+  openMedicalAi(): void {
+    this.medicalAiEverOpened = true;
+    if (!this.medicalAiReady) {
+      this.medicalAiOpening = true;
+    }
+    this.medicalAiUi.open();
+  }
+
+  onMedicalAiReady(): void {
+    this.medicalAiReady = true;
+    this.medicalAiOpening = false;
+  }
+
+  onMedicalAiVisibleChange(visible: boolean): void {
+    this.medicalAiUi.setOpen(visible);
   }
 
   private initializePusher(): void {
