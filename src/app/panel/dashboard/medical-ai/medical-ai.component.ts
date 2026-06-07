@@ -4,7 +4,10 @@ import {
   ViewChild,
   ElementRef,
   OnDestroy,
-  AfterViewInit,
+  AfterViewChecked,
+  OnChanges,
+  SimpleChanges,
+  Input,
   Output,
   EventEmitter,
 } from '@angular/core';
@@ -26,8 +29,9 @@ const STORAGE_KEY = 'medical_ai_conversation';
   standalone: true,
   imports: [CommonModule, FormsModule, InputTextareaModule],
 })
-export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewChecked, OnChanges {
   @ViewChild('messageContainer') messageContainer!: ElementRef;
+  @Input() dialogVisible = false;
   @Output() ready = new EventEmitter<void>();
 
   messages: any[] = [];
@@ -37,6 +41,7 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
   userId!: number;
 
   private initialLoadFinished = false;
+  private scrollPending = false;
 
   constructor(
     private medicalAIService: MedicalAIService,
@@ -65,11 +70,26 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => this.scrollToBottom(), 0);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['dialogVisible']?.currentValue === true) {
+      this.scheduleScrollToBottom();
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this.scrollPending || !this.messageContainer) {
+      return;
+    }
+    const el = this.messageContainer.nativeElement;
+    el.scrollTop = el.scrollHeight;
+    this.scrollPending = false;
   }
 
   ngOnDestroy(): void {}
+
+  scheduleScrollToBottom(): void {
+    this.scrollPending = true;
+  }
 
   private finishInitialLoad(): void {
     if (this.initialLoadFinished) {
@@ -124,7 +144,7 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
             this.applyWelcomeMessage();
           }
         }
-        setTimeout(() => this.scrollToBottom(), 0);
+        this.scheduleScrollToBottom();
         this.finishInitialLoad();
       },
       error: () => {
@@ -142,6 +162,7 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
         timestamp: new Date(),
       },
     ];
+    this.scheduleScrollToBottom();
   }
 
   clearConversation(): void {
@@ -157,7 +178,7 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
       summary: 'Success',
       detail: 'Conversation cleared (local view)',
     });
-    setTimeout(() => this.scrollToBottom(), 0);
+    this.scheduleScrollToBottom();
   }
 
   onEnter(event: Event): void {
@@ -186,8 +207,9 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.messages.push({ type: 'user', content, timestamp: new Date() });
     this.userInput = '';
+    this.scheduleScrollToBottom();
     this.isLoading = true;
-    this.scrollToBottom();
+    this.scheduleScrollToBottom();
 
     this.medicalAIService.send(this.conversationId, this.userId, content).subscribe({
       next: (res: any) => {
@@ -195,7 +217,7 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
           res?.assistant ?? res?.raw?.choices?.[0]?.message?.content ?? '...';
         this.messages.push({ type: 'ai', content: ai, timestamp: new Date() });
         this.isLoading = false;
-        this.scrollToBottom();
+        this.scheduleScrollToBottom();
       },
       error: (err: any) => {
         console.error('Error getting AI response:', err);
@@ -205,14 +227,12 @@ export class MedicalAIComponent implements OnInit, OnDestroy, AfterViewInit {
           detail: 'Failed to get AI response. Please try again.',
         });
         this.isLoading = false;
+        this.scheduleScrollToBottom();
       },
     });
   }
 
   scrollToBottom(): void {
-    if (this.messageContainer) {
-      const container = this.messageContainer.nativeElement;
-      container.scrollTop = container.scrollHeight;
-    }
+    this.scheduleScrollToBottom();
   }
 }

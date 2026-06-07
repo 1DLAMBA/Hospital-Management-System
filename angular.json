@@ -11,12 +11,11 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "ngx-build-plus:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/hospital-management-system",
             "index": "src/index.html",
-            "extraWebpackConfig": "./extra-webpack.config.js",
-            "main": "src/main.ts",
+            "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -24,6 +23,16 @@
             "assets": [
               "src/favicon.ico",
               "src/assets/hospital-icon.svg",
+              {
+                "glob": "robots.txt",
+                "input": "src",
+                "output": "/"
+              },
+              {
+                "glob": "sitemap.xml",
+                "input": "src",
+                "output": "/"
+              },
               "src/assets"
             ],
             "styles": [
@@ -40,6 +49,13 @@
           },
           "configurations": {
             "production": {
+              "server": "src/main.server.ts",
+              "ssr": {
+                "entry": "server.ts"
+              },
+              "prerender": {
+                "routesFile": "prerender-routes.txt"
+              },
               "budgets": [
                 {
                   "type": "initial",
@@ -53,11 +69,11 @@
                 }
               ],
               "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.production.ts"
-                  }
-                ],
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }
+              ],
               "outputHashing": "all"
             },
             "staging": {
@@ -77,24 +93,13 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "ngx-build-plus:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "hospital-management-system:build:production",
-              "fileReplacements": [
-                  {
-                    "replace": "src/environments/environment.ts",
-                    "with": "src/environments/environment.production.ts"
-                  }
-                ]
+              "buildTarget": "hospital-management-system:build:production"
             },
-             "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.staging.ts"
-                }
-              ]
+            "staging": {
+              "buildTarget": "hospital-management-system:build:staging"
             },
             "development": {
               "buildTarget": "hospital-management-system:build:development"
@@ -102,18 +107,17 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "browserTarget": "my-app:build",
             "port": 4800
           }
         },
         "extract-i18n": {
-          "builder": "ngx-build-plus:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "hospital-management-system:build"
           }
         },
         "test": {
-          "builder": "ngx-build-plus:karma",
+          "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
               "zone.js",

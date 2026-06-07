@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MedicalAIComponent } from './medical-ai/medical-ai.component';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { UserResource } from '../../../resources/user.model';
@@ -20,6 +21,8 @@ import { Subscription } from 'rxjs';
   providers: [MessageService]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  @ViewChild(MedicalAIComponent) medicalAi?: MedicalAIComponent;
+
   id: any;
   user!: UserResource
   firstName!: string;
@@ -42,7 +45,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   newNotificationBatch:boolean = false;
   position: string = 'center';
   notifications: Notification[] = [];
-  showStaffPopup: boolean = false;
   private messageSentHandler?: (data: any) => void;
   private notificationSentHandler?: (data: any) => void;
 
@@ -82,6 +84,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   onMedicalAiReady(): void {
     this.medicalAiReady = true;
     this.medicalAiOpening = false;
+    this.medicalAi?.scheduleScrollToBottom();
   }
 
   onMedicalAiVisibleChange(visible: boolean): void {
@@ -329,25 +332,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // console.log(this.user);
   }
 
-  toggleStaffPopup(): void {
-    this.showStaffPopup = !this.showStaffPopup;
-  }
-
-  selectStaffType(type: 'doctor' | 'nurse' | 'other_professional'): void {
-    this.router.navigate(['panel/doctors'], {
-      queryParams: { type }
-    });
-    this.showStaffPopup = false;
-  }
-
-  isStaffRouteActive(): boolean {
-    return this.router.url.startsWith('/panel/doctors');
-  }
-
-  isSelectedStaffType(type: 'doctor' | 'nurse' | 'other_professional'): boolean {
-    const queryString = this.router.url.split('?')[1] || '';
-    const selectedType = new URLSearchParams(queryString).get('type') || 'doctor';
-    return selectedType === type;
+  isHealthcareStaffRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/panel/doctors'
+      || url.startsWith('/panel/doctors/')
+      || url.startsWith('/panel/nurses/nurse-profile');
   }
 
   logout() {

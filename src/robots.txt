@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /panel/
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://phoenixmed.online/sitemap.xml

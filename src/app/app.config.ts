@@ -4,8 +4,8 @@ import { provideRouter, RouteReuseStrategy } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideMarkdown } from 'ngx-markdown';
 
 // Custom route reuse strategy - prevents component reuse
 export class CustomRouteReuseStrategy implements RouteReuseStrategy {
@@ -21,9 +21,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes), 
     provideClientHydration(),
     MessageService, 
-    provideAnimationsAsync(),
     importProvidersFrom(TranslateModule.forRoot()),
-    provideHttpClient(),
+    provideHttpClient(withFetch()),
+    provideMarkdown(),
     { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy }
   ]
 };

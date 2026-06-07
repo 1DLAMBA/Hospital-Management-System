@@ -1,4 +1,6 @@
-<div class="medical-ai-container medical-ai-container--glass">
+<div
+  class="medical-ai-container medical-ai-container--glass"
+  [class.medical-ai-container--idle]="messages.length === 1 && !isLoading">
   <div class="chat-toolbar">
     <p class="chat-hint">General health guidance — not a diagnosis.</p>
     <button

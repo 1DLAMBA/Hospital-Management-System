@@ -316,6 +316,22 @@
                         </div>
                     </div>
 
+                    <div class="terms-acceptance my-3">
+                        <label class="d-flex align-items-start gap-2">
+                            <input type="checkbox" [(ngModel)]="termsAccepted" [ngModelOptions]="{standalone: true}"
+                                (change)="termsError = false" />
+                            <span>
+                                I agree to the
+                                <a routerLink="/terms-of-service" target="_blank">Terms of Service</a>
+                                and
+                                <a routerLink="/privacy-policy" target="_blank">Privacy Policy</a>.
+                            </span>
+                        </label>
+                        <small *ngIf="termsError" class="text-danger d-block mt-1">
+                            You must accept the Terms of Service and Privacy Policy to continue.
+                        </small>
+                    </div>
+
                     <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover"
                         (click)="submit()">Submit</button>
                     <button *ngIf="submitLoader" disabled

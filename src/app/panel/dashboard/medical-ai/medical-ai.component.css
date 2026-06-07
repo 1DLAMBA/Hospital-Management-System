@@ -7,16 +7,20 @@
   width: 100%;
 }
 
+.medical-ai-container,
 .medical-ai-container--glass {
   --ai-brand: #17224d;
   --ai-text: #334155;
   --ai-text-muted: #64748b;
   --ai-brand-muted: rgba(23, 34, 77, 0.08);
 
+  width: 100%;
+  min-width: 0;
   height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   background: rgba(255, 255, 255, 0.55);
 }
 
@@ -74,6 +78,7 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  overflow-anchor: auto;
   padding: 1rem 1.1rem;
   display: flex;
   flex-direction: column;
@@ -130,6 +135,25 @@
 
 .ai-message .message-icon i {
   color: var(--ai-text-muted);
+}
+
+/* Welcome / empty thread: use full pane width */
+.medical-ai-container--idle .messages .ai-message {
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.medical-ai-container--idle .input-container,
+.medical-ai-container--idle .input-wrapper,
+.medical-ai-container--idle .suggestions {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.medical-ai-container--idle .suggestion-buttons {
+  width: 100%;
 }
 
 .message-content {

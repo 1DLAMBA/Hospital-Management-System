@@ -55,6 +55,8 @@ export class RegisterComponent implements OnInit {
   registeredUserType: string = '';
   /** Store register API response so we can set localStorage and route for non-OTP users (e.g. client). */
   registerResponse: any = null;
+  termsAccepted = false;
+  termsError = false;
 
   // Professional types for other_professional user type
   professionalTypes = [
@@ -277,6 +279,13 @@ export class RegisterComponent implements OnInit {
 
   }
   submit() {
+    if (!this.termsAccepted) {
+      this.termsError = true;
+      this.degreeError('You must accept the Terms of Service and Privacy Policy to register.');
+      return;
+    }
+    this.termsError = false;
+
     // Validate signature and ID card for professionals
     const isProfessional = this.RegisterForm.value.user_type === 'doctor' ||
       this.RegisterForm.value.user_type === 'nurse' ||

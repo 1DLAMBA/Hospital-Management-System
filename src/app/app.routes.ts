@@ -25,12 +25,13 @@ import { PanelResolver } from './panel/dashboard/panel/panel-resolver';
 import { ClientListComponent } from './panel/dashboard/clients/client-list/client-list.component';
 import { ClientProfileComponent } from './panel/dashboard/clients/client-profile/client-profile.component';
 import { DoctorProfileComponent } from './panel/dashboard/my-profile/doctor-profile/doctor-profile.component';
-import { NurseListComponent } from './panel/dashboard/nurses/nurse-list/nurse-list.component';
 import { NurseProfileComponent } from './panel/dashboard/my-profile/nurse-profile/nurse-profile.component';
 import { ProfileNurseComponent } from './panel/dashboard/nurses/profile-nurse/profile-nurse.component';
 import { ProfilePageComponent } from './panel/dashboard/my-profile/profile-page/profile-page.component';
 import { AssignmentsComponent } from './panel/dashboard/assignments/assignments.component';
 import { ChatPageComponent } from './panel/dashboard/messages/chat-page/chat-page.component';
+import { LegalPageComponent } from './legal/legal-page.component';
+import { legalContentResolver } from './legal/legal-content.resolver';
 
 export const routes: Routes = [
     {
@@ -63,7 +64,24 @@ export const routes: Routes = [
         path: 'register',
         component: RegisterComponent,
       },
-      
+      {
+        path: 'privacy-policy',
+        component: LegalPageComponent,
+        resolve: { content: legalContentResolver },
+        data: { legalSlug: 'privacy-policy', animation: 'LegalPage' },
+      },
+      {
+        path: 'terms-of-service',
+        component: LegalPageComponent,
+        resolve: { content: legalContentResolver },
+        data: { legalSlug: 'terms-of-service', animation: 'LegalPage' },
+      },
+      {
+        path: 'medical-disclaimer',
+        component: LegalPageComponent,
+        resolve: { content: legalContentResolver },
+        data: { legalSlug: 'medical-disclaimer', animation: 'LegalPage' },
+      },
       {
         path: 'panel',
         component: DashboardComponent,
@@ -109,7 +127,8 @@ export const routes: Routes = [
           children: [
             {
               path: '',
-              component: NurseListComponent
+              redirectTo: '/panel/doctors',
+              pathMatch: 'full'
             },
             {
               path: 'nurse-profile/:id',
