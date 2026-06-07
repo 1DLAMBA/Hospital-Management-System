@@ -32,6 +32,8 @@ import { NursesService } from "./endpoints/nurses.service";
 import { AboutComponent } from "./about/about.component";
 import { ServicesComponent } from "./services/services.component";
 import { ContactComponent } from "./contact/contact.component";
+import { LegalPageComponent } from "./legal/legal-page.component";
+import { MarkdownModule } from 'ngx-markdown';
 import { PanelModule } from "./panel/panel.module";
 import { MessageService } from "primeng/api";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -67,6 +69,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         AboutComponent,
         ServicesComponent,
         ContactComponent,
+        LegalPageComponent,
         // DashboardComponent,
         //   ChatDialogComponent
     ],
@@ -94,7 +97,8 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         NgxSpinnerModule,
         DynamicDialogModule,
         PanelModule,
-        SharedModule
+        SharedModule,
+        MarkdownModule.forRoot()
     ],
     exports:[
         NavBarComponent,

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MedicalAIComponent } from './medical-ai/medical-ai.component';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { UserResource } from '../../../resources/user.model';
@@ -10,6 +11,8 @@ import { Router } from '@angular/router';
 import { PusherService } from '../../services/pusher.service';
 import { AuthService } from '../../auth.service';
 import { NotificationsService, Notification } from '../../endpoints/notifications.service';
+import { MedicalAiUiService } from '../../services/medical-ai-ui.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,16 +20,31 @@ import { NotificationsService, Notification } from '../../endpoints/notification
   styleUrls: ['./dashboard.component.css'],
   providers: [MessageService]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  @ViewChild(MedicalAIComponent) medicalAi?: MedicalAIComponent;
+
   id: any;
   user!: UserResource
   firstName!: string;
   avatar_file: string = environment.apiUrl + '/file/get/';
   visible: boolean = false;
+  medicalAiOpen = false;
+  medicalAiOpening = false;
+  medicalAiEverOpened = false;
+  medicalAiReady = false;
+  medicalAiDialogStyle = {
+    width: '50vw',
+    height: '82.5vh',
+    maxWidth: '50rem',
+    maxHeight: '52.8rem',
+  };
+  medicalAiDialogBreakpoints = {
+    '768px': { width: '90vw', height: '92vh', maxWidth: 'none', maxHeight: 'none' },
+  };
+  private medicalAiSub?: Subscription;
   newNotificationBatch:boolean = false;
   position: string = 'center';
   notifications: Notification[] = [];
-  showStaffPopup: boolean = false;
   private messageSentHandler?: (data: any) => void;
   private notificationSentHandler?: (data: any) => void;
 
@@ -38,13 +56,39 @@ export class DashboardComponent implements OnInit {
     private pusherService: PusherService,
     private router: Router,
     private authService: AuthService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private medicalAiUi: MedicalAiUiService
   ){}
   ngOnInit(): void {
     this.id = localStorage.getItem('id');
     this.getUser();
     this.loadNotifications();
     this.initializePusher();
+    this.medicalAiSub = this.medicalAiUi.isOpen$.subscribe((open) => {
+      this.medicalAiOpen = open;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.medicalAiSub?.unsubscribe();
+  }
+
+  openMedicalAi(): void {
+    this.medicalAiEverOpened = true;
+    if (!this.medicalAiReady) {
+      this.medicalAiOpening = true;
+    }
+    this.medicalAiUi.open();
+  }
+
+  onMedicalAiReady(): void {
+    this.medicalAiReady = true;
+    this.medicalAiOpening = false;
+    this.medicalAi?.scheduleScrollToBottom();
+  }
+
+  onMedicalAiVisibleChange(visible: boolean): void {
+    this.medicalAiUi.setOpen(visible);
   }
 
   private initializePusher(): void {
@@ -288,25 +332,11 @@ export class DashboardComponent implements OnInit {
     // console.log(this.user);
   }
 
-  toggleStaffPopup(): void {
-    this.showStaffPopup = !this.showStaffPopup;
-  }
-
-  selectStaffType(type: 'doctor' | 'nurse' | 'other_professional'): void {
-    this.router.navigate(['panel/doctors'], {
-      queryParams: { type }
-    });
-    this.showStaffPopup = false;
-  }
-
-  isStaffRouteActive(): boolean {
-    return this.router.url.startsWith('/panel/doctors');
-  }
-
-  isSelectedStaffType(type: 'doctor' | 'nurse' | 'other_professional'): boolean {
-    const queryString = this.router.url.split('?')[1] || '';
-    const selectedType = new URLSearchParams(queryString).get('type') || 'doctor';
-    return selectedType === type;
+  isHealthcareStaffRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/panel/doctors'
+      || url.startsWith('/panel/doctors/')
+      || url.startsWith('/panel/nurses/nurse-profile');
   }
 
   logout() {

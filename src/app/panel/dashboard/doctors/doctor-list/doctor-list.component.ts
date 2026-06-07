@@ -4,251 +4,164 @@ import { DoctorResource } from '../../../../../resources/doctor.model';
 import { NurseResource } from '../../../../../resources/nurse.model';
 import { UserResource } from '../../../../../resources/user.model';
 import { ProfessionalResource } from '../../../../../resources/professional.model';
-import { DoctorsService } from '../../../../endpoints/doctors.service';
-import { NursesService } from '../../../../endpoints/nurses.service';
-import { OtherProfessionalsService } from '../../../../endpoints/other-professionals.service';
+import { ProfessionalsService } from '../../../../endpoints/professionals.service';
 import { UserService } from '../../../../endpoints/user.service';
-import { forkJoin, Subscription } from 'rxjs';
-import {
-  ActivatedRoute,
-  Router,
-  NavigationEnd,
-} from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-
+type FilterType = '' | 'doctor' | 'nurse' | 'other_professional';
+type FilterAvailability = '' | 'available' | 'unavailable';
 
 @Component({
   selector: 'app-doctor-list',
   templateUrl: './doctor-list.component.html',
   styleUrl: './doctor-list.component.css'
 })
-export class DoctorListComponent implements OnInit, OnDestroy{
+export class DoctorListComponent implements OnInit, OnDestroy {
   id: any;
   user!: UserResource;
-  firstName!: string;
-  avatar_file!:string;
-  doctors!: DoctorResource[];
-  professionals!: ProfessionalResource[]; // Unified list
-  filteredProfessionals!: ProfessionalResource[]; // Filtered list for display
-  SingleDoctor!: DoctorResource;
-  searchValue: string | undefined;
-  showdoc: boolean = false;
-  availableCount: number = 0;
-  unavailableCount: number = 0;
-  currentType: 'all' | 'doctor' | 'nurse' | 'other_professional' = 'all';
-  
-  private routerSubscription?: Subscription;
-  private queryParamsSubscription?: Subscription;
-  private isComponentActive: boolean = true;
+  avatar_file!: string;
+
+  doctors: ProfessionalResource[] = [];
+  nurses: ProfessionalResource[] = [];
+  otherProfessionals: ProfessionalResource[] = [];
+
+  loading = true;
+  searchValue = '';
+  filterType: FilterType = '';
+  filterAvailability: FilterAvailability = '';
+  showFilterDialog = false;
+
+  summary = { total: 0, available: 0, unavailable: 0 };
+
+  readonly filterTypeOptions: { label: string; value: FilterType }[] = [
+    { label: 'All', value: '' },
+    { label: 'Doctors', value: 'doctor' },
+    { label: 'Nurses', value: 'nurse' },
+    { label: 'Other Professionals', value: 'other_professional' },
+  ];
+
+  readonly filterAvailabilityOptions: { label: string; value: FilterAvailability }[] = [
+    { label: 'All', value: '' },
+    { label: 'Available', value: 'available' },
+    { label: 'Unavailable', value: 'unavailable' },
+  ];
+
+  private readonly searchSubject = new Subject<string>();
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private userEndpoint: UserService,
-    private doctorEndpoint: DoctorsService,
-    private nurseEndpoint: NursesService,
-    private otherProfessionalEndpoint: OtherProfessionalsService,
-    private readonly route: ActivatedRoute,
+    private professionalsService: ProfessionalsService,
     private readonly router: Router,
-
-  ){
-
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.id=localStorage.getItem('id');
-    this.isComponentActive = true;
+    this.id = localStorage.getItem('id');
     this.getUser();
-    this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
-      this.currentType = this.normalizeType(params['type']);
-      this.getProfessionalsByType();
-    });
-    
-    // Subscribe to router navigation events to detect when navigating to this component
-    // This handles the case where component is reused
-    this.routerSubscription = this.router.events.pipe(
-      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
-    ).subscribe((event) => {
-      if (!this.isComponentActive) return;
-      
-      const currentUrl = event.urlAfterRedirects || event.url;
-      
-      // If we're on the doctors list route, reload data
-      // This ensures data is refreshed even when component is reused
-      if (currentUrl.includes('/panel/doctors') && !currentUrl.includes('/profile/')) {
-        // Use setTimeout to avoid multiple rapid calls and ensure component is ready
-        setTimeout(() => {
-          if (this.isComponentActive && this.router.url === currentUrl) {
-            this.getProfessionalsByType();
-          }
-        }, 100);
+
+    this.subscriptions.add(
+      this.searchSubject.pipe(debounceTime(300), distinctUntilChanged()).subscribe(() => {
+        this.loadProfessionals();
+      })
+    );
+
+    this.loadProfessionals();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    this.searchSubject.complete();
+  }
+
+  getUser(): void {
+    this.userEndpoint.get(this.id).subscribe({
+      next: (response: any) => {
+        this.user = response.user;
+        this.avatar_file = environment.apiUrl + '/file/get/';
       }
     });
   }
 
-  ngOnDestroy(): void {
-    this.isComponentActive = false;
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
-    if (this.queryParamsSubscription) {
-      this.queryParamsSubscription.unsubscribe();
-    }
+  loadProfessionals(): void {
+    this.loading = true;
+
+    this.professionalsService.get({
+      search: this.searchValue,
+      type: this.filterType || undefined,
+      availability: this.filterAvailability || undefined,
+    }).subscribe({
+      next: (response) => {
+        this.doctors = this.mapDoctors((response.sections.doctors?.items || []) as DoctorResource[]);
+        this.nurses = this.mapNurses((response.sections.nurses?.items || []) as NurseResource[]);
+        this.otherProfessionals = this.mapOtherProfessionals(response.sections.other_professionals?.items || []);
+        this.summary = response.summary || { total: 0, available: 0, unavailable: 0 };
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading professionals:', err);
+        this.doctors = [];
+        this.nurses = [];
+        this.otherProfessionals = [];
+        this.summary = { total: 0, available: 0, unavailable: 0 };
+        this.loading = false;
+      }
+    });
   }
 
-  loadData(): void {
-    this.getUser();
-    this.getProfessionalsByType();
+  onSearchInput(): void {
+    this.searchSubject.next(this.searchValue);
   }
 
-  clearSearch() {
+  openFilters(): void {
+    this.showFilterDialog = true;
+  }
+
+  applyFilters(): void {
+    this.showFilterDialog = false;
+    this.loadProfessionals();
+  }
+
+  clearSearch(): void {
     this.searchValue = '';
-    this.filterProfessionals();
+    this.filterType = '';
+    this.filterAvailability = '';
+    this.loadProfessionals();
   }
 
-  filterProfessionals() {
-    if (!this.professionals) {
-      this.filteredProfessionals = [];
-      return;
-    }
-
-    // First filter out professionals with 'demo' in their name
-    let professionalsWithoutDemo = this.professionals.filter(professional => 
-      !professional.user.name.toLowerCase().includes('demo')
-    );
-
-    if (!this.searchValue || this.searchValue.trim() === '') {
-      this.filteredProfessionals = professionalsWithoutDemo;
-      return;
-    }
-
-    const searchTerm = this.searchValue.toLowerCase().trim();
-    this.filteredProfessionals = professionalsWithoutDemo.filter(professional => 
-      professional.user.name.toLowerCase().includes(searchTerm) ||
-      professional.specialization?.toLowerCase().includes(searchTerm) ||
-      professional.displayType.toLowerCase().includes(searchTerm) ||
-      professional.user.email?.toLowerCase().includes(searchTerm)
-    );
+  hasAnyResults(): boolean {
+    return this.doctors.length > 0 || this.nurses.length > 0 || this.otherProfessionals.length > 0;
   }
 
-  getAvailabilityIcon(professional: ProfessionalResource): string {
-    if (professional.type === 'doctor' && professional.availability === '1') {
-      return 'pi-check-circle';
-    } else if (professional.type === 'doctor' && professional.availability === '0') {
-      return 'pi-times-circle';
+  shouldShowSection(type: FilterType): boolean {
+    if (!this.filterType) {
+      return true;
     }
-    return 'pi-info-circle';
+    return this.filterType === type;
   }
 
   getAvailabilityText(professional: ProfessionalResource): string {
-    if (professional.type === 'doctor' && professional.availability === '1') {
-      return 'Available';
-    } else if (professional.type === 'doctor' && professional.availability === '0') {
-      return 'Unavailable';
+    if (professional.type === 'doctor') {
+      return professional.availability === '0' ? 'Unavailable' : 'Available';
     }
     return 'Available';
   }
 
-  getUser (){
-    this.userEndpoint.get(this.id).subscribe({
-      next: (response: any) => {
-        this.user = response.user
-        this.avatar_file = environment.apiUrl + '/file/get/';        
-      }
-    })
+  isAvailable(professional: ProfessionalResource): boolean {
+    if (professional.type === 'doctor') {
+      return professional.availability !== '0';
+    }
+    return true;
   }
 
-  getProfessionalsByType(): void {
-    switch (this.currentType) {
-      case 'doctor':
-        this.doctorEndpoint.get().subscribe({
-          next: (response: any) => {
-            const verifiedDoctors = (response.doctor || []).filter((doctor: DoctorResource) =>
-              doctor.user && doctor.user.email_verified_at && !doctor.user.name.toLowerCase().includes('demo')
-            );
-            this.doctors = verifiedDoctors;
-            this.professionals = this.mapDoctors(verifiedDoctors);
-            this.professionals = this.sortProfessionalsByName(this.professionals);
-            this.filteredProfessionals = this.professionals;
-            this.calculateAvailabilityCounts();
-          },
-          error: (err) => {
-            console.error('Error loading doctors:', err);
-            this.professionals = [];
-            this.filteredProfessionals = [];
-            this.calculateAvailabilityCounts();
-          }
-        });
-        break;
-
-      case 'nurse':
-        this.nurseEndpoint.get(undefined, 1, 1000).subscribe({
-          next: (response: any) => {
-            const verifiedNurses = (response.nurse || []).filter((nurse: NurseResource) =>
-              nurse.user && nurse.user.email_verified_at && !nurse.user.name.toLowerCase().includes('demo')
-            );
-            this.professionals = this.mapNurses(verifiedNurses);
-            this.professionals = this.sortProfessionalsByName(this.professionals);
-            this.filteredProfessionals = this.professionals;
-            this.calculateAvailabilityCounts();
-          },
-          error: (err) => {
-            console.error('Error loading nurses:', err);
-            this.professionals = [];
-            this.filteredProfessionals = [];
-            this.calculateAvailabilityCounts();
-          }
-        });
-        break;
-
-      case 'other_professional':
-        this.otherProfessionalEndpoint.get().subscribe({
-          next: (response: any) => {
-            const verifiedOtherProfessionals = (response.other_professional || []).filter((op: any) =>
-              op.user && op.user.email_verified_at && !op.user.name.toLowerCase().includes('demo')
-            );
-            this.professionals = this.mapOtherProfessionals(verifiedOtherProfessionals);
-            this.professionals = this.sortProfessionalsByName(this.professionals);
-            this.filteredProfessionals = this.professionals;
-            this.calculateAvailabilityCounts();
-          },
-          error: (err) => {
-            console.error('Error loading other professionals:', err);
-            this.professionals = [];
-            this.filteredProfessionals = [];
-            this.calculateAvailabilityCounts();
-          }
-        });
-        break;
-
-      default:
-        forkJoin({
-          doctors: this.doctorEndpoint.get(),
-          otherProfessionals: this.otherProfessionalEndpoint.get()
-        }).subscribe({
-          next: (responses: any) => {
-            const verifiedDoctors = (responses.doctors.doctor || []).filter((doctor: DoctorResource) =>
-              doctor.user && doctor.user.email_verified_at && !doctor.user.name.toLowerCase().includes('demo')
-            );
-            this.doctors = verifiedDoctors;
-            const verifiedOtherProfessionals = (responses.otherProfessionals.other_professional || []).filter((op: any) =>
-              op.user && op.user.email_verified_at && !op.user.name.toLowerCase().includes('demo')
-            );
-
-            const doctorsList = this.mapDoctors(verifiedDoctors);
-            const otherProfessionalsList = this.mapOtherProfessionals(verifiedOtherProfessionals);
-            this.professionals = this.sortProfessionalsByName([...doctorsList, ...otherProfessionalsList]);
-            this.filteredProfessionals = this.professionals;
-            this.calculateAvailabilityCounts();
-          },
-          error: (err) => {
-            console.error('Error loading professionals:', err);
-            this.professionals = [];
-            this.filteredProfessionals = [];
-            this.calculateAvailabilityCounts();
-          }
-        });
-        break;
+  getSingleDoctor(id: number, type: 'doctor' | 'other_professional' | 'nurse' = 'doctor'): void {
+    if (type === 'nurse') {
+      this.router.navigate([`panel/nurses/nurse-profile/`, id]);
+      return;
     }
+
+    this.router.navigate([`panel/doctors/profile/`, id], { queryParams: { type } });
   }
 
   mapDoctors(doctors: DoctorResource[]): ProfessionalResource[] {
@@ -263,7 +176,7 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       grad_year: doctor.grad_year,
       degree_file: doctor.degree_file,
       availability: doctor.availability,
-      doctor: doctor,
+      doctor,
       registration_complete: (doctor as any).registration_complete === true,
     }));
   }
@@ -280,7 +193,7 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       grad_year: nurse.grad_year,
       degree_file: nurse.degree_file,
       availability: nurse.availability,
-      nurse: nurse,
+      nurse,
       registration_complete: (nurse as any).registration_complete === true,
     }));
   }
@@ -301,59 +214,4 @@ export class DoctorListComponent implements OnInit, OnDestroy{
       registration_complete: op.registration_complete === true,
     }));
   }
-
-  sortProfessionalsByName(professionals: ProfessionalResource[]): ProfessionalResource[] {
-    return professionals.sort((a, b) => a.user.name.localeCompare(b.user.name));
-  }
-
-  normalizeType(type: any): 'all' | 'doctor' | 'nurse' | 'other_professional' {
-    if (type === 'doctor' || type === 'nurse' || type === 'other_professional') {
-      return type;
-    }
-    return 'all';
-  }
-
-  getCurrentTypeLabel(): string {
-    switch (this.currentType) {
-      case 'doctor':
-        return 'Doctors';
-      case 'nurse':
-        return 'Nurses';
-      case 'other_professional':
-        return 'Other Professionals';
-      default:
-        return 'Healthcare Professionals';
-    }
-  }
-
-  getSingleDoctor(id: any, type: 'doctor' | 'other_professional' | 'nurse' = 'doctor'){
-    if (type === 'nurse') {
-      this.router.navigate([`panel/nurses/nurse-profile/`, id]);
-      return;
-    }
-
-    // Route both doctors and other_professionals to the same profile component
-    // Pass the type as a query parameter so the profile component knows which endpoint to use
-    this.router.navigate([`panel/doctors/profile/`, id], { queryParams: { type: type } })
-  }
-
-  calculateAvailabilityCounts() {
-    if (!this.professionals) {
-      this.availableCount = 0;
-      this.unavailableCount = 0;
-      return;
-    }
-
-    const withAvailability = this.professionals.filter((p) => p.availability !== undefined && p.availability !== null);
-
-    if (withAvailability.length === 0) {
-      this.availableCount = this.professionals.length;
-      this.unavailableCount = 0;
-      return;
-    }
-
-    this.availableCount = withAvailability.filter((p) => p.availability === '1').length;
-    this.unavailableCount = withAvailability.filter((p) => p.availability === '0').length;
-  }
-
 }

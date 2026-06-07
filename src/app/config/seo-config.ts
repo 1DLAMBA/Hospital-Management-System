@@ -78,6 +78,39 @@ export const SEO_CONFIG: { [key: string]: SeoMetadata } = {
     ogUrl: 'https://phoenixmed.online/panel',
     canonical: 'https://phoenixmed.online/panel',
     robotsIndex: false
+  },
+
+  'privacy-policy': {
+    title: 'Privacy Policy - Phoenix',
+    description: 'Learn how Phoenix collects, uses, and protects your personal and medical information.',
+    keywords: 'privacy policy, data protection, medical data, Phoenix healthcare',
+    ogTitle: 'Privacy Policy - Phoenix',
+    ogDescription: 'Learn how Phoenix collects, uses, and protects your personal and medical information.',
+    ogUrl: 'https://phoenixmed.online/privacy-policy',
+    canonical: 'https://phoenixmed.online/privacy-policy',
+    robotsIndex: true
+  },
+
+  'terms-of-service': {
+    title: 'Terms of Service - Phoenix',
+    description: 'Read the terms and conditions for using the Phoenix healthcare platform.',
+    keywords: 'terms of service, user agreement, Phoenix healthcare',
+    ogTitle: 'Terms of Service - Phoenix',
+    ogDescription: 'Read the terms and conditions for using the Phoenix healthcare platform.',
+    ogUrl: 'https://phoenixmed.online/terms-of-service',
+    canonical: 'https://phoenixmed.online/terms-of-service',
+    robotsIndex: true
+  },
+
+  'medical-disclaimer': {
+    title: 'Medical Disclaimer - Phoenix',
+    description: 'Important medical disclaimer regarding AI health guidance and platform content on Phoenix.',
+    keywords: 'medical disclaimer, AI health assistant, healthcare disclaimer',
+    ogTitle: 'Medical Disclaimer - Phoenix',
+    ogDescription: 'Important medical disclaimer regarding AI health guidance and platform content on Phoenix.',
+    ogUrl: 'https://phoenixmed.online/medical-disclaimer',
+    canonical: 'https://phoenixmed.online/medical-disclaimer',
+    robotsIndex: true
   }
 };
 

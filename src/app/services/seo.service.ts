@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface SeoMetadata {
   title: string;
@@ -21,57 +22,69 @@ export class SeoService {
 
   constructor(
     private meta: Meta,
-    private title: Title
+    private title: Title,
+    @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
   /**
    * Update page title and meta tags
    */
   updatePageSeo(metadata: SeoMetadata): void {
-    // Update title
     if (metadata.title) {
       this.title.setTitle(metadata.title);
-      this.meta.updateTag({ name: 'og:title', content: metadata.ogTitle || metadata.title });
+      this.updateOrAddTag({ property: 'og:title', content: metadata.ogTitle || metadata.title });
+      this.updateOrAddTag({ name: 'twitter:title', content: metadata.ogTitle || metadata.title });
     }
 
-    // Update description
     if (metadata.description) {
-      this.meta.updateTag({ name: 'description', content: metadata.description });
-      this.meta.updateTag({ name: 'og:description', content: metadata.ogDescription || metadata.description });
+      this.updateOrAddTag({ name: 'description', content: metadata.description });
+      this.updateOrAddTag({ property: 'og:description', content: metadata.ogDescription || metadata.description });
+      this.updateOrAddTag({ name: 'twitter:description', content: metadata.ogDescription || metadata.description });
     }
 
-    // Update keywords if provided
     if (metadata.keywords) {
-      this.meta.updateTag({ name: 'keywords', content: metadata.keywords });
+      this.updateOrAddTag({ name: 'keywords', content: metadata.keywords });
     }
 
-    // Update OG image
     if (metadata.ogImage) {
-      this.meta.updateTag({ name: 'og:image', content: metadata.ogImage });
+      this.updateOrAddTag({ property: 'og:image', content: metadata.ogImage });
+      this.updateOrAddTag({ name: 'twitter:image', content: metadata.ogImage });
     }
 
-    // Update canonical URL
     if (metadata.canonical) {
-      const canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (canonicalLink) {
-        canonicalLink.setAttribute('href', metadata.canonical);
-      } else {
-        const link = document.createElement('link');
-        link.rel = 'canonical';
-        link.href = metadata.canonical;
-        document.head.appendChild(link);
-      }
+      this.updateCanonical(metadata.canonical);
     }
 
-    // Update OG URL
     if (metadata.ogUrl) {
-      this.meta.updateTag({ name: 'og:url', content: metadata.ogUrl });
+      this.updateOrAddTag({ property: 'og:url', content: metadata.ogUrl });
     }
 
-    // Update robots meta tag
     if (metadata.robotsIndex !== undefined) {
       const robotsContent = metadata.robotsIndex ? 'index, follow' : 'noindex, nofollow';
-      this.meta.updateTag({ name: 'robots', content: robotsContent });
+      this.updateOrAddTag({ name: 'robots', content: robotsContent });
+    }
+  }
+
+  private updateOrAddTag(tag: { name?: string; property?: string; content: string }): void {
+    const updated = this.meta.updateTag(tag);
+    if (!updated) {
+      this.meta.addTag(tag);
+    }
+  }
+
+  private updateCanonical(url: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', url);
+    } else {
+      const link = document.createElement('link');
+      link.rel = 'canonical';
+      link.href = url;
+      document.head.appendChild(link);
     }
   }
 

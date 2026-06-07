@@ -8,11 +8,10 @@
         </div>
         <div *ngFor="let navType of nav_type">
             <ng-container *ngIf="!navType.isDropdown; else dropdownMenu">
-                <button routerLinkActive="active"
+                <button [class.active]="isNavItemActive(navType)"
                         class="{{navType.navClassName}}"
                         (click)="onNavClick(navType)"
-                        [routerLink]="navType.action ? null : navType.routerLink"
-                        [routerLinkActiveOptions]="{exact:true}">
+                        [routerLink]="navType.action ? null : navType.routerLink">
                     &nbsp;&nbsp;{{navType.title}}
                 </button>
             </ng-container>

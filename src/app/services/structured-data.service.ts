@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface StructuredData {
   '@context': string;
@@ -14,12 +15,19 @@ export class StructuredDataService {
   private baseUrl = 'https://phoenixmed.online';
   private scriptId = 'structured-data-schema';
 
-  constructor(private meta: Meta) {}
+  constructor(
+    private meta: Meta,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
 
   /**
    * Add structured data (JSON-LD) to page
    */
   addStructuredData(data: StructuredData): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.removeStructuredData();
     
     const script = document.createElement('script');
@@ -141,6 +149,24 @@ export class StructuredDataService {
         '@type': 'ContactPoint',
         'contactType': 'Customer Support',
         'availableLanguage': 'en'
+      }
+    };
+  }
+
+  /**
+   * Generate legal page schema
+   */
+  generateLegalPageSchema(title: string, path: string): StructuredData {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      'name': title,
+      'url': `${this.baseUrl}${path}`,
+      'description': `${title} for Phoenix healthcare platform.`,
+      'isPartOf': {
+        '@type': 'WebSite',
+        'name': 'Phoenix',
+        'url': this.baseUrl
       }
     };
   }

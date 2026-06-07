@@ -1,5 +1,4 @@
-
-<section>
+<section class="staff-directory">
 
     <div class="kpi-grid">
         <div class="kpi-card">
@@ -7,8 +6,8 @@
                 <span class="bi bi-prescription2"></span>
             </div>
             <div class="kpi-info">
-                <span class="kpi-value">{{ (professionals && professionals.length) || 0 }}</span>
-                <span class="kpi-label">{{ getCurrentTypeLabel() }}</span>
+                <span class="kpi-value">{{ summary.total }}</span>
+                <span class="kpi-label">Healthcare Professionals</span>
             </div>
         </div>
         <div class="kpi-card">
@@ -16,7 +15,7 @@
                 <span class="bi bi-person-square"></span>
             </div>
             <div class="kpi-info">
-                <span class="kpi-value">{{ unavailableCount }}</span>
+                <span class="kpi-value">{{ summary.unavailable }}</span>
                 <span class="kpi-label">Unavailable</span>
             </div>
         </div>
@@ -25,80 +24,163 @@
                 <span class="bi bi-heart-pulse-fill"></span>
             </div>
             <div class="kpi-info">
-                <span class="kpi-value">{{ availableCount }}</span>
+                <span class="kpi-value">{{ summary.available }}</span>
                 <span class="kpi-label">Available</span>
             </div>
         </div>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="search-section mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <p-button pRipple label="Clear" [outlined]="true" icon="pi pi-filter-slash" (click)="clearSearch()" />
-            <span class="p-input-icon-left ml-auto">
-                <i class="pi pi-search"></i>
-                <input pInputText type="text" [(ngModel)]="searchValue" (input)="filterProfessionals()" placeholder="Search keyword" />
-            </span>
+    <div class="search-section">
+        <div class="search-bar">
+            <p-button
+                pRipple
+                label="Filter"
+                [outlined]="true"
+                icon="pi pi-filter"
+                (click)="openFilters()" />
+            <div class="search-bar__controls">
+                <span class="p-input-icon-left search-input-wrap">
+                    <i class="pi pi-search"></i>
+                    <input
+                        pInputText
+                        type="text"
+                        [(ngModel)]="searchValue"
+                        (input)="onSearchInput()"
+                        placeholder="Search keyword" />
+                </span>
+                <button type="button" class="clear-btn" (click)="clearSearch()" aria-label="Clear search and filters">
+                    <i class="pi pi-filter-slash"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Horizontal Scrollable Profile Cards -->
-    <div class="professionals-container">
-        <!-- Skeleton Loaders while loading -->
-        <div class="professionals-scroll" *ngIf="!professionals">
-            <div class="profile-card" *ngFor="let i of [1,2,3,4]">
-                <div class="card-image-container">
-                    <p-skeleton shape="circle" size="100px"></p-skeleton>
-                </div>
-                <div class="card-content">
-                    <p-skeleton width="80%" height="1.2rem" styleClass="mb-2"></p-skeleton>
-                    <p-skeleton width="60%" height="1rem" styleClass="mb-2"></p-skeleton>
-                    <p-skeleton width="70%" height="1rem"></p-skeleton>
-                </div>
+    <p-dialog
+        header="Filter professionals"
+        [(visible)]="showFilterDialog"
+        [modal]="true"
+        [style]="{ width: '22rem' }"
+        [breakpoints]="{ '640px': { width: '95vw' } }">
+        <div class="filter-form">
+            <label class="filter-label">Professional type</label>
+            <div class="filter-options">
+                <button
+                    type="button"
+                    *ngFor="let option of filterTypeOptions"
+                    class="filter-chip"
+                    [class.filter-chip--active]="filterType === option.value"
+                    (click)="filterType = option.value">
+                    {{ option.label }}
+                </button>
+            </div>
+
+            <label class="filter-label">Availability</label>
+            <div class="filter-options">
+                <button
+                    type="button"
+                    *ngFor="let option of filterAvailabilityOptions"
+                    class="filter-chip"
+                    [class.filter-chip--active]="filterAvailability === option.value"
+                    (click)="filterAvailability = option.value">
+                    {{ option.label }}
+                </button>
             </div>
         </div>
-        
-        <!-- Profile Cards -->
-        <div class="professionals-scroll" *ngIf="professionals && filteredProfessionals && filteredProfessionals.length > 0">
-            <div class="profile-card" *ngFor="let professional of filteredProfessionals">
-                <div class="card-image-container">
-                    <app-lazy-image 
-                        [src]="avatar_file + (professional.user.passport || '')" 
-                        [alt]="professional.user.name"
-                        class="card-image">
-                    </app-lazy-image>
-                </div>
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3 class="card-name">{{ professional.user.name }}</h3>
-                        <span
-                            *ngIf="professional.registration_complete === true"
-                            class="registration-verified-badge"
-                            title="Profile, licenses, and documents verified">
-                            <i class="pi pi-check" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                    <p class="card-title">{{ professional.specialization || professional.displayType }}</p>
-                    <div class="card-metrics">
-                        <div class="metric-item">
-                            <i class="pi pi-user"></i>
-                            <span>{{ professional.displayType }}</span>
-                        </div>
-                        <div class="metric-item">
-                            <i class="pi" [ngClass]="getAvailabilityIcon(professional)"></i>
-                            <span>{{ getAvailabilityText(professional) }}</span>
-                        </div>
-                    </div>
-                    <button class="card-button" (click)="getSingleDoctor(professional.id, professional.type)">
-                        View Profile
-                    </button>
+        <ng-template pTemplate="footer">
+            <p-button label="Apply" (onClick)="applyFilters()" />
+        </ng-template>
+    </p-dialog>
+
+    <div class="staff-content" *ngIf="loading">
+        <div class="staff-grid">
+            <div class="staff-card staff-card--skeleton" *ngFor="let i of [1,2,3]">
+                <p-skeleton shape="circle" size="4rem"></p-skeleton>
+                <div class="staff-card__body">
+                    <p-skeleton width="70%" height="1rem" styleClass="mb-2"></p-skeleton>
+                    <p-skeleton width="50%" height="0.85rem" styleClass="mb-2"></p-skeleton>
+                    <p-skeleton width="40%" height="0.85rem"></p-skeleton>
                 </div>
             </div>
-        </div>
-        
-        <!-- Empty Message -->
-        <div class="empty-message" *ngIf="professionals && (!filteredProfessionals || filteredProfessionals.length === 0)">
-            <p>No {{ getCurrentTypeLabel().toLowerCase() }} found.</p>
         </div>
     </div>
+
+    <ng-container *ngIf="!loading">
+        <section class="staff-section" *ngIf="shouldShowSection('doctor') && doctors.length">
+            <h2 class="staff-section__title">Doctors</h2>
+            <div class="staff-grid">
+                <article class="staff-card" *ngFor="let professional of doctors">
+                    <ng-container *ngTemplateOutlet="professionalCard; context: { $implicit: professional }"></ng-container>
+                </article>
+            </div>
+        </section>
+
+        <section class="staff-section" *ngIf="shouldShowSection('nurse') && nurses.length">
+            <h2 class="staff-section__title">Nurses</h2>
+            <div class="staff-grid">
+                <article class="staff-card" *ngFor="let professional of nurses">
+                    <ng-container *ngTemplateOutlet="professionalCard; context: { $implicit: professional }"></ng-container>
+                </article>
+            </div>
+        </section>
+
+        <section class="staff-section" *ngIf="shouldShowSection('other_professional') && otherProfessionals.length">
+            <h2 class="staff-section__title">Other Professionals</h2>
+            <div class="staff-grid">
+                <article class="staff-card" *ngFor="let professional of otherProfessionals">
+                    <ng-container *ngTemplateOutlet="professionalCard; context: { $implicit: professional }"></ng-container>
+                </article>
+            </div>
+        </section>
+
+        <div class="empty-message" *ngIf="!hasAnyResults()">
+            <p>No healthcare professionals found.</p>
+        </div>
+    </ng-container>
 </section>
+
+<ng-template #professionalCard let-professional>
+    <div class="staff-card__avatar">
+        <app-lazy-image
+            [src]="avatar_file + (professional.user.passport || '')"
+            [alt]="professional.user.name"
+            class="staff-card__image"
+            width="4rem"
+            height="4rem"
+            borderRadius="50%">
+        </app-lazy-image>
+    </div>
+
+    <div class="staff-card__body">
+        <div class="staff-card__top">
+            <div class="staff-card__identity">
+                <div class="staff-card__name-row">
+                    <h3 class="staff-card__name">{{ professional.user.name }}</h3>
+                    <span
+                        *ngIf="professional.registration_complete === true"
+                        class="registration-verified-badge"
+                        title="Profile, licenses, and documents verified">
+                        <i class="pi pi-check" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <p class="staff-card__specialty">{{ professional.specialization || professional.displayType }}</p>
+                <span class="staff-card__role">{{ professional.displayType }}</span>
+            </div>
+
+            <div class="staff-card__actions">
+                <span
+                    class="availability-pill"
+                    [class.availability-pill--available]="isAvailable(professional)"
+                    [class.availability-pill--unavailable]="!isAvailable(professional)">
+                    <span class="availability-pill__dot"></span>
+                    {{ getAvailabilityText(professional) }}
+                </span>
+                <button
+                    type="button"
+                    class="staff-card__button"
+                    (click)="getSingleDoctor(professional.id, professional.type)">
+                    View Profile
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

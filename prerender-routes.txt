@@ -1,0 +1,7 @@
+/
+/services
+/about
+/contact
+/privacy-policy
+/terms-of-service
+/medical-disclaimer

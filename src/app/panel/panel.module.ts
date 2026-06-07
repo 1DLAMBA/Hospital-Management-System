@@ -64,6 +64,7 @@ import { ChatPageComponent } from './dashboard/messages/chat-page/chat-page.comp
 import { SharedModule } from '../shared.module';
 import { MedicalRecordViewComponent } from '../shared/components/medical-record-view/medical-record-view.component';
 import { BankAccountFormComponent } from '../shared/bank-account-form/bank-account-form.component';
+import { MedicalAIComponent } from './dashboard/medical-ai/medical-ai.component';
 
 @NgModule({
   declarations: [
@@ -133,6 +134,7 @@ import { BankAccountFormComponent } from '../shared/bank-account-form/bank-accou
     MedicalRecordViewComponent,
     DropdownModule,
     TooltipModule,
+    MedicalAIComponent,
   ],
   exports: [PanelLoaderComponent],
   bootstrap: [DashboardComponent],

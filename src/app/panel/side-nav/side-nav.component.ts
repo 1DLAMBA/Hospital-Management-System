@@ -82,6 +82,34 @@ export class SideNavComponent implements OnInit, OnDestroy {
     }
   }
 
+  isHealthcareStaffRoute(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url === '/panel/doctors'
+      || url.startsWith('/panel/doctors/')
+      || url.startsWith('/panel/nurses/nurse-profile');
+  }
+
+  isNavItemActive(navItem: any): boolean {
+    if (navItem?.activeRouteMatch === 'healthcare-staff') {
+      return this.isHealthcareStaffRoute();
+    }
+
+    const link = navItem?.routerLink;
+    if (!link) {
+      return false;
+    }
+
+    const segments = Array.isArray(link) ? link : [link];
+    const tree = this.router.createUrlTree(['/panel', ...segments]);
+
+    return this.router.isActive(tree, {
+      paths: 'exact',
+      queryParams: 'ignored',
+      fragment: 'ignored',
+      matrixParams: 'ignored',
+    });
+  }
+
   getUser (){
     this.userEndpoint.get(this.id).subscribe({
       next: (response: any) => {
@@ -120,11 +148,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       routerLink: 'messages'
     },
     {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
-    },
-    {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
       routerLink: `my-profile/doctor/${this.id}`
@@ -146,11 +169,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       routerLink: 'messages'
     },
     {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
-    },
-    {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
       title: 'My Profile',
       routerLink: `my-profile/doctor/${this.id}`
@@ -169,28 +187,8 @@ export class SideNavComponent implements OnInit, OnDestroy {
     {
       navClassName:'side-btn bi bi-people-fill my-2 py-3',
       title: 'Healthcare Staff',
-      isDropdown: true,
-      expanded: false,
-      children: [
-        {
-          navClassName: 'side-btn side-sub-btn bi bi-person-square my-1 py-2',
-          title: 'Doctors',
-          routerLink: 'doctors',
-          queryParams: { type: 'doctor' }
-        },
-        {
-          navClassName: 'side-btn side-sub-btn bi bi-heart-pulse-fill my-1 py-2',
-          title: 'Nurses',
-          routerLink: 'doctors',
-          queryParams: { type: 'nurse' }
-        },
-        {
-          navClassName: 'side-btn side-sub-btn bi bi-person-badge my-1 py-2',
-          title: 'Other Professionals',
-          routerLink: 'doctors',
-          queryParams: { type: 'other_professional' }
-        }
-      ]
+      routerLink: 'doctors',
+      activeRouteMatch: 'healthcare-staff',
     },
     // {
     //   navClassName:'side-btn bi bi-heart-pulse-fill my-2 py-3',
@@ -201,11 +199,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
       title: 'Messages',
       routerLink: 'messages'
-    },
-    {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
     },
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',
@@ -237,11 +230,6 @@ export class SideNavComponent implements OnInit, OnDestroy {
       navClassName:'side-btn bi bi-chat-right-text-fill my-2 py-3',
       title: 'Messages',
       routerLink: 'messages'
-    },
-    {
-      navClassName:'side-btn bi bi-robot my-2 py-3',
-      title: 'Medical AI',
-      routerLink: 'medical-ai'
     },
     {
       navClassName:'side-btn bi bi-person-circle my-2 py-3',

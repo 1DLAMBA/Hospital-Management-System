@@ -1,13 +1,12 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { SlideElement } from '../animate';
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
-  animations: [SlideElement]
 })
 export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('heroBg') heroBgRef!: ElementRef<HTMLCanvasElement>;
@@ -16,7 +15,10 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
   private angle = 0;
   private routerSub: any;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
 
   ngOnInit(): void {
     this.routerSub = this.router.events.pipe(
@@ -28,7 +30,9 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.scheduleHeroBackground();
+    if (isPlatformBrowser(this.platformId)) {
+      this.scheduleHeroBackground();
+    }
   }
 
   ngOnDestroy(): void {

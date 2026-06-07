@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChildrenOutletContexts, RouterLink, RouterOutlet } from '@angular/router';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppModule } from './app.module';
@@ -7,7 +7,6 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { SlideElement, slideInAnimation } from './animate';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SeoService } from './services/seo.service';
@@ -24,13 +23,10 @@ import { getSeoConfigByRoute } from './config/seo-config';
         DialogModule, ToastModule, RouterLink],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [slideInAnimation, SlideElement]
+  // Route animations disabled for SSR/prerender compatibility
   // providers: [MessageService]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  
-  
-  title = 'hospital-management-system';
   showNavbarAndFooter: boolean = true;
   private routerSubscription?: Subscription;
 
@@ -39,7 +35,8 @@ export class AppComponent implements OnInit, OnDestroy {
      private spinner: NgxSpinnerService,
      private contexts: ChildrenOutletContexts,
      private seoService: SeoService,
-     private structuredDataService: StructuredDataService) {}
+     private structuredDataService: StructuredDataService,
+     @Inject(PLATFORM_ID) private platformId: object) {}
 
     ngOnInit(): void {
       // Initialize SEO with default metadata
@@ -48,11 +45,12 @@ export class AppComponent implements OnInit, OnDestroy {
         this.structuredDataService.generateOrganizationSchema()
       );
 
-      this.spinner.show();
-    setTimeout(() => {
-      /** spinner ends after 5 seconds */
-      this.spinner.hide();
-    }, 2000);
+      if (isPlatformBrowser(this.platformId)) {
+        this.spinner.show();
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 2000);
+      }
     
     // Check initial route
     this.updateNavbarFooterVisibility();
@@ -131,6 +129,18 @@ export class AppComponent implements OnInit, OnDestroy {
       } else if (currentPath === '/contact') {
         this.structuredDataService.addStructuredData(
           this.structuredDataService.generateContactPageSchema()
+        );
+      } else if (currentPath === '/privacy-policy') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateLegalPageSchema('Privacy Policy', '/privacy-policy')
+        );
+      } else if (currentPath === '/terms-of-service') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateLegalPageSchema('Terms of Service', '/terms-of-service')
+        );
+      } else if (currentPath === '/medical-disclaimer') {
+        this.structuredDataService.addStructuredData(
+          this.structuredDataService.generateLegalPageSchema('Medical Disclaimer', '/medical-disclaimer')
         );
       }
     }
