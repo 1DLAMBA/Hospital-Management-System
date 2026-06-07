@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "build:ssr": "ng build --configuration production",
+    "build": "ng build --configuration production",
+    "build:ssr": "ng build --configuration production-ssr",
     "serve:ssr": "node dist/hospital-management-system/server/server.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
