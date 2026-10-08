@@ -1,25 +1,36 @@
+:host { display: block; background: var(--ph-surface); }
+
 .appt{
-    background-color: #17224d;
-    color: white;
+    background: #fff;
+    border: 1px solid var(--ph-line);
+    color: var(--ph-ink);
     justify-content: space-between;
-    padding: 2%;
-    border-radius: 7px;
+    padding: 1rem 1.25rem;
+    border-radius: var(--ph-radius);
+    box-shadow: var(--ph-shadow);
     margin: auto;
 }
 
+.appt p { margin: 0; font-size: 0.9rem; }
+.appt .text-secondary { color: var(--ph-ink-45) !important; font-family: var(--ph-font-mono); font-size: 0.8rem; }
+
 .sub-card{
-    background-color: #17224d80;
-    width: 30%;
-    color: white;
-    border-radius: 7px;
-    padding: 1rem;
-    gap: 0.75rem;
+    background: #fff;
+    border: 1px solid var(--ph-line);
+    border-radius: var(--ph-radius);
+    box-shadow: var(--ph-shadow);
+    width: 32%;
+    color: var(--ph-ink);
+    padding: 1.1rem 1.2rem;
+    gap: 0.85rem;
 }
 
 .sub-card-icon{
-    background-color: #0055aa;
-    border-radius: 50%;
-    padding: 0.75rem;
+    background: var(--ph-signal-tint);
+    color: var(--ph-signal);
+    border-radius: 10px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -28,14 +39,18 @@
 
 .sub-card-info h1{
     margin: 0;
-    font-size: 1.5rem;
-    line-height: 1.2;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ph-ink);
+    font-variant-numeric: tabular-nums;
 }
 
 .sub-card-info p{
     margin: 0;
     font-size: 0.8rem;
-    opacity: 0.85;
+    color: var(--ph-ink-45);
 }
 
 @media (max-width: 499px){
@@ -51,14 +66,28 @@
         margin: 3%;
     }
 
+.main-sect h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ph-ink);
+    margin: 0;
+}
+
 .main-sect a{
     text-decoration: none !important;
+    color: var(--ph-signal);
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
 .main-sect .stat-card{
-    background-color: #17224d !important;
-    color: white !important;
-    padding: 5% !important;
+    background: #fff !important;
+    border: 1px solid var(--ph-line);
+    border-radius: var(--ph-radius);
+    box-shadow: var(--ph-shadow);
+    color: var(--ph-ink) !important;
+    padding: 1.25rem !important;
 }
 
 .appt-sect {

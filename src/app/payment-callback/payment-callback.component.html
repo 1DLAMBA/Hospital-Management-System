@@ -1,0 +1,27 @@
+<div class="pay-callback">
+  <div class="pay-card">
+    <div class="pay-mark" [ngClass]="state">
+      <span *ngIf="state === 'verifying'" class="spinner" aria-hidden="true"></span>
+      <span *ngIf="state === 'success'" class="glyph">&#10003;</span>
+      <span *ngIf="state === 'failed'" class="glyph">&#33;</span>
+    </div>
+
+    <h1 class="pay-title">
+      <ng-container [ngSwitch]="state">
+        <span *ngSwitchCase="'verifying'">Confirming payment</span>
+        <span *ngSwitchCase="'success'">Payment successful</span>
+        <span *ngSwitchCase="'failed'">Payment not confirmed</span>
+      </ng-container>
+    </h1>
+
+    <p class="pay-message">{{ message }}</p>
+
+    <button
+      *ngIf="state !== 'verifying'"
+      type="button"
+      class="pay-btn"
+      (click)="goToAppointments()">
+      Go to my appointments
+    </button>
+  </div>
+</div>

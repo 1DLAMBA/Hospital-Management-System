@@ -1,0 +1,218 @@
+/* --- Awaiting you -------------------------------------------------------
+   The one ember element on the dashboard. It is the loudest thing here even
+   though it carries the smallest number, because it is the only thing that
+   asks the admin to act. */
+.awaiting-strip {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--ph-radius);
+    background: var(--ph-ember-tint);
+    border: 1px solid rgba(180, 83, 9, 0.22);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.awaiting-strip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(180, 83, 9, 0.14);
+}
+
+.awaiting-strip:focus-visible {
+    outline: 2px solid var(--ph-ember);
+    outline-offset: 2px;
+}
+
+.awaiting-count {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ph-ember);
+    font-variant-numeric: tabular-nums;
+    min-width: 2ch;
+    text-align: center;
+}
+
+.awaiting-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+}
+
+.awaiting-copy strong {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #7c3a06;
+}
+
+.awaiting-copy small {
+    font-size: 0.8rem;
+    color: #96551f;
+}
+
+.awaiting-go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ph-ember);
+    white-space: nowrap;
+}
+
+/* Nothing to decide: the strip stops shouting. */
+.awaiting-strip.settled {
+    background: #fff;
+    border-color: var(--ph-line);
+}
+
+.awaiting-strip.settled .awaiting-count,
+.awaiting-strip.settled .awaiting-go {
+    color: var(--ph-ink-45);
+}
+
+.awaiting-strip.settled .awaiting-copy strong { color: var(--ph-ink); }
+.awaiting-strip.settled .awaiting-copy small { color: var(--ph-ink-45); }
+.awaiting-strip.settled:hover { box-shadow: var(--ph-shadow); }
+
+/* --- Metrics ------------------------------------------------------------ */
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1.15rem 1.25rem;
+}
+
+.metric-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ph-ink-45);
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ph-ink);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+
+.metric-note {
+    font-size: 0.78rem;
+    color: var(--ph-ink-45);
+}
+
+/* --- Charts ------------------------------------------------------------- */
+.charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.chart-card {
+    padding: 1.15rem 1.25rem 1.35rem;
+}
+
+.chart-head {
+    margin-bottom: 1rem;
+}
+
+.chart-head h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ph-ink);
+    margin: 0;
+}
+
+.chart-head p {
+    margin: 0.15rem 0 0;
+    font-size: 0.78rem;
+    color: var(--ph-ink-45);
+}
+
+/* --- Jump links --------------------------------------------------------- */
+.jump {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.jump-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 1.15rem;
+    background: #fff;
+    border: 1px solid var(--ph-line);
+    border-radius: var(--ph-radius);
+    text-decoration: none;
+    color: var(--ph-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.jump-link:hover {
+    border-color: var(--ph-signal);
+    box-shadow: var(--ph-shadow);
+}
+
+.jump-link:focus-visible {
+    outline: 2px solid var(--ph-signal);
+    outline-offset: 2px;
+}
+
+.jump-link i {
+    font-size: 1.1rem;
+    color: var(--ph-signal);
+    background: var(--ph-signal-tint);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.jump-link span {
+    display: flex;
+    flex-direction: column;
+}
+
+.jump-link strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.jump-link small {
+    font-size: 0.78rem;
+    color: var(--ph-ink-45);
+}
+
+@media (max-width: 640px) {
+    .awaiting-strip {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    .awaiting-go { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .awaiting-strip,
+    .jump-link {
+        transition: none;
+    }
+    .awaiting-strip:hover { transform: none; }
+}

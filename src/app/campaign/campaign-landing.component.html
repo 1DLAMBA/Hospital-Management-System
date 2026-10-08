@@ -1,0 +1,96 @@
+<main class="camp" *ngIf="content">
+
+  <!-- Hero: one promise, one action, visible without scrolling on mobile -->
+  <section class="camp-hero">
+    <div class="camp-hero-inner">
+      <div class="camp-hero-text">
+        <p class="camp-eyebrow">{{ content.eyebrow }}</p>
+        <h1>
+          {{ content.headline }}<br />
+          <span class="camp-accent">{{ content.headlineAccent }}</span>
+        </h1>
+        <p class="camp-subhead">{{ content.subhead }}</p>
+
+        <div class="camp-cta-row">
+          <button type="button" class="camp-btn camp-btn-primary"
+                  (click)="onCtaClick(content.primaryCta, 'hero')">
+            {{ content.primaryCta.label }}
+          </button>
+          <button type="button" class="camp-btn camp-btn-ghost"
+                  (click)="onCtaClick(content.secondaryCta, 'hero')">
+            {{ content.secondaryCta.label }}
+          </button>
+        </div>
+
+        <p class="camp-reassurance">{{ content.reassurance }}</p>
+
+        <ul class="camp-proof">
+          <li *ngFor="let point of content.proofPoints">{{ point }}</li>
+        </ul>
+      </div>
+
+      <div class="camp-hero-media">
+        <img [src]="content.heroImage" [alt]="content.heroAlt" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="camp-section">
+    <h2>{{ content.stepsTitle }}</h2>
+    <ol class="camp-steps">
+      <li *ngFor="let step of content.steps">
+        <span class="camp-step-num">{{ step.number }}</span>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.body }}</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Value props -->
+  <section class="camp-section camp-section-tinted">
+    <h2>{{ content.valuePropsTitle }}</h2>
+    <div class="camp-props">
+      <article class="camp-prop" *ngFor="let prop of content.valueProps">
+        <img [src]="prop.icon" alt="" aria-hidden="true" />
+        <h3>{{ prop.title }}</h3>
+        <p>{{ prop.body }}</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <section class="camp-section camp-quote-section">
+    <blockquote class="camp-quote">
+      <p>{{ content.testimonial.quote }}</p>
+      <cite>{{ content.testimonial.attribution }}</cite>
+    </blockquote>
+  </section>
+
+  <!-- FAQ: answers the objections that otherwise cost you the conversion -->
+  <section class="camp-section">
+    <h2>{{ content.faqTitle }}</h2>
+    <div class="camp-faq">
+      <div class="camp-faq-item" *ngFor="let faq of content.faqs; let i = index">
+        <button type="button" class="camp-faq-q" (click)="toggleFaq(i)"
+                [attr.aria-expanded]="openFaq === i">
+          <span>{{ faq.question }}</span>
+          <span class="camp-faq-sign" aria-hidden="true">{{ openFaq === i ? '−' : '+' }}</span>
+        </button>
+        <p class="camp-faq-a" *ngIf="openFaq === i">{{ faq.answer }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <section class="camp-close">
+    <h2>{{ content.closingHeadline }}</h2>
+    <p>{{ content.closingBody }}</p>
+    <button type="button" class="camp-btn camp-btn-primary"
+            (click)="onCtaClick(content.primaryCta, 'footer')">
+      {{ content.primaryCta.label }}
+    </button>
+    <p class="camp-reassurance">{{ content.reassurance }}</p>
+  </section>
+
+</main>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix - Book a consultation (story)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0a1233; }
+
+  .frame {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    padding: 190px 80px 250px;
+    background: radial-gradient(circle at 78% 20%, rgba(48,120,235,0.42) 0%, rgba(48,120,235,0) 58%),
+                linear-gradient(160deg, #0a1233 0%, #16214a 52%, #0e3d85 100%);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 46px;
+  }
+
+  /* Every animated element starts hidden; the timeline drives opacity + transform. */
+  .anim { opacity: 0; will-change: opacity, transform; }
+
+  .logo { font-size: 46px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500;
+             letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff; }
+  h1 { font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 104px;
+       line-height: 1.05; color: #fff; letter-spacing: -0.01em; }
+  .accent { color: #8fbaff; }
+
+  .card { display: flex; flex-direction: column; gap: 22px; padding: 38px 34px;
+          background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 34px; }
+
+  .bubble-user { align-self: flex-end; max-width: 620px; padding: 26px 32px; background: #8fbaff;
+                 color: #10193a; border-radius: 28px 28px 8px 28px; font-size: 30px;
+                 line-height: 1.4; font-weight: 500; }
+  .bubble-ai { align-self: flex-start; max-width: 720px; padding: 26px 32px;
+               background: rgba(255,255,255,0.95); color: #10193a;
+               border-radius: 28px 28px 28px 8px; font-size: 30px; line-height: 1.4; }
+
+  .typing { align-self: flex-start; display: flex; gap: 12px; padding: 30px 34px;
+            background: rgba(255,255,255,0.95); border-radius: 28px 28px 28px 8px; }
+  .dot { width: 16px; height: 16px; border-radius: 50%; background: #46507a; }
+
+  .doc { display: flex; align-items: center; gap: 24px; margin-top: 12px; padding: 26px 28px;
+         background: #fff; border-radius: 24px; }
+  .doc-avatar { flex-shrink: 0; width: 84px; height: 84px; border-radius: 50%; background: #e7f0fa;
+                display: flex; align-items: center; justify-content: center; font-size: 30px;
+                font-weight: 600; color: #0055aa; }
+  .doc-meta { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .doc-name { font-size: 30px; font-weight: 600; color: #10193a; }
+  .doc-sub { font-size: 24px; color: #46507a; }
+  .doc-btn { flex-shrink: 0; padding: 18px 34px; background: #0055aa; color: #fff;
+             border-radius: 999px; font-size: 26px; font-weight: 600; }
+
+  .cta { align-self: flex-start; padding: 32px 64px; background: #fff; color: #14204a;
+         border-radius: 999px; font-size: 38px; font-weight: 700;
+         box-shadow: 0 10px 30px rgba(3,10,32,0.45); }
+  .url { font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255,255,255,0.72); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="logo" id="logo">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div class="eyebrow anim" id="eyebrow">Your health assistant</div>
+    <h1><span class="anim" id="h1a" style="display: block;">No matter the time,</span><span class="accent anim" id="h1b" style="display: block;">Phoenix is open.</span></h1>
+  </div>
+
+  <div class="card anim" id="card">
+    <div class="bubble-user anim" id="bUser">How do I know which specialist to see?</div>
+    <div class="typing anim" id="typing">
+      <div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div>
+    </div>
+    <div class="bubble-ai anim" id="bAi">Tell me what's going on and I'll point you to the right one — then you can book someone who's available.</div>
+    <div class="doc anim" id="doc">
+      <div class="doc-avatar">AO</div>
+      <div class="doc-meta">
+        <div class="doc-name">Dr. Amaka Obi</div>
+        <div class="doc-sub">General Medicine · Available 8:00am</div>
+      </div>
+      <div class="doc-btn">Book</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div class="cta anim" id="cta">Book a consultation</div>
+    <div class="url anim" id="url">phoenixmed.online</div>
+  </div>
+</div>
+
+<script>
+// Deterministic timeline: renderFrame(t) fully describes the frame at time t,
+// so the capture script can step frame-by-frame instead of racing wall-clock
+// animations. Nothing here depends on requestAnimationFrame.
+(function () {
+  var easeOut = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+
+  // progress of a cue that runs from `start` to `end`
+  function cue(t, start, end) { return clamp01((t - start) / (end - start)); }
+
+  // element, start, end, travel distance in px (rises from below)
+  var RISE = [
+    ['eyebrow', 0.15, 0.65, 20],
+    ['h1a',     0.30, 1.00, 44],
+    ['h1b',     0.65, 1.35, 44],
+    ['card',    1.50, 2.20, 40],
+    ['cta',     5.50, 6.05, 28],
+    ['url',     5.90, 6.40, 16]
+  ];
+
+  var el = {};
+  ['eyebrow','h1a','h1b','card','bUser','typing','bAi','doc','cta','url','d1','d2','d3']
+    .forEach(function (id) { el[id] = document.getElementById(id); });
+
+  function set(node, opacity, ty, scale) {
+    node.style.opacity = opacity;
+    node.style.transform = 'translateY(' + ty + 'px)' + (scale ? ' scale(' + scale + ')' : '');
+  }
+
+  window.renderFrame = function (t) {
+    RISE.forEach(function (r) {
+      var p = easeOut(cue(t, r[1], r[2]));
+      set(el[r[0]], p, (1 - p) * r[3]);
+    });
+
+    // Chat beats: the user bubble pops, dots think, then the reply lands.
+    var pu = easeOut(cue(t, 2.30, 2.80));
+    set(el.bUser, pu, (1 - pu) * 18, 0.96 + 0.04 * pu);
+
+    // Typing indicator lives only between the question and the answer.
+    var typingOn = t >= 2.95 && t < 3.60;
+    el.typing.style.display = typingOn ? 'flex' : 'none';
+    if (typingOn) {
+      el.typing.style.opacity = easeOut(cue(t, 2.95, 3.20));
+      el.typing.style.transform = 'none';
+      [el.d1, el.d2, el.d3].forEach(function (d, i) {
+        var phase = (t * 3.2 + i * 0.22) % 1;            // staggered bounce
+        var lift = Math.sin(phase * Math.PI) * 9;
+        d.style.transform = 'translateY(' + (-lift) + 'px)';
+        d.style.opacity = 0.45 + 0.55 * Math.sin(phase * Math.PI);
+      });
+    }
+
+    var pa = easeOut(cue(t, 3.60, 4.15));
+    set(el.bAi, pa, (1 - pa) * 18, 0.96 + 0.04 * pa);
+
+    var pd = easeOut(cue(t, 4.50, 5.10));
+    set(el.doc, pd, (1 - pd) * 26, 0.97 + 0.03 * pd);
+
+    // A single settle on the CTA once it has arrived - one accent, not a loop.
+    if (t > 6.05) {
+      var b = Math.max(0, 1 - (t - 6.05) / 0.45);
+      el.cta.style.transform = 'translateY(0px) scale(' + (1 + 0.022 * Math.sin(b * Math.PI)) + ')';
+    }
+  };
+
+  window.renderFrame(0);
+})();
+</script>
+</body>
+</html>

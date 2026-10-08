@@ -92,6 +92,17 @@
                                 <label class="reg-field__label" for="reg-grad-year">Graduation year</label>
                                 <input id="reg-grad-year" pInputText formControlName="grad_year" class="w-full" inputmode="numeric" />
                             </div>
+                            <div class="reg-field reg-field--full">
+                                <label class="reg-field__label" for="reg-hospital">Hospital
+                                    <span class="reg-field__hint">(optional)</span>
+                                </label>
+                                <p-dropdown inputId="reg-hospital" formControlName="hospital_id" [options]="hospitals"
+                                    optionLabel="label" optionValue="value" placeholder="Select your hospital"
+                                    [showClear]="true" [filter]="true" filterBy="label" styleClass="w-full"></p-dropdown>
+                                <span *ngIf="hospitals.length === 0" class="reg-field__hint">
+                                    No hospitals available yet.
+                                </span>
+                            </div>
                         </div>
 
                         <div class="reg-uploads-block">
@@ -190,6 +201,43 @@
                         <div class="info-field">
                             <span class="info-field-label">Practicing Since</span>
                             <span class="info-field-value">{{user.doctors?.grad_year || user.other_professionals?.grad_year}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consultation Transactions (owner-only) -->
+                <div class="info-card span-full">
+                    <div class="info-card-header">
+                        <i class="pi pi-wallet"></i>
+                        <h2>Consultation Transactions</h2>
+                        <span class="txn-total" *ngIf="!loadingTransactions">Total earned: <strong>&#8358;{{ totalEarned | number }}</strong></span>
+                    </div>
+                    <div class="info-card-body">
+                        <p *ngIf="loadingTransactions" class="text-muted">Loading transactions…</p>
+                        <p *ngIf="!loadingTransactions && transactions.length === 0" class="text-muted">
+                            No paid consultations yet. Your earnings from consultations will appear here.
+                        </p>
+                        <div class="txn-table-wrap" *ngIf="!loadingTransactions && transactions.length > 0">
+                            <table class="txn-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Patient</th>
+                                        <th>Fee</th>
+                                        <th>Your earnings</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let t of transactions">
+                                        <td>{{ t.paid_at | date:'MMM d, y' }}</td>
+                                        <td>{{ t.patient }}</td>
+                                        <td>&#8358;{{ t.amount | number }}</td>
+                                        <td class="txn-earn">&#8358;{{ t.earnings | number }}</td>
+                                        <td><span class="txn-badge">Paid</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

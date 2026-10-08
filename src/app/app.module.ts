@@ -11,7 +11,8 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from "@angular/common";
 import { FormGroup, FormControl } from '@angular/forms';
 import { SharedModule } from "./shared.module";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { AuthInterceptor } from "./interceptors/auth.interceptor";
 import { FooterComponent } from "./footer/footer.component";
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +23,9 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CalendarModule } from 'primeng/calendar';
 import { UserService } from "./endpoints/user.service";
 import { RegisterComponent } from "./register/register.component";
+import { HospitalRegisterComponent } from "./hospital-register/hospital-register.component";
+import { HospitalsService } from "./endpoints/hospitals.service";
+import { AdminService } from "./endpoints/admin.service";
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
@@ -33,6 +37,8 @@ import { AboutComponent } from "./about/about.component";
 import { ServicesComponent } from "./services/services.component";
 import { ContactComponent } from "./contact/contact.component";
 import { LegalPageComponent } from "./legal/legal-page.component";
+import { CampaignLandingComponent } from "./campaign/campaign-landing.component";
+import { ConsentBannerComponent } from "./consent/consent-banner.component";
 import { MarkdownModule } from 'ngx-markdown';
 import { PanelModule } from "./panel/panel.module";
 import { MessageService } from "primeng/api";
@@ -66,10 +72,13 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         FooterComponent,
         LoginComponent,
         RegisterComponent,
+        HospitalRegisterComponent,
         AboutComponent,
         ServicesComponent,
         ContactComponent,
         LegalPageComponent,
+        CampaignLandingComponent,
+        ConsentBannerComponent,
         // DashboardComponent,
         //   ChatDialogComponent
     ],
@@ -102,14 +111,19 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
     ],
     exports:[
         NavBarComponent,
+        ConsentBannerComponent,
         FooterComponent,
         LandingComponent,
         LoginComponent,
         RegisterComponent,
+        HospitalRegisterComponent,
         AboutComponent,
     ],
     providers:[
         UserService,
+        HospitalsService,
+        AdminService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         DoctorsService,
         ClientsService,
         NursesService,

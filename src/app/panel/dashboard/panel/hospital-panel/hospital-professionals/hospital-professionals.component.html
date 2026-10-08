@@ -1,0 +1,102 @@
+<section class="ph-page">
+    <div class="ph-page-head">
+        <div>
+            <h1>Health professionals</h1>
+            <p>Doctors, nurses and other professionals who selected your hospital when they registered.</p>
+        </div>
+        <span class="search">
+            <i class="pi pi-search" aria-hidden="true"></i>
+            <input
+                pInputText
+                type="text"
+                [(ngModel)]="search"
+                (ngModelChange)="applyFilters()"
+                placeholder="Search name, email, speciality or licence"
+                aria-label="Search health professionals" />
+        </span>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter by role">
+        <button
+            *ngFor="let option of filters"
+            type="button"
+            class="filter"
+            [class.on]="filter === option.value"
+            [attr.aria-pressed]="filter === option.value"
+            (click)="setFilter(option.value)">
+            {{ option.label }}
+            <span class="filter-count">{{ count(option.value) }}</span>
+        </button>
+    </div>
+
+    <ng-template #none><span class="none">&mdash;</span></ng-template>
+
+    <div class="ph-card table-card">
+        <p-table
+            [value]="visibleProfessionals"
+            dataKey="id"
+            [loading]="loading"
+            [paginator]="visibleProfessionals.length > 10"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="ph-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Speciality</th>
+                    <th>Licence</th>
+                    <th>Contact</th>
+                    <th>Availability</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-professional>
+                <tr>
+                    <td>
+                        <div class="person">
+                            <img class="avatar" *ngIf="professional.passport" [src]="avatarBase + professional.passport" alt="" />
+                            <span class="avatar avatar-fallback" *ngIf="!professional.passport" aria-hidden="true">
+                                {{ professional.name.charAt(0) }}
+                            </span>
+                            <span class="name">{{ professional.name }}</span>
+                        </div>
+                    </td>
+                    <td><span class="role">{{ professional.role }}</span></td>
+                    <td>
+                        <span *ngIf="professional.specialization; else none">{{ professional.specialization }}</span>
+                    </td>
+                    <td>
+                        <span class="ph-record" *ngIf="professional.licence; else none">{{ professional.licence }}</span>
+                    </td>
+                    <td>
+                        <span class="ph-record contact">{{ professional.email }}</span>
+                        <span class="ph-record contact sub" *ngIf="professional.phone">{{ professional.phone }}</span>
+                    </td>
+                    <td>
+                        <app-status-pill *ngIf="professional.availability; else none" [status]="professional.availability"></app-status-pill>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">
+                        <div class="empty" *ngIf="!loading">
+                            <ng-container *ngIf="failed">
+                                <strong>Couldn't load your health professionals</strong>
+                                <span>Refresh the page to try again.</span>
+                            </ng-container>
+                            <ng-container *ngIf="!failed && professionals.length === 0">
+                                <strong>No health professionals yet</strong>
+                                <span>They appear here once they select your hospital when registering on Phoenix.</span>
+                            </ng-container>
+                            <ng-container *ngIf="!failed && professionals.length > 0">
+                                <strong>No matches</strong>
+                                <span>Try a different name, email, speciality or licence number.</span>
+                            </ng-container>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</section>

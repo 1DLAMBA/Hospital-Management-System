@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect x="6" y="6" width="500" height="500" rx="116" fill="#0F4E9C"/>
+  <!-- stem -->
+  <rect x="143" y="100" width="68" height="302" rx="32" fill="#ffffff"/>
+  <!-- bowl: outer ring with the counter punched out (evenodd) -->
+  <path fill="#ffffff" fill-rule="evenodd"
+        d="M177 100 H268 a95 95 0 0 1 0 190 H177 Z
+           M211 157 H258 a39 39 0 0 1 0 78 H211 Z"/>
+  <!-- the dot -->
+  <circle cx="356" cy="349" r="41" fill="#ffffff"/>
+</svg>

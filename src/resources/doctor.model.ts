@@ -11,6 +11,8 @@ export interface DoctorResource {
     signature?: string,
     id_card?: string,
     availability: string,
+    hospital_id?: number | null,
+    consultation_fee?: number | null,
     user: UserResource
 }
 

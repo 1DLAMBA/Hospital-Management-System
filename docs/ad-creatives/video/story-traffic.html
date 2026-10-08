@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix - Skip the traffic (story)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0a1233; }
+  .frame {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    padding: 190px 80px 250px;
+    background: radial-gradient(circle at 78% 20%, rgba(48,120,235,0.42) 0%, rgba(48,120,235,0) 58%),
+                linear-gradient(160deg, #0a1233 0%, #16214a 52%, #0e3d85 100%);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 40px;
+  }
+  .anim { opacity: 0; will-change: opacity, transform; }
+  .logo { font-size: 46px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500;
+             letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff; }
+  h1 { font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 112px;
+       line-height: 1.04; color: #fff; letter-spacing: -0.015em; }
+  .accent { color: #8fbaff; }
+  .sub { font-size: 33px; line-height: 1.5; color: rgba(255,255,255,0.82); max-width: 780px; margin-top: 8px; }
+  .map { display: flex; justify-content: center; }
+  .cta { align-self: flex-start; padding: 32px 64px; background: #fff; color: #14204a;
+         border-radius: 999px; font-size: 38px; font-weight: 700;
+         box-shadow: 0 10px 30px rgba(3,10,32,0.45); }
+  .url { font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255,255,255,0.72); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="logo" id="logo">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div class="eyebrow anim" id="eyebrow">Online consultations</div>
+    <h1><span class="anim" id="h1a" style="display: block;">Skip the traffic.</span><span class="accent anim" id="h1b" style="display: block;">Not the doctor.</span></h1>
+    <p class="sub anim" id="sub">Consult from home, from the office, from wherever the day has put you.</p>
+  </div>
+
+  <div class="map">
+    <svg width="880" height="380" viewBox="0 0 880 380" fill="none" aria-hidden="true">
+      <defs>
+        <!-- The path runs left-to-right monotonically, so a growing rect wipes
+             the route on exactly as a drawn line would. -->
+        <clipPath id="reveal"><rect id="revealRect" x="0" y="0" width="0" height="380"></rect></clipPath>
+      </defs>
+      <path id="track" opacity="0"
+            d="M90 300 C 250 300, 240 120, 420 120 C 600 120, 610 250, 790 250"
+            stroke="rgba(255,255,255,0.18)" stroke-width="10" stroke-linecap="round"></path>
+      <circle id="pinStart" cx="90" cy="300" r="20" fill="rgba(255,255,255,0.35)" opacity="0"></circle>
+      <g clip-path="url(#reveal)">
+        <path id="route"
+              d="M90 300 C 250 300, 240 120, 420 120 C 600 120, 610 250, 790 250"
+              stroke="#8fbaff" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="20 26"></path>
+      </g>
+      <g id="pinEnd" opacity="0" style="transform-origin: 790px 250px;">
+        <circle cx="790" cy="250" r="30" fill="#8fbaff"></circle>
+        <circle cx="790" cy="250" r="12" fill="#0a1233"></circle>
+      </g>
+    </svg>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div class="cta anim" id="cta">Book a consultation</div>
+    <div class="url anim" id="url">phoenixmed.online</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var easeOut = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var easeBack = function (p) { var c = 1.70158 + 1; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+  var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  function cue(t, a, b) { return clamp01((t - a) / (b - a)); }
+
+  var RISE = [
+    ['eyebrow', 0.15, 0.65, 20],
+    ['h1a',     0.30, 1.00, 46],
+    ['h1b',     0.75, 1.45, 46],
+    ['sub',     1.40, 1.95, 24],
+    ['cta',     5.30, 5.85, 28],
+    ['url',     5.70, 6.20, 16]
+  ];
+
+  var el = {};
+  ['eyebrow','h1a','h1b','sub','cta','url','track','pinStart','revealRect','route','pinEnd']
+    .forEach(function (id) { el[id] = document.getElementById(id); });
+
+  window.renderFrame = function (t) {
+    RISE.forEach(function (r) {
+      var p = easeOut(cue(t, r[1], r[2]));
+      el[r[0]].style.opacity = p;
+      el[r[0]].style.transform = 'translateY(' + (1 - p) * r[3] + 'px)';
+    });
+
+    // The empty road appears first, then the route travels it.
+    el.track.setAttribute('opacity', easeOut(cue(t, 2.00, 2.45)) * 1);
+    el.pinStart.setAttribute('opacity', easeOut(cue(t, 2.15, 2.55)) * 1);
+
+    var draw = easeOut(cue(t, 2.45, 4.60));
+    el.revealRect.setAttribute('width', String(draw * 880));
+    // Dashes creep forward while the route draws - reads as movement, not a static line.
+    el.route.setAttribute('stroke-dashoffset', String(-t * 26));
+
+    var pin = cue(t, 4.45, 4.95);
+    el.pinEnd.setAttribute('opacity', easeOut(pin));
+    el.pinEnd.style.transform = 'scale(' + (pin > 0 ? easeBack(pin) : 0) + ')';
+  };
+
+  window.renderFrame(0);
+})();
+</script>
+</body>
+</html>

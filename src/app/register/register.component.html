@@ -155,7 +155,36 @@
                         </span>
 
                     </div>
-                    <button class="btn btn-lg submit border text-center btn-hover" (click)="next()">Next </button>
+
+                    <div class="terms-acceptance my-3">
+                        <label class="d-flex align-items-start gap-2">
+                            <input type="checkbox" [(ngModel)]="termsAccepted" [ngModelOptions]="{standalone: true}"
+                                (change)="termsError = false" />
+                            <span>
+                                I have read and accept the
+                                <a routerLink="/terms-of-service" target="_blank">Terms of Service</a> and
+                                <a routerLink="/privacy-policy" target="_blank">Privacy Policy</a>.
+                            </span>
+                        </label>
+                        <small *ngIf="termsError" class="text-danger d-block mt-1">
+                            You must accept the Terms of Service and Privacy Policy to continue.
+                        </small>
+
+                        <label class="d-flex align-items-start gap-2 mt-2">
+                            <input type="checkbox" [(ngModel)]="consentAccepted" [ngModelOptions]="{standalone: true}"
+                                (change)="consentError = false" />
+                            <span>
+                                I consent to Phoenix processing my personal and health data for care and payments, in line
+                                with our <a routerLink="/privacy-policy" target="_blank">Data Protection &amp; Privacy</a> policy.
+                            </span>
+                        </label>
+                        <small *ngIf="consentError" class="text-danger d-block mt-1">
+                            You must give data protection consent to continue.
+                        </small>
+                    </div>
+
+                    <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover" (click)="next()">Next </button>
+                    <button *ngIf="submitLoader" disabled class="btn btn-lg submit border text-center btn-hover"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Registering…</button>
                 </div>
                 <div class="secondstep" *ngIf="secondstep">
                     <!-- Professional Type Dropdown - Only show for other_professional -->
@@ -186,6 +215,22 @@
                             Field Required
                         </small>
                     </div>
+                    <div class="flex flex-column gap-2">
+                        <label for="hospital_id">Hospital <span class="text-muted">(Optional)</span></label><br>
+                        <p-dropdown formControlName="hospital_id" [options]="hospitals" optionLabel="label"
+                            optionValue="value" placeholder="Select your hospital" [showClear]="true"
+                            [filter]="true" filterBy="label" styleClass="w-full">
+                        </p-dropdown>
+                        <small
+                            *ngIf="RegisterForm.get('hospital_id')?.touched && RegisterForm.get('hospital_id')?.hasError('required')"
+                            class="text-danger">
+                            Field Required
+                        </small>
+                        <small *ngIf="hospitals.length === 0" class="text-muted">
+                            Don't see your hospital? <a routerLink="/hospital-register">Register it here</a>.
+                        </small>
+                    </div>
+
                     <div class="flex flex-column gap-2">
                         <label for="med_school">Medical School</label><br>
                         <input formControlName="med_school" placeholder="Medical School" name="med_school" type="text"
@@ -335,7 +380,7 @@
                     <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover"
                         (click)="submit()">Submit</button>
                     <button *ngIf="submitLoader" disabled
-                        class="btn btn-lg submit border text-center btn-hover">Submitting...</button>
+                        class="btn btn-lg submit border text-center btn-hover"><span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting…</button>
 
                 </div>
 

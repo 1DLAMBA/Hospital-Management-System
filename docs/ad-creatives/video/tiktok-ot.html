@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix TikTok - Occupational therapy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0B0F1A; }
+  .frame {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background: radial-gradient(circle at 50% 38%, #16224a 0%, #0B0F1A 62%);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  }
+  /* TikTok safe box - everything outside is covered by app UI */
+  .safe { position: absolute; left: 70px; top: 240px; width: 810px; height: 1240px;
+           display: flex; align-items: center; justify-content: center; }
+  .beat { position: absolute; width: 100%; text-align: center; opacity: 0;
+           font-weight: 700; font-size: 104px; line-height: 1.1; color: #fff;
+           letter-spacing: -0.025em; text-wrap: balance; will-change: opacity, transform; }
+  .beat.sm { font-size: 82px; }
+  .hl { color: #7FC4FF; }
+  .endcard { position: absolute; left: 70px; top: 240px; width: 810px; height: 1240px;
+              display: flex; flex-direction: column; align-items: center; justify-content: center;
+              gap: 40px; opacity: 0; }
+  .endcard img { width: 112px; height: 112px; border-radius: 30px; }
+  .endcard .line { font-size: 78px; line-height: 1.12; font-weight: 700; color: #fff; text-align: center; letter-spacing: -0.02em; }
+  .endcard .url { font-family: 'IBM Plex Mono', monospace; font-size: 34px; color: #7FC4FF; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="safe">
+    <div class="beat sm" id="beat0">Nobody knows what an<br>occupational therapist<br>actually does.</div>
+    <div class="beat" id="beat1">So here it is.</div>
+    <div class="beat" id="beat2">They help you get<br>dressed again.</div>
+    <div class="beat" id="beat3">Cook. Write.<br>Hold a spoon.</div>
+    <div class="beat" id="beat4">Go back to <span class='hl'>work</span>.</div>
+    <div class="beat sm" id="beat5">After a stroke, an injury,<br>or surgery.</div>
+  </div>
+  <div class="endcard" id="endcard">
+    <img src="../canvas/phoenix-mark.svg" alt="Phoenix">
+    <div class="line">Occupational therapists<br>are on Phoenix.</div>
+    <div class="url">phoenixmed.online</div>
+  </div>
+</div>
+<script>
+function initTikTok(spec) {
+  var beats = spec.beats, end = spec.end;
+  var nodes = beats.map(function (b, i) { return document.getElementById('beat' + i); });
+  var endEl = document.getElementById('endcard');
+  var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  var easeOut = function (p) { return 1 - Math.pow(1 - p, 3); };
+
+  var starts = [], acc = 0;
+  beats.forEach(function (b) { starts.push(acc); acc += b.d; });
+  var endStart = acc;
+
+  window.renderFrame = function (t) {
+    var active = -1;
+    for (var i = 0; i < beats.length; i++) {
+      if (t >= starts[i] && t < starts[i] + beats[i].d) { active = i; break; }
+    }
+    nodes.forEach(function (n, i) {
+      if (!n) return;
+      if (i === active) {
+        // Snap in over ~4 frames, then hold dead still. No exit fade: cut.
+        var p = easeOut(clamp((t - starts[i]) / 0.13));
+        n.style.opacity = 1;
+        n.style.transform = 'scale(' + (0.955 + 0.045 * p) + ')';
+      } else {
+        n.style.opacity = 0;
+      }
+    });
+    if (endEl) {
+      var ep = easeOut(clamp((t - endStart) / 0.35));
+      endEl.style.opacity = t >= endStart ? ep : 0;
+      endEl.style.transform = 'translateY(' + (1 - ep) * 24 + 'px)';
+    }
+  };
+  window.renderFrame(0);
+}
+</script>
+<script>initTikTok({"beats": [{"d": 2.3}, {"d": 1.3}, {"d": 1.8}, {"d": 1.8}, {"d": 1.6}, {"d": 2.1}], "endDur": 2.6});</script>
+</body>
+</html>

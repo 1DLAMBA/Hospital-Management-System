@@ -6,8 +6,8 @@
         [draggable]="false" [resizable]="false">
         <form *ngIf="!preview" action="" [formGroup]="apptFormGroup" class="d-flex m-auto justify-content-between">
             <div class=" calendar justify-content-center">
-                <p-calendar class="" formControlName="date" [inline]="true" [showWeek]="false" [showTime]="true"
-                    panelStyle="background-color:blue" />
+                <p-calendar formControlName="date" [inline]="true" [showWeek]="false" [showTime]="true"
+                    styleClass="ph-calendar" />
             </div>
             <div class="diag-text my-auto d-flex justify-content-between flex-column">
                 <span class="bi bi-calendar4-week mb-5"></span>
@@ -188,6 +188,12 @@
 
                     <p class="col-12 col-md-4"><span class="text-secondary">License Number:</span><br>
                     {{singleNurse.license_number}}</p>
+
+                    <p class="col-12 col-md-4"><span class="text-secondary">Consultation Fee:</span><br>
+                    <ng-container *ngIf="singleNurse.consultation_fee > 0; else nurseFree">
+                        <strong>&#8358;{{ singleNurse.consultation_fee | number }}</strong>
+                    </ng-container>
+                    <ng-template #nurseFree><strong>Free consultation</strong></ng-template></p>
                 </div>
                 <hr>
                 <!-- <div class="d-flex justify-content-between flex-wrap col-12">

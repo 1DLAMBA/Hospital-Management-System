@@ -12,6 +12,8 @@ import { filter } from 'rxjs/operators';
 import { SeoService } from './services/seo.service';
 import { StructuredDataService } from './services/structured-data.service';
 import { getSeoConfigByRoute } from './config/seo-config';
+import { AnalyticsService } from './services/analytics.service';
+import { AttributionService } from './services/attribution.service';
 
 
 
@@ -36,9 +38,16 @@ export class AppComponent implements OnInit, OnDestroy {
      private contexts: ChildrenOutletContexts,
      private seoService: SeoService,
      private structuredDataService: StructuredDataService,
+     private analytics: AnalyticsService,
+     private attribution: AttributionService,
      @Inject(PLATFORM_ID) private platformId: object) {}
 
     ngOnInit(): void {
+      // Campaign attribution must be captured from the landing URL before any
+      // in-app navigation rewrites the query string.
+      this.attribution.capture();
+      this.analytics.init();
+
       // Initialize SEO with default metadata
       this.seoService.resetToDefaults();
       this.structuredDataService.addStructuredData(
@@ -59,9 +68,10 @@ export class AppComponent implements OnInit, OnDestroy {
     // Subscribe to route changes
     this.routerSubscription = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    ).subscribe((event: NavigationEnd) => {
       this.updateNavbarFooterVisibility();
       this.updatePageSeo();
+      this.analytics.trackPageView(event.urlAfterRedirects);
     });
     }
     

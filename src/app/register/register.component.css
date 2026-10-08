@@ -50,3 +50,45 @@
         padding: 0;
     }
 }
+/* Terms & data-protection acceptance (step 1) */
+.terms-acceptance {
+  text-align: left;
+  max-width: 480px;
+  margin: 18px auto 8px;
+  background: #f8fafd;
+  border: 1px solid #e3e8f0;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.terms-acceptance label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #2c3e50;
+  margin: 0;
+}
+.terms-acceptance label + small + label,
+.terms-acceptance label + label {
+  margin-top: 12px;
+}
+.terms-acceptance input[type="checkbox"] {
+  appearance: auto;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  margin: 2px 0 0 0;
+  flex: 0 0 auto;
+  accent-color: #0055aa;
+  cursor: pointer;
+}
+.terms-acceptance a {
+  color: #0055aa;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.terms-acceptance small.text-danger {
+  padding-left: 32px;
+}

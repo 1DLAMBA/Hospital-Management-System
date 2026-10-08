@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #8fbaff; } a:hover { color: #b9d4ff; }
+  </style>
+</helmet>
+
+<!-- Animation note: #route uses stroke-dasharray so the path can draw itself,
+     then #pinEnd pops. The headline's second line lands on the beat. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(160deg, #0a1233 0%, #16214a 52%, #0e3d85 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif; display: flex; flex-direction: column; justify-content: space-between; gap: 40px;">
+
+  <div style="font-size: 46px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em;" id="logo">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff;" id="eyebrow">Online consultations</div>
+    <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 112px; line-height: 1.04; color: #ffffff; letter-spacing: -0.015em;"><span style="display: block;" id="h1a">Skip the traffic.</span><span style="display: block; color: #8fbaff;" id="h1b">Not the doctor.</span></h1>
+    <p style="margin: 8px 0 0; font-size: 33px; line-height: 1.5; color: rgba(255, 255, 255, 0.82); max-width: 780px;" id="sub">Consult from home, from the office, from wherever the day has put you.</p>
+  </div>
+
+  <div style="display: flex; justify-content: center;" id="map">
+    <svg width="880" height="380" viewBox="0 0 880 380" fill="none" aria-hidden="true">
+      <path d="M90 300 C 250 300, 240 120, 420 120 C 600 120, 610 250, 790 250"
+            stroke="rgba(255,255,255,0.18)" stroke-width="10" stroke-linecap="round"></path>
+      <path id="route" d="M90 300 C 250 300, 240 120, 420 120 C 600 120, 610 250, 790 250"
+            stroke="#8fbaff" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="20 26"></path>
+      <circle cx="90" cy="300" r="20" fill="rgba(255,255,255,0.35)"></circle>
+      <g id="pinEnd">
+        <circle cx="790" cy="250" r="30" fill="#8fbaff"></circle>
+        <circle cx="790" cy="250" r="12" fill="#0a1233"></circle>
+      </g>
+    </svg>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div style="padding: 32px 64px; background: #ffffff; color: #14204a; border-radius: 999px; font-size: 38px; font-weight: 700; box-shadow: 0 10px 30px rgba(3, 10, 32, 0.45);" id="cta">Book a consultation</div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255, 255, 255, 0.72);" id="url">phoenixmed.online</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

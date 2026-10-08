@@ -97,29 +97,36 @@ export class NursePanelComponent implements OnInit, OnDestroy {
     plugins: {
         legend: {
             labels: {
-                color: 'black'
+                color: '#46507a',
+                usePointStyle: true,
+                pointStyle: 'circle',
+                boxWidth: 8,
+                padding: 16,
+                font: { family: 'IBM Plex Sans', size: 12 }
             }
         }
     },
     scales: {
         x: {
             ticks: {
-                color: 'black',
-                font: {
-                    weight: 500
-                }
+                color: '#737c9e',
+                font: { family: 'IBM Plex Sans', size: 12 }
             },
             grid: {
-                color: '#31385261',
+                display: false,
                 drawBorder: false
             }
         },
         y: {
+            beginAtZero: true,
             ticks: {
-                color: 'black'
+                color: '#737c9e',
+                stepSize: 1,
+                precision: 0,
+                font: { family: 'IBM Plex Sans', size: 12 }
             },
             grid: {
-                color: '#31385261',
+                color: '#eef1f6',
                 drawBorder: false
             }
         }

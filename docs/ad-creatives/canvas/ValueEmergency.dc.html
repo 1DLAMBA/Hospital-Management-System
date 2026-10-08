@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #92ccff; } a:hover { color: #cce4ff; }
+  </style>
+</helmet>
+
+<!-- Animation: the two panels wipe in from opposite sides and meet - the
+     split IS the message. Ember side lands second and holds. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(165deg, #060d26 0%, #0a1a3a 42%, #0d3080 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif;">
+
+  <svg id="waves" width="1240" height="260" viewBox="0 0 1240 260" fill="none" style="position: absolute; top: 300px; left: -80px; opacity: 0.4;" aria-hidden="true">
+    <defs>
+      <linearGradient id="wg4" x1="0" y1="0" x2="1240" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#6ab0ff" stop-opacity="0.12"></stop>
+        <stop offset="45%" stop-color="#92ccff" stop-opacity="0.8"></stop>
+        <stop offset="82%" stop-color="#dff0ff" stop-opacity="0.32"></stop>
+        <stop offset="100%" stop-color="#eef8ff" stop-opacity="0.08"></stop>
+      </linearGradient>
+    </defs>
+    <path d="M0 130 C 210 30, 410 230, 620 130 C 830 30, 1030 230, 1240 130" stroke="url(#wg4)" stroke-width="1.5" stroke-linecap="round"></path>
+    <path d="M0 130 C 210 230, 410 30, 620 130 C 830 230, 1030 30, 1240 130" stroke="url(#wg4)" stroke-width="1.5" stroke-linecap="round"></path>
+  </svg>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+      <img src="phoenix-mark.svg" alt="Phoenix" style="width: 96px; height: 96px; display: block; border-radius: 22px;" id="logo">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 23px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6ab0ff;" id="eyebrow">Know the difference</div>
+    </div>
+
+    <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 100px; line-height: 1.05; color: #ffffff; letter-spacing: -0.015em;" id="claim">Some things<br><span style="color: #92ccff;">should not wait<br>for an appointment.</span></h1>
+
+    <div style="display: flex; flex-direction: column; gap: 22px;">
+      <div style="padding: 40px 38px; background: rgba(146,204,255,0.1); border: 1px solid rgba(146,204,255,0.34); border-radius: 26px; display: flex; flex-direction: column; gap: 12px;" id="panelA">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 23px; letter-spacing: 0.14em; text-transform: uppercase; color: #92ccff;">Phoenix is for</div>
+        <div style="font-size: 36px; line-height: 1.4; color: #ffffff;">Consultations, follow-ups, prescriptions, second opinions, and your records.</div>
+      </div>
+      <div style="padding: 40px 38px; background: rgba(180,83,9,0.16); border: 1px solid rgba(240,160,80,0.44); border-radius: 26px; display: flex; flex-direction: column; gap: 12px;" id="panelB">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 23px; letter-spacing: 0.14em; text-transform: uppercase; color: #f0a050;">Phoenix is not for</div>
+        <div style="font-size: 36px; line-height: 1.4; color: #ffffff;">Emergencies. If it is an emergency, go straight to the nearest hospital.</div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 22px;" id="foot">
+      <div style="height: 1px; background: rgba(255,255,255,0.14);"></div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; color: rgba(255,255,255,0.5);">phoenixmed.online</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

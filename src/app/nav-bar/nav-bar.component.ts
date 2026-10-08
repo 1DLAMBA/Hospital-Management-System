@@ -63,6 +63,12 @@ export class NavBarComponent implements OnInit {
         case 'nurse':
           this.router.navigate(['panel/nurse-panel']);
           break;
+        case 'admin':
+          this.router.navigate(['panel/admin-panel']);
+          break;
+        case 'hospital':
+          this.router.navigate(['panel/hospital-panel']);
+          break;
         default:
           this.router.navigate(['login']);
       }

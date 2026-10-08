@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #92ccff; } a:hover { color: #cce4ff; }
+  </style>
+</helmet>
+
+<!-- Animation: waves draw (stroke-dashoffset), question fades, the connector
+     line travels down to the answer chip, chip pops, footer last. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(165deg, #060d26 0%, #0a1a3a 42%, #0d3080 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif;">
+
+  <svg id="waves" width="1240" height="300" viewBox="0 0 1240 300" fill="none" style="position: absolute; top: 1020px; left: -80px; opacity: 0.55;" aria-hidden="true">
+    <defs>
+      <linearGradient id="wg1" x1="0" y1="0" x2="1240" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#6ab0ff" stop-opacity="0.15"></stop>
+        <stop offset="40%" stop-color="#92ccff" stop-opacity="0.85"></stop>
+        <stop offset="78%" stop-color="#dff0ff" stop-opacity="0.45"></stop>
+        <stop offset="100%" stop-color="#eef8ff" stop-opacity="0.1"></stop>
+      </linearGradient>
+    </defs>
+    <path d="M0 150 C 210 40, 410 260, 620 150 C 830 40, 1030 260, 1240 150" stroke="url(#wg1)" stroke-width="1.5" stroke-linecap="round"></path>
+    <path d="M0 150 C 210 260, 410 40, 620 150 C 830 260, 1030 40, 1240 150" stroke="url(#wg1)" stroke-width="1.5" stroke-linecap="round"></path>
+  </svg>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+      <img src="phoenix-mark.svg" alt="Phoenix" style="width: 96px; height: 96px; display: block; border-radius: 22px;" id="logo">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 23px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6ab0ff;" id="eyebrow">Who handles what</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 54px;">
+      <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 118px; line-height: 1.02; color: #ffffff; letter-spacing: -0.015em; text-wrap: pretty;" id="claim">Hair loss is<br>dermatology.</h1>
+
+      <div style="display: flex; align-items: center; gap: 28px;" id="connector">
+        <div style="width: 3px; height: 92px; background: linear-gradient(180deg, rgba(146,204,255,0) 0%, #92ccff 100%); border-radius: 2px;" id="stem"></div>
+        <div style="font-size: 34px; line-height: 1.45; color: rgba(255,255,255,0.72); max-width: 720px;">Not general medicine. Nails and scalp sit there too.</div>
+      </div>
+
+      <div style="align-self: flex-start; padding: 26px 44px; border-radius: 999px; background: #92ccff; color: #071026; font-size: 36px; font-weight: 600;" id="chip">See a dermatologist</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 22px;" id="foot">
+      <div style="height: 1px; background: rgba(255,255,255,0.14);"></div>
+      <div style="font-size: 30px; line-height: 1.5; color: rgba(255,255,255,0.68);">Describe it on Phoenix and your assistant points you to the right one.</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; color: rgba(255,255,255,0.5);">Reviewed by [DOCTOR NAME], [SPECIALTY] &middot; phoenixmed.online</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

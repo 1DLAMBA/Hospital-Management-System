@@ -116,20 +116,23 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
       plugins: {
         legend: {
           labels: {
-            color: 'white'
+            color: '#46507a',
+            usePointStyle: true,
+            pointStyle: 'circle',
+            boxWidth: 8,
+            padding: 16,
+            font: { family: 'IBM Plex Sans', size: 12 }
           }
         }
       },
       scales: {
         x: {
           ticks: {
-            color: 'white',
-            font: {
-              weight: 500
-            }
+            color: '#737c9e',
+            font: { family: 'IBM Plex Sans', size: 12 }
           },
           grid: {
-            color: '#31385261',
+            display: false,
             drawBorder: false
           }
         },
@@ -137,11 +140,12 @@ export class ClientPanelComponent implements OnInit, OnDestroy {
           beginAtZero: true,
           min: 0,
           ticks: {
-            color: 'white',
-            stepSize: 1
+            color: '#737c9e',
+            stepSize: 1,
+            font: { family: 'IBM Plex Sans', size: 12 }
           },
           grid: {
-            color: '#31385261',
+            color: '#eef1f6',
             drawBorder: false
           }
         }

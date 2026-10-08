@@ -40,3 +40,20 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Intermediate per-frame PNG sequences from ad-video rendering (scratch; the
+# encoded .mp4 in the same folder is the actual deliverable)
+docs/ad-creatives/video/frames_*/
+
+# Rendered ad-creative media (videos, images, PDFs, bundled fonts) - large
+# binaries kept out of the app repo. Source templates that generate them
+# (.html/.js/.py/.json under docs/ad-creatives/) stay tracked.
+docs/ad-creatives/**/*.mp4
+docs/ad-creatives/**/*.png
+docs/ad-creatives/**/*.jpg
+docs/ad-creatives/**/*.jpeg
+docs/ad-creatives/**/*.woff2
+docs/*.pdf
+
+# One-off generated video (HyperFrames /brag output) - not part of the app
+/brag-output/

@@ -1,0 +1,33 @@
+<div class="ve-wrap">
+  <div class="ve-card">
+    <div class="ve-mark" [ngClass]="state">
+      <span *ngIf="state === 'verifying'" class="spinner" aria-hidden="true"></span>
+      <span *ngIf="state === 'success'" class="glyph">&#10003;</span>
+      <span *ngIf="state === 'failed' || state === 'expired'" class="glyph">&#33;</span>
+    </div>
+
+    <h1 class="ve-title">
+      <ng-container [ngSwitch]="state">
+        <span *ngSwitchCase="'verifying'">Verifying your email</span>
+        <span *ngSwitchCase="'success'">Email verified</span>
+        <span *ngSwitchCase="'expired'">Link expired</span>
+        <span *ngSwitchDefault>Verification failed</span>
+      </ng-container>
+    </h1>
+
+    <p class="ve-message">{{ message }}</p>
+
+    <button
+      *ngIf="state === 'expired'"
+      type="button"
+      class="ve-btn"
+      [disabled]="resending"
+      (click)="resend()">
+      {{ resending ? 'Sending…' : 'Send me a new link' }}
+    </button>
+
+    <a *ngIf="state === 'success' || state === 'failed'" class="ve-btn" routerLink="/login">
+      Go to login
+    </a>
+  </div>
+</div>

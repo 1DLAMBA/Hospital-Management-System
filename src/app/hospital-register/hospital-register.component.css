@@ -1,0 +1,13 @@
+.registerbody {
+    padding: 70px;
+}
+
+@media (max-width: 799px) {
+    .holder {
+        flex-wrap: wrap;
+    }
+
+    .registerbody {
+        padding: 0;
+    }
+}

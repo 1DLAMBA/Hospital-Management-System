@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix TikTok - tt2-block-clinic</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Public+Sans:wght@800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1080px; height:1920px; overflow:hidden; }
+
+  body { background:#0F4E9C; }
+  #frame { width:1080px; height:1920px; position:relative; background:#0F4E9C; color:#fff;
+           font-family:"Anton", Impact, sans-serif; transition:none; }
+  .safe { position:absolute; left:70px; top:250px; width:800px; height:1220px;
+          display:flex; align-items:center; justify-content:center; }
+  .beat { position:absolute; width:100%; text-align:center; opacity:0;
+          font-size:128px; line-height:1.04; letter-spacing:-0.012em;
+          text-transform:uppercase; text-wrap:balance; }
+  .beat.q { font-size:112px; text-transform:none; font-family:"Public Sans", sans-serif;
+            font-weight:800; letter-spacing:-0.03em; }
+  .endcard { position:absolute; left:70px; top:250px; width:800px; height:1220px;
+             display:flex; flex-direction:column; align-items:center; justify-content:center;
+             gap:38px; opacity:0; }
+  .endcard img { width:132px; height:132px; border-radius:31px; }
+  .endcard .l { font-family:"Anton", Impact, sans-serif; font-size:76px; text-align:center;
+                text-transform:uppercase; line-height:1.06; letter-spacing:-0.01em; }
+  .endcard .u { font-family:"IBM Plex Mono", monospace; font-size:32px; opacity:.8;
+                text-transform:none; }
+
+</style>
+</head>
+<body>
+<div id="frame">
+  <div class="safe">
+    <div class="beat" id="b0">Things you&rsquo;ve heard<br>at a clinic</div>
+    <div class="beat q" id="b1">&ldquo;Come back<br>tomorrow.&rdquo;</div>
+    <div class="beat q" id="b2">&ldquo;Doctor is<br>not on seat.&rdquo;</div>
+    <div class="beat q" id="b3">&ldquo;Nothing till<br>next week.&rdquo;</div>
+    <div class="beat" id="b4">Or &mdash;</div>
+    <div class="beat" id="b5">Pick a time<br>that exists.</div>
+  </div>
+  <div class="endcard" id="endcard">
+    <img src="../canvas/phoenix-mark.svg" alt="Phoenix">
+    <div class="l">Book a<br>consultation</div>
+    <div class="u">phoenixmed.online</div>
+  </div>
+</div>
+<script>
+function initTT2(spec) {
+  var easeOut  = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var easeBack = function (p) { var c = 2.0; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+  var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  function cue(t, a, b) { return clamp((t - a) / (b - a)); }
+
+  var items = spec.items.map(function (it) {
+    return { el: document.getElementById(it.id), at: it.at, mode: it.mode || 'up' };
+  });
+  var endEl = document.getElementById('endcard');
+  var caret = document.getElementById('caret');
+  var frame = document.getElementById('frame');
+  var typing = spec.typing ? document.getElementById(spec.typing.id) : null;
+
+  items.forEach(function (i) { if (i.el) i.el.style.opacity = 0; });
+  if (endEl) endEl.style.opacity = 0;
+  if (typing) typing.style.opacity = 0;
+
+  window.renderFrame = function (t) {
+    // Beats stay on screen once they land (notes, chat) or replace each
+    // other (block) - spec.swap decides which.
+    var active = -1;
+    for (var i = 0; i < items.length; i++) if (t >= items[i].at) active = i;
+
+    items.forEach(function (it, i) {
+      if (!it.el) return;
+      if (spec.swap) {
+        if (i !== active) { it.el.style.opacity = 0; return; }
+        var sp = easeOut(clamp((t - it.at) / 0.14));
+        it.el.style.opacity = 1;
+        it.el.style.transform = 'scale(' + (0.95 + 0.05 * sp) + ')';
+        return;
+      }
+      var p = clamp((t - it.at) / 0.34);
+      var e = easeOut(p);
+      it.el.style.opacity = e;
+      if (it.mode === 'pop') it.el.style.transform = 'scale(' + (p > 0 ? easeBack(p) : 0.7) + ')';
+      else it.el.style.transform = 'translateY(' + (1 - e) * 22 + 'px)';
+    });
+
+    // Background flip for the block format.
+    if (spec.grounds && frame) {
+      var g = spec.grounds[active < 0 ? 0 : active] || spec.grounds[spec.grounds.length - 1];
+      if (t >= spec.endAt && spec.endGround) g = spec.endGround;
+      frame.style.background = g.bg;
+      frame.style.color = g.fg;
+    }
+
+    if (typing) {
+      var on = t >= spec.typing.from && t < spec.typing.to;
+      typing.style.opacity = on ? 1 : 0;
+      typing.style.display = on ? 'flex' : 'none';
+      if (on) {
+        var dots = typing.querySelectorAll('i');
+        for (var d = 0; d < dots.length; d++) {
+          var ph = (t * 3.1 + d * 0.22) % 1;
+          dots[d].style.transform = 'translateY(' + (-Math.sin(ph * Math.PI) * 7) + 'px)';
+          dots[d].style.opacity = 0.4 + 0.6 * Math.sin(ph * Math.PI);
+        }
+      }
+    }
+
+    if (caret) caret.style.opacity = (t < spec.endAt && Math.floor(t * 1.7) % 2 === 0) ? 1 : 0;
+
+    if (endEl) {
+      var ep = easeOut(clamp((t - spec.endAt) / 0.4));
+      endEl.style.opacity = t >= spec.endAt ? ep : 0;
+      endEl.style.transform = 'translateY(' + (1 - ep) * 20 + 'px)';
+      if (spec.hideOnEnd && t >= spec.endAt) {
+        items.forEach(function (it) { if (it.el) it.el.style.opacity = 0; });
+        if (caret) caret.style.opacity = 0;
+      }
+    }
+  };
+  window.renderFrame(0);
+}
+</script>
+<script>initTT2({"items": [{"id": "b0", "at": 0.0}, {"id": "b1", "at": 1.6}, {"id": "b2", "at": 3.2}, {"id": "b3", "at": 4.8}, {"id": "b4", "at": 6.4}, {"id": "b5", "at": 8.0}], "endAt": 9.6, "swap": true, "hideOnEnd": true, "grounds": [{"bg": "#0F4E9C", "fg": "#FFFFFF"}, {"bg": "#F3F1EC", "fg": "#12141A"}, {"bg": "#12141A", "fg": "#FFFFFF"}, {"bg": "#F3F1EC", "fg": "#12141A"}, {"bg": "#12141A", "fg": "#FFFFFF"}, {"bg": "#0F4E9C", "fg": "#FFFFFF"}], "endGround": {"bg": "#0F4E9C", "fg": "#FFFFFF"}});</script>
+</body>
+</html>

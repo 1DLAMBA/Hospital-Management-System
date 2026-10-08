@@ -1,0 +1,105 @@
+<p-toast></p-toast>
+
+<div class="registerbody">
+    <div class="holder shadow-lg m-auto d-flex justify-content-center">
+        <div class="sideA">
+            <div class="innersideA d-flex">
+                <div class="text px-3 mt-auto">
+                    <h3>Register Your Hospital <br>with Phoenix</h3>
+                    <p>
+                        Register your hospital so its doctors, nurses, and other
+                        health professionals can select it when they create their
+                        Phoenix accounts.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="form d-flex flex-column m-auto px-5 py-3">
+            <h3><b>Welcome To <span class="text-secondary">Phoe</span><span class="text-blue">nix</span></b></h3>
+            <p>Let's get your hospital set up!</p>
+
+            <form [formGroup]="hospitalForm" class="mt-2">
+                <div class="flex flex-column gap-2">
+                    <label for="name">Hospital Name</label><br>
+                    <input formControlName="name" placeholder="Hospital Name" name="name" type="text" pInputText
+                        id="name" />
+                    <small *ngIf="hospitalForm.get('name')?.touched && hospitalForm.get('name')?.hasError('required')"
+                        class="text-danger">
+                        Field Required
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="address">Address</label><br>
+                    <input formControlName="address" placeholder="Hospital Address" name="address" type="text"
+                        pInputText id="address" />
+                    <small
+                        *ngIf="hospitalForm.get('address')?.touched && hospitalForm.get('address')?.hasError('required')"
+                        class="text-danger">
+                        Field Required
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="phoneno">Phone Number</label><br>
+                    <input formControlName="phoneno" placeholder="+234 80 293 298 22" name="phoneno" type="tel"
+                        pInputText id="phoneno" />
+                    <small
+                        *ngIf="hospitalForm.get('phoneno')?.touched && hospitalForm.get('phoneno')?.hasError('required')"
+                        class="text-danger">
+                        Field Required
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="email">Email</label><br>
+                    <input formControlName="email" placeholder="hospital@example.com" name="email" type="email"
+                        pInputText id="email" />
+                    <small
+                        *ngIf="hospitalForm.get('email')?.touched && hospitalForm.get('email')?.hasError('required')"
+                        class="text-danger">
+                        Field Required
+                    </small>
+                    <small *ngIf="hospitalForm.get('email')?.touched && hospitalForm.get('email')?.hasError('email')"
+                        class="text-danger">
+                        Please enter a valid email address
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="registration_number">Registration Number <span class="text-muted">(Optional)</span></label><br>
+                    <input formControlName="registration_number" placeholder="Registration Number"
+                        name="registration_number" type="text" pInputText id="registration_number" />
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="password">Password</label><br>
+                    <input formControlName="password" placeholder="Password" name="password" type="password"
+                        pInputText id="password" />
+                    <small
+                        *ngIf="hospitalForm.get('password')?.touched && hospitalForm.get('password')?.hasError('required')"
+                        class="text-danger">
+                        Field Required
+                    </small>
+                    <small
+                        *ngIf="hospitalForm.get('password')?.touched && hospitalForm.get('password')?.hasError('minlength')"
+                        class="text-danger">
+                        Password must be at least 8 characters
+                    </small>
+                </div>
+                <div class="flex flex-column gap-2">
+                    <label for="password_confirmation">Confirm Password</label><br>
+                    <input formControlName="password_confirmation" placeholder="Confirm Password"
+                        name="password_confirmation" type="password" pInputText id="password_confirmation" />
+                    <small
+                        *ngIf="hospitalForm.get('password_confirmation')?.touched && hospitalForm.hasError('passwordMismatch')"
+                        class="text-danger">
+                        Passwords do not match
+                    </small>
+                </div>
+
+                <button *ngIf="!submitLoader" class="btn btn-lg submit border text-center btn-hover"
+                    (click)="submit()">Register Hospital</button>
+                <button *ngIf="submitLoader" disabled
+                    class="btn btn-lg submit border text-center btn-hover">Submitting...</button>
+            </form>
+            <p>Already registered your hospital? <a routerLink="/login">Log in here</a></p>
+            <p>Registering a health professional instead? <a routerLink="/register">Register here</a></p>
+        </div>
+    </div>
+</div>

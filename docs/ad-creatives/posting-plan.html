@@ -1,0 +1,625 @@
+<title>Phoenix Posting Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --ink:#141A2E; --ink-2:#4A5370; --ink-3:#7E8699;
+  --bg:#F4F7FB; --card:#FFFFFF; --line:#DCE3ED; --line-soft:#EBF0F6;
+  --accent:#0F4E9C; --accent-soft:#E6EEF8;
+  --tt:#A8356E; --ig:#B85326; --fb:#0F4E9C; --li:#0B6360;
+  --done:#0E7A5F; --done-soft:#E4F2EC;
+  --radius:10px;
+  --sans:"Archivo", ui-sans-serif, system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink:#E9EDF5; --ink-2:#A6AFC4; --ink-3:#747D94;
+    --bg:#0D111D; --card:#161C2B; --line:#283047; --line-soft:#1F2739;
+    --accent:#77ADF2; --accent-soft:#18243B;
+    --tt:#E58BB7; --ig:#E29769; --fb:#77ADF2; --li:#5EBDB7;
+    --done:#4FC79C; --done-soft:#153026;
+  }
+}
+:root[data-theme="dark"] {
+  --ink:#E9EDF5; --ink-2:#A6AFC4; --ink-3:#747D94;
+  --bg:#0D111D; --card:#161C2B; --line:#283047; --line-soft:#1F2739;
+  --accent:#77ADF2; --accent-soft:#18243B;
+  --tt:#E58BB7; --ig:#E29769; --fb:#77ADF2; --li:#5EBDB7;
+  --done:#4FC79C; --done-soft:#153026;
+}
+
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans);
+       font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+.wrap { max-width:1180px; margin:0 auto; padding:56px 28px 100px; }
+
+/* --- masthead --- */
+.mast { display:flex; flex-wrap:wrap; gap:28px; align-items:flex-end;
+        justify-content:space-between; padding-bottom:26px;
+        border-bottom:2px solid var(--ink); margin-bottom:34px; }
+.mast h1 { font-size:clamp(30px,4.2vw,46px); font-weight:700; letter-spacing:-0.025em;
+           margin:0 0 8px; text-wrap:balance; }
+.mast .sub { color:var(--ink-2); max-width:56ch; margin:0; }
+.eyebrow { font-family:var(--mono); font-size:11.5px; font-weight:500; letter-spacing:0.16em;
+           text-transform:uppercase; color:var(--accent); margin:0 0 12px; }
+
+/* --- progress --- */
+.meter { min-width:236px; }
+.meter-top { display:flex; justify-content:space-between; align-items:baseline;
+             font-family:var(--mono); font-size:12px; color:var(--ink-3); margin-bottom:8px; }
+.meter-top b { font-family:var(--sans); font-size:26px; font-weight:700; color:var(--ink);
+               font-variant-numeric:tabular-nums; }
+.bar { height:7px; background:var(--line-soft); border-radius:99px; overflow:hidden; }
+.bar i { display:block; height:100%; width:0%; background:var(--done); border-radius:99px;
+         transition:width .28s ease; }
+
+/* --- cadence --- */
+.cadence { display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+           gap:1px; background:var(--line); border:1px solid var(--line);
+           border-radius:var(--radius); overflow:hidden; margin-bottom:16px; }
+.cad { background:var(--card); padding:16px 18px; display:flex; flex-direction:column; gap:5px; }
+.cad .nm { font-family:var(--mono); font-size:11.5px; letter-spacing:0.1em;
+           text-transform:uppercase; font-weight:500; }
+.cad .ct { font-size:23px; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.02em; }
+.cad .rl { font-size:12.5px; color:var(--ink-3); line-height:1.35; }
+.nm-tt{color:var(--tt);} .nm-ig{color:var(--ig);} .nm-fb{color:var(--fb);} .nm-li{color:var(--li);}
+.note { color:var(--ink-3); font-size:13px; margin:0 0 42px; }
+
+/* --- weeks --- */
+.week { margin-bottom:42px; }
+.wk-head { margin-bottom:14px; }
+.wk-id { font-family:var(--mono); font-size:11.5px; font-weight:500; letter-spacing:0.16em;
+         text-transform:uppercase; color:var(--ink-3); margin-bottom:6px; }
+.wk-head h2 { font-size:22px; font-weight:600; letter-spacing:-0.02em; margin:0 0 4px; }
+.wk-note { margin:0; color:var(--ink-2); font-size:13.5px; max-width:66ch; }
+
+.rows { list-style:none; margin:0; padding:0; border:1px solid var(--line);
+        border-radius:var(--radius); overflow:hidden; background:var(--card); }
+.row { display:grid; grid-template-columns:30px 40px 92px 92px 1fr auto; gap:9px 14px;
+       align-items:center; padding:12px 16px; border-bottom:1px solid var(--line-soft); }
+.row:last-child { border-bottom:none; }
+.row .asset { grid-column:5; grid-row:1; font-family:var(--mono); font-size:12px; color:var(--ink);
+              background:var(--accent-soft); padding:2px 7px; border-radius:5px;
+              justify-self:start; word-break:break-all; }
+.row .copy { grid-column:6; grid-row:1; justify-self:end; }
+.row .cap { grid-column:5 / span 2; grid-row:2; color:var(--ink-2); font-size:13.5px; }
+.day { font-family:var(--mono); font-size:12px; color:var(--ink-3); font-weight:500; }
+.fmt { font-size:12px; color:var(--ink-3); }
+.chip { font-family:var(--mono); font-size:10.5px; font-weight:500; letter-spacing:0.07em;
+        text-transform:uppercase; padding:4px 8px; border-radius:5px; justify-self:start;
+        white-space:nowrap; }
+.chip-tt{color:var(--tt);background:color-mix(in srgb,var(--tt) 12%,transparent);}
+.chip-ig{color:var(--ig);background:color-mix(in srgb,var(--ig) 12%,transparent);}
+.chip-fb{color:var(--fb);background:color-mix(in srgb,var(--fb) 12%,transparent);}
+.chip-li{color:var(--li);background:color-mix(in srgb,var(--li) 12%,transparent);}
+
+.tick { width:21px; height:21px; border-radius:6px; border:1.5px solid var(--line);
+        background:transparent; cursor:pointer; padding:0; position:relative; }
+.tick:hover { border-color:var(--accent); }
+.tick:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.row[data-done="1"] .tick { background:var(--done); border-color:var(--done); }
+.row[data-done="1"] .tick::after { content:""; position:absolute; left:6px; top:2.5px;
+        width:5px; height:10px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(43deg); }
+.row[data-done="1"] { background:var(--done-soft); }
+.row[data-done="1"] .cap, .row[data-done="1"] .fmt { text-decoration:line-through;
+        text-decoration-color:var(--ink-3); opacity:.6; }
+
+.copy { font-family:var(--mono); font-size:11px; padding:4px 10px; border-radius:5px;
+        border:1px solid var(--line); background:transparent; color:var(--ink-3); cursor:pointer; }
+.copy:hover { border-color:var(--accent); color:var(--accent); }
+.copy:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.copy[data-copied="1"] { color:var(--done); border-color:var(--done); }
+
+.foot { margin-top:14px; padding-top:22px; border-top:1px solid var(--line); color:var(--ink-3); font-size:13px; }
+.foot h3 { font-size:14px; font-weight:600; color:var(--ink); margin:0 0 8px; }
+.foot ul { margin:0 0 18px; padding-left:18px; } .foot li { margin-bottom:5px; }
+.foot code { font-family:var(--mono); font-size:12px; background:var(--accent-soft);
+             color:var(--ink); padding:1px 5px; border-radius:4px; }
+
+@media (max-width:760px) {
+  .wrap { padding:34px 16px 70px; }
+  .row { grid-template-columns:26px 1fr auto; gap:7px 10px; }
+  .row .day, .row .chip, .row .fmt { grid-column:2; grid-row:auto; justify-self:start; }
+  .row .asset { grid-column:2; grid-row:auto; }
+  .row .copy { grid-column:3; grid-row:auto; justify-self:end; }
+  .row .cap { grid-column:2 / span 2; grid-row:auto; }
+}
+@media (prefers-reduced-motion: reduce) { .bar i { transition:none; } }
+</style>
+<div class="wrap">
+
+  <div class="mast">
+    <div>
+      <p class="eyebrow">Organic &middot; 4 weeks &middot; 40 posts</p>
+      <h1>Phoenix Posting Plan</h1>
+      <p class="sub">Every post below uses an asset that already exists. Nothing here needs
+      filming, a designer, or ad spend &mdash; the only cost is the time to upload.</p>
+    </div>
+    <div class="meter">
+      <div class="meter-top"><span><b id="doneN">0</b> / 40 posted</span><span id="pct">0%</span></div>
+      <div class="bar"><i id="barFill"></i></div>
+    </div>
+  </div>
+
+  <div class="cadence">
+    <div class="cad"><span class="nm nm-tt">TikTok</span><span class="ct">12</span>
+      <span class="rl">3&times;/week. Reach. Post first, judge everything else against it.</span></div>
+    <div class="cad"><span class="nm nm-ig">Instagram</span><span class="ct">12</span>
+      <span class="rl">3&times;/week. Reels for reach, feed for credibility.</span></div>
+    <div class="cad"><span class="nm nm-fb">Facebook</span><span class="ct">8</span>
+      <span class="rl">2&times;/week. Older audience &mdash; the people who pay for care.</span></div>
+    <div class="cad"><span class="nm nm-li">LinkedIn</span><span class="ct">8</span>
+      <span class="rl">2&times;/week. Professionals only. Never patient content.</span></div>
+  </div>
+  <p class="note">Same asset on two platforms is deliberate, never lazy &mdash; audience overlap
+  between them is small, and a post that worked deserves a second airing.</p>
+
+<artifact-sync>
+  <section class="week">
+    <header class="wk-head">
+      <div class="wk-id">Week 1</div>
+      <h2>What Phoenix is</h2>
+      <p class="wk-note">Lead with the product. Nobody can trust a service they cannot picture.</p>
+    </header>
+    <ul class="rows">
+      <li class="row" data-plat="tt" id="p1">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 1 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 13s</span>
+        <code class="asset">phoenix-tiktok-clinic-closed.mp4</code>
+        <span class="cap">The clinic closed at 5. Your question didn&#x27;t.</span>
+        <button class="copy" type="button" data-cap="The clinic closed at 5. Your question didn&#x27;t.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p2">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 2 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Reel 7s</span>
+        <code class="asset">phoenix-consult-story.mp4</code>
+        <span class="cap">Health questions don&#x27;t keep office hours. Phoenix is open whenever you need it.</span>
+        <button class="copy" type="button" data-cap="Health questions don&#x27;t keep office hours. Phoenix is open whenever you need it.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p3">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 3 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed 1:1</span>
+        <code class="asset">patients-feed-a.png</code>
+        <span class="cap">See a licensed doctor without leaving home. Free to create an account.</span>
+        <button class="copy" type="button" data-cap="See a licensed doctor without leaving home. Free to create an account.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p4">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 4 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed 1:1</span>
+        <code class="asset">pros-feed-a.png</code>
+        <span class="cap">Doctors, nurses and allied professionals: set your own hours, consult online, get paid for the time you choose to work.</span>
+        <button class="copy" type="button" data-cap="Doctors, nurses and allied professionals: set your own hours, consult online, get paid for the time you choose to work.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p5">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 5 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 12s</span>
+        <code class="asset">phoenix-tiktok-consult-list.mp4</code>
+        <span class="cap">Five people you didn&#x27;t know you could consult.</span>
+        <button class="copy" type="button" data-cap="Five people you didn&#x27;t know you could consult.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p6">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 6 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Feed 1:1</span>
+        <code class="asset">patients-feed-b.png</code>
+        <span class="cap">Booked in minutes. Not mornings.</span>
+        <button class="copy" type="button" data-cap="Booked in minutes. Not mornings.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p7">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 7 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Reel 7s</span>
+        <code class="asset">phoenix-consult-story.mp4</code>
+        <span class="cap">No matter the time, Phoenix is open.</span>
+        <button class="copy" type="button" data-cap="No matter the time, Phoenix is open.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p8">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 8 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 7s</span>
+        <code class="asset">phoenix-which-doctor-story.mp4</code>
+        <span class="cap">Not sure who you need to see? That is exactly what it is for.</span>
+        <button class="copy" type="button" data-cap="Not sure who you need to see? That is exactly what it is for.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p9">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 9 as posted"></button>
+        <span class="day">Fri</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Story 7s</span>
+        <code class="asset">phoenix-traffic-story.mp4</code>
+        <span class="cap">Skip the traffic. Not the doctor.</span>
+        <button class="copy" type="button" data-cap="Skip the traffic. Not the doctor.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p10">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 10 as posted"></button>
+        <span class="day">Sat</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed 1:1</span>
+        <code class="asset">pros-feed-b.png</code>
+        <span class="cap">Your open hours are worth something. No listing fee, and you publish only the times you actually have.</span>
+        <button class="copy" type="button" data-cap="Your open hours are worth something. No listing fee, and you publish only the times you actually have.">Copy</button>
+      </li>
+    </ul>
+  </section>
+  <section class="week">
+    <header class="wk-head">
+      <div class="wk-id">Week 2</div>
+      <h2>Why you can trust it</h2>
+      <p class="wk-note">Every objection a first-time user has, answered before they ask.</p>
+    </header>
+    <ul class="rows">
+      <li class="row" data-plat="tt" id="p11">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 11 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 7s</span>
+        <code class="asset">phoenix-verified-story.mp4</code>
+        <span class="cap">Four documents before anyone sees a patient.</span>
+        <button class="copy" type="button" data-cap="Four documents before anyone sees a patient.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p12">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 12 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Reel 7s</span>
+        <code class="asset">phoenix-verified-story.mp4</code>
+        <span class="cap">Every doctor here had to prove it. Licence, school, certificate, ID.</span>
+        <button class="copy" type="button" data-cap="Every doctor here had to prove it. Licence, school, certificate, ID.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p13">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 13 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">ValueFour.dc.html</code>
+        <span class="cap">Four documents, checked by hand, before a professional can accept a single patient.</span>
+        <button class="copy" type="button" data-cap="Four documents, checked by hand, before a professional can accept a single patient.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p14">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 14 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Schedule.dc.html</code>
+        <span class="cap">You publish the hours. Patients book only what you opened. Nothing else moves.</span>
+        <button class="copy" type="button" data-cap="You publish the hours. Patients book only what you opened. Nothing else moves.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p15">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 15 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 8s</span>
+        <code class="asset">phoenix-difference-story.mp4</code>
+        <span class="cap">Phoenix is for consultations. If it is an emergency, go to the hospital.</span>
+        <button class="copy" type="button" data-cap="Phoenix is for consultations. If it is an emergency, go to the hospital.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p16">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 16 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Fee.dc.html</code>
+        <span class="cap">You see the fee before you book. No booking charge, nothing added at the end.</span>
+        <button class="copy" type="button" data-cap="You see the fee before you book. No booking charge, nothing added at the end.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p17">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 17 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">ValueEmergency.dc.html</code>
+        <span class="cap">Knowing when not to use us matters as much as knowing when to.</span>
+        <button class="copy" type="button" data-cap="Knowing when not to use us matters as much as knowing when to.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p18">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 18 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 8s</span>
+        <code class="asset">phoenix-questions-story.mp4</code>
+        <span class="cap">Three questions worth asking before you accept any prescription.</span>
+        <button class="copy" type="button" data-cap="Three questions worth asking before you accept any prescription.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p19">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 19 as posted"></button>
+        <span class="day">Fri</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Testimonial.dc.html</code>
+        <span class="cap">&quot;I found a specialist, picked a time, and had it confirmed in under two minutes.&quot; - Adaeze, 34</span>
+        <button class="copy" type="button" data-cap="&quot;I found a specialist, picked a time, and had it confirmed in under two minutes.&quot; - Adaeze, 34">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p20">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 20 as posted"></button>
+        <span class="day">Sat</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Question.dc.html</code>
+        <span class="cap">What is an empty Tuesday evening worth? Open the hours you actually have.</span>
+        <button class="copy" type="button" data-cap="What is an empty Tuesday evening worth? Open the hours you actually have.">Copy</button>
+      </li>
+    </ul>
+  </section>
+  <section class="week">
+    <header class="wk-head">
+      <div class="wk-id">Week 3</div>
+      <h2>The specialties nobody knows about</h2>
+      <p class="wk-note">The deepest well you have. Useful on its own, and it advertises supply you already carry.</p>
+    </header>
+    <ul class="rows">
+      <li class="row" data-plat="tt" id="p21">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 21 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 13s</span>
+        <code class="asset">phoenix-tiktok-ot.mp4</code>
+        <span class="cap">Nobody knows what an occupational therapist actually does. So here it is.</span>
+        <button class="copy" type="button" data-cap="Nobody knows what an occupational therapist actually does. So here it is.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p22">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 22 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Reel 7s</span>
+        <code class="asset">phoenix-social-story.mp4</code>
+        <span class="cap">Not every part of being ill is medical. Cost, care at home, work, family.</span>
+        <button class="copy" type="button" data-cap="Not every part of being ill is medical. Cost, care at home, work, family.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p23">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 23 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">FactSocial.dc.html</code>
+        <span class="cap">A medical social worker handles the parts of illness no prescription covers.</span>
+        <button class="copy" type="button" data-cap="A medical social worker handles the parts of illness no prescription covers.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p24">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 24 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">FactOT.dc.html</code>
+        <span class="cap">Occupational therapists, physiotherapists and medical social workers all practise on Phoenix. Applications are open.</span>
+        <button class="copy" type="button" data-cap="Occupational therapists, physiotherapists and medical social workers all practise on Phoenix. Applications are open.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p25">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 25 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 13s</span>
+        <code class="asset">phoenix-tiktok-quiz.mp4</code>
+        <span class="cap">Quick: who handles hair loss? Most people get this wrong.</span>
+        <button class="copy" type="button" data-cap="Quick: who handles hair loss? Most people get this wrong.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p26">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 26 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Reel 7s</span>
+        <code class="asset">phoenix-physio-story.mp4</code>
+        <span class="cap">Physiotherapy is not only for athletes.</span>
+        <button class="copy" type="button" data-cap="Physiotherapy is not only for athletes.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p27">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 27 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">FactPharmacist.dc.html</code>
+        <span class="cap">Your pharmacist knows what your medicines do to each other. Some questions don&#x27;t need a full consultation.</span>
+        <button class="copy" type="button" data-cap="Your pharmacist knows what your medicines do to each other. Some questions don&#x27;t need a full consultation.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p28">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 28 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 7s</span>
+        <code class="asset">phoenix-pharmacy-story.mp4</code>
+        <span class="cap">You can consult a pharmacist. Most people never think to.</span>
+        <button class="copy" type="button" data-cap="You can consult a pharmacist. Most people never think to.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p29">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 29 as posted"></button>
+        <span class="day">Fri</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">ValueScope.dc.html</code>
+        <span class="cap">Hair loss is dermatology. Not general medicine. Picking wrong costs you a week.</span>
+        <button class="copy" type="button" data-cap="Hair loss is dermatology. Not general medicine. Picking wrong costs you a week.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p30">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 30 as posted"></button>
+        <span class="day">Sat</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed 1:1</span>
+        <code class="asset">pros-link.png</code>
+        <span class="cap">Set your availability, consult online, get paid. Verification takes a few working days.</span>
+        <button class="copy" type="button" data-cap="Set your availability, consult online, get paid. Verification takes a few working days.">Copy</button>
+      </li>
+    </ul>
+  </section>
+  <section class="week">
+    <header class="wk-head">
+      <div class="wk-id">Week 4</div>
+      <h2>The thing they already hate</h2>
+      <p class="wk-note">Name the frustration directly. This is the week that converts.</p>
+    </header>
+    <ul class="rows">
+      <li class="row" data-plat="tt" id="p31">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 31 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 13s</span>
+        <code class="asset">phoenix-tiktok-clinic-closed.mp4</code>
+        <span class="cap">Repost the week 1 opener. It is the strongest hook you have - give it a second run.</span>
+        <button class="copy" type="button" data-cap="Repost the week 1 opener. It is the strongest hook you have - give it a second run.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p32">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 32 as posted"></button>
+        <span class="day">Mon</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Tomorrow.dc.html</code>
+        <span class="cap">&quot;Come back tomorrow.&quot; &quot;The doctor is not on seat.&quot; &quot;Nothing until next week.&quot;</span>
+        <button class="copy" type="button" data-cap="&quot;Come back tomorrow.&quot; &quot;The doctor is not on seat.&quot; &quot;Nothing until next week.&quot;">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p33">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 33 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Tomorrow.dc.html</code>
+        <span class="cap">Three things you will not hear on Phoenix.</span>
+        <button class="copy" type="button" data-cap="Three things you will not hear on Phoenix.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p34">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 34 as posted"></button>
+        <span class="day">Tue</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">ValueFour.dc.html</code>
+        <span class="cap">We verify four documents by hand before anyone accepts a patient. That is who you&#x27;d be practising alongside.</span>
+        <button class="copy" type="button" data-cap="We verify four documents by hand before anyone accepts a patient. That is who you&#x27;d be practising alongside.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p35">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 35 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 7s</span>
+        <code class="asset">phoenix-traffic-story.mp4</code>
+        <span class="cap">You should not have to sit in traffic to see a doctor.</span>
+        <button class="copy" type="button" data-cap="You should not have to sit in traffic to see a doctor.">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p36">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 36 as posted"></button>
+        <span class="day">Wed</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Reel 7s</span>
+        <code class="asset">phoenix-pharmacy-story.mp4</code>
+        <span class="cap">Your pharmacist knows more than you think.</span>
+        <button class="copy" type="button" data-cap="Your pharmacist knows more than you think.">Copy</button>
+      </li>
+      <li class="row" data-plat="fb" id="p37">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 37 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-fb">Facebook</span>
+        <span class="fmt">Feed 1:1</span>
+        <code class="asset">patients-feed-b.png</code>
+        <span class="cap">Booking a doctor should not cost you a morning.</span>
+        <button class="copy" type="button" data-cap="Booking a doctor should not cost you a morning.">Copy</button>
+      </li>
+      <li class="row" data-plat="tt" id="p38">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 38 as posted"></button>
+        <span class="day">Thu</span>
+        <span class="chip chip-tt">TikTok</span>
+        <span class="fmt">Video 8s</span>
+        <code class="asset">phoenix-questions-story.mp4</code>
+        <span class="cap">What is this treating? How long do I take it? What if it doesn&#x27;t help?</span>
+        <button class="copy" type="button" data-cap="What is this treating? How long do I take it? What if it doesn&#x27;t help?">Copy</button>
+      </li>
+      <li class="row" data-plat="ig" id="p39">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 39 as posted"></button>
+        <span class="day">Fri</span>
+        <span class="chip chip-ig">Instagram</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Steps.dc.html</code>
+        <span class="cap">Three steps to your consultation. That is the whole thing.</span>
+        <button class="copy" type="button" data-cap="Three steps to your consultation. That is the whole thing.">Copy</button>
+      </li>
+      <li class="row" data-plat="li" id="p40">
+        <button class="tick" type="button" aria-pressed="false" aria-label="Mark post 40 as posted"></button>
+        <span class="day">Sat</span>
+        <span class="chip chip-li">LinkedIn</span>
+        <span class="fmt">Feed export</span>
+        <code class="asset">Schedule.dc.html</code>
+        <span class="cap">You opened three hours. We filled them.</span>
+        <button class="copy" type="button" data-cap="You opened three hours. We filled them.">Copy</button>
+      </li>
+    </ul>
+  </section>
+</artifact-sync>
+
+  <div class="foot">
+    <h3>Before you start</h3>
+    <ul>
+      <li>Videos are in <code>docs/ad-creatives/video/</code>. Static images are in <code>docs/ad-creatives/png/</code>.</li>
+      <li>Rows marked <em>Feed export</em> name a canvas artboard &mdash; open the design canvas, select that artboard and Export PNG.</li>
+      <li>Every video is silent. Add a track in each app&rsquo;s own composer before posting &mdash; TikTok especially punishes silence.</li>
+      <li>The consult video still shows an invented doctor name. Swap in a real verified professional first.</li>
+      <li>Post to TikTok organically, not as ads. Watch what gets past three seconds, then put budget behind that one.</li>
+    </ul>
+    <h3>What this plan is not</h3>
+    <ul>
+      <li>It is not the paid campaign. Google Search and Meta ads run separately, on their own budget and measurement.</li>
+      <li>It has no clinical claims to review &mdash; every fact here is scope of practice or a statement about how Phoenix works.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+(function () {
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
+  var doneN = document.getElementById('doneN');
+  var pct = document.getElementById('pct');
+  var fill = document.getElementById('barFill');
+
+  function refresh() {
+    var d = rows.filter(function (r) { return r.getAttribute('data-done') === '1'; }).length;
+    doneN.textContent = d;
+    var p = rows.length ? Math.round(d / rows.length * 100) : 0;
+    pct.textContent = p + '%';
+    fill.style.width = p + '%';
+    rows.forEach(function (r) {
+      var b = r.querySelector('.tick');
+      if (b) b.setAttribute('aria-pressed', r.getAttribute('data-done') === '1' ? 'true' : 'false');
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var tick = e.target.closest ? e.target.closest('.tick') : null;
+    if (tick) {
+      var row = tick.closest('.row');
+      if (row.getAttribute('data-done') === '1') row.removeAttribute('data-done');
+      else row.setAttribute('data-done', '1');
+      refresh();
+      return;
+    }
+    var copy = e.target.closest ? e.target.closest('.copy') : null;
+    if (copy) {
+      var text = copy.getAttribute('data-cap') || '';
+      var done = function () {
+        copy.setAttribute('data-copied', '1');
+        copy.textContent = 'Copied';
+        setTimeout(function () { copy.removeAttribute('data-copied'); copy.textContent = 'Copy'; }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () {});
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (err) {}
+        document.body.removeChild(ta);
+      }
+    }
+  });
+
+  // Ticks arrive in the markup when someone else has already saved them.
+  new MutationObserver(refresh).observe(document.body, {
+    subtree: true, attributes: true, attributeFilter: ['data-done'] });
+  refresh();
+})();
+</script>

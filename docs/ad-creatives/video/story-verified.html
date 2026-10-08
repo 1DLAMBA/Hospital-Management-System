@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix - Every doctor here had to prove it (story)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0a1233; }
+  .frame {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    padding: 190px 80px 250px;
+    background: radial-gradient(circle at 78% 20%, rgba(48,120,235,0.42) 0%, rgba(48,120,235,0) 58%),
+                linear-gradient(160deg, #0a1233 0%, #16214a 52%, #0e3d85 100%);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 44px;
+  }
+  .anim { opacity: 0; will-change: opacity, transform; }
+  .logo { font-size: 46px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500;
+             letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff; }
+  h1 { font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 104px;
+       line-height: 1.05; color: #fff; letter-spacing: -0.01em; }
+  .accent { color: #8fbaff; }
+  .checklist { display: flex; flex-direction: column; gap: 20px; }
+  .chk { display: flex; align-items: center; gap: 22px; padding: 28px 32px;
+         background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.14);
+         border-radius: 20px; }
+  .chk span { font-size: 34px; color: #fff; }
+  .note { font-size: 29px; line-height: 1.45; color: rgba(255,255,255,0.72); margin-top: 8px; }
+  .cta { align-self: flex-start; padding: 32px 64px; background: #fff; color: #14204a;
+         border-radius: 999px; font-size: 38px; font-weight: 700;
+         box-shadow: 0 10px 30px rgba(3,10,32,0.45); }
+  .url { font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255,255,255,0.72); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="logo" id="logo">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div class="eyebrow anim" id="eyebrow">Verified professionals</div>
+    <h1><span class="anim" id="h1a" style="display: block;">Every doctor here</span><span class="accent anim" id="h1b" style="display: block;">had to prove it.</span></h1>
+  </div>
+
+  <div class="checklist">
+    <div class="chk anim" id="chk1">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path id="tick1" pathLength="100" d="M4 12.5l5.5 5.5L20 6.5" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"></path></svg>
+      <span>Practising licence number</span>
+    </div>
+    <div class="chk anim" id="chk2">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path id="tick2" pathLength="100" d="M4 12.5l5.5 5.5L20 6.5" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"></path></svg>
+      <span>Medical school and year</span>
+    </div>
+    <div class="chk anim" id="chk3">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path id="tick3" pathLength="100" d="M4 12.5l5.5 5.5L20 6.5" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"></path></svg>
+      <span>Certificate upload</span>
+    </div>
+    <div class="chk anim" id="chk4">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path id="tick4" pathLength="100" d="M4 12.5l5.5 5.5L20 6.5" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="100" stroke-dashoffset="100"></path></svg>
+      <span>Government-issued ID</span>
+    </div>
+    <div class="note anim" id="note">Checked before they can accept a single patient.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div class="cta anim" id="cta">Book a consultation</div>
+    <div class="url anim" id="url">phoenixmed.online</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var easeOut = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  function cue(t, a, b) { return clamp01((t - a) / (b - a)); }
+
+  var RISE = [
+    ['eyebrow', 0.15, 0.65, 20],
+    ['h1a',     0.30, 1.00, 44],
+    ['h1b',     0.70, 1.40, 44],
+    ['note',    4.45, 4.95, 18],
+    ['cta',     5.30, 5.85, 28],
+    ['url',     5.70, 6.20, 16]
+  ];
+
+  // Each row slides in, then its tick draws itself a beat later - the row
+  // arrives, then it is confirmed. Four times, evenly.
+  var ROWS = [
+    ['chk1', 1.75, 2.15, 'tick1', 2.05, 2.35],
+    ['chk2', 2.35, 2.75, 'tick2', 2.65, 2.95],
+    ['chk3', 2.95, 3.35, 'tick3', 3.25, 3.55],
+    ['chk4', 3.55, 3.95, 'tick4', 3.85, 4.15]
+  ];
+
+  var el = {};
+  ['eyebrow','h1a','h1b','note','cta','url',
+   'chk1','chk2','chk3','chk4','tick1','tick2','tick3','tick4']
+    .forEach(function (id) { el[id] = document.getElementById(id); });
+
+  window.renderFrame = function (t) {
+    RISE.forEach(function (r) {
+      var p = easeOut(cue(t, r[1], r[2]));
+      el[r[0]].style.opacity = p;
+      el[r[0]].style.transform = 'translateY(' + (1 - p) * r[3] + 'px)';
+    });
+
+    ROWS.forEach(function (r) {
+      var p = easeOut(cue(t, r[1], r[2]));
+      el[r[0]].style.opacity = p;
+      el[r[0]].style.transform = 'translateX(' + (1 - p) * -26 + 'px)';
+      var d = easeOut(cue(t, r[4], r[5]));
+      el[r[3]].setAttribute('stroke-dashoffset', String(100 - d * 100));
+    });
+  };
+
+  window.renderFrame(0);
+})();
+</script>
+</body>
+</html>

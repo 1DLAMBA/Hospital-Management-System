@@ -205,6 +205,15 @@
                         appointments.status }}</span>
                     <span *ngIf="appointments.status=='Declined'" class="ml-1 vertical-align-middle text-danger">{{
                         appointments.status }}</span>
+                    <div *ngIf="appointments.is_free_first" class="small text-success mt-1">
+                        🎉 Free — first consultation
+                    </div>
+                    <div *ngIf="isPaid(appointments)" class="small text-success mt-1">
+                        <i class="pi pi-check-circle"></i> Paid &#8358;{{ appointments.amount | number }}
+                    </div>
+                    <div *ngIf="needsPayment(appointments)" class="small text-warning mt-1">
+                        Payment required &#8226; &#8358;{{ appointments.amount | number }}
+                    </div>
                 </td>
                 <td class="appt-actions-cell">
                     <ng-container *ngIf="getProfessionalId(appointments); else noProviderActions">
@@ -217,10 +226,25 @@
                             (click)="viewProfile(appointments)"
                             class="view-profile-btn">
                         </button>
+                        <button
+                            *ngIf="needsPayment(appointments)"
+                            type="button"
+                            pButton
+                            severity="success"
+                            size="small"
+                            class="appt-pay-btn"
+                            [loading]="payingId === appointments.id"
+                            [disabled]="payingId === appointments.id"
+                            [pTooltip]="payToConsultTooltip"
+                            tooltipPosition="top"
+                            label="Pay &#8358;{{ appointments.amount | number }}"
+                            icon="pi pi-credit-card"
+                            (click)="payToConsult(appointments)">
+                        </button>
                         <span
                             class="appt-chat-tooltip-wrap"
-                            [pTooltip]="chatDisabledTooltip"
-                            [tooltipDisabled]="appointments.status === 'Accepted'"
+                            [pTooltip]="needsPayment(appointments) ? payToConsultTooltip : chatDisabledTooltip"
+                            [tooltipDisabled]="canConsult(appointments)"
                             tooltipPosition="top">
                             <button
                                 type="button"
@@ -229,7 +253,7 @@
                                 severity="secondary"
                                 size="small"
                                 class="appt-chat-btn"
-                                [disabled]="appointments.status !== 'Accepted'"
+                                [disabled]="!canConsult(appointments)"
                                 (click)="openChatWithProfessional(appointments)">
                             </button>
                         </span>

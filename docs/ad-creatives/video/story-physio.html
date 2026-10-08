@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix - Physiotherapy (story, transparent)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+  .frame {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    padding: 180px 80px 240px;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  /* Darker at top (logo/eyebrow) and bottom (body/footer) where type sits;
+     lighter through the middle third so the room itself stays visible. */
+  .scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(6,10,28,0.62) 0%,
+      rgba(6,10,28,0.30) 22%,
+      rgba(6,10,28,0.22) 45%,
+      rgba(6,10,28,0.55) 68%,
+      rgba(6,10,28,0.80) 100%);
+  }
+  .anim { opacity: 0; will-change: opacity, transform; }
+  .mark { width: 96px; height: 96px; display: block; border-radius: 22px; position: relative; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 23px; font-weight: 500;
+             letter-spacing: 0.2em; text-transform: uppercase; color: #92ccff; }
+  h1 { margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 100px;
+       line-height: 1.04; color: #fff; letter-spacing: -0.015em; text-wrap: pretty; }
+  .accent { color: #92ccff; }
+  .chip { align-self: flex-start; padding: 20px 36px; border-radius: 999px;
+          border: 1px solid rgba(146,204,255,0.55); background: rgba(10,20,50,0.45);
+          backdrop-filter: blur(3px); font-family: 'IBM Plex Mono', monospace; font-size: 26px;
+          letter-spacing: 0.08em; text-transform: uppercase; color: #cfe6ff; }
+  .body-cp { margin: 0; font-size: 35px; line-height: 1.5; color: rgba(255,255,255,0.9);
+             max-width: 880px; }
+  .foot { position: relative; display: flex; flex-direction: column; gap: 22px; }
+  .rule { height: 1px; background: rgba(255,255,255,0.22); }
+  .tie { margin: 0; font-size: 30px; line-height: 1.5; color: rgba(255,255,255,0.75); }
+  .url { font-family: 'IBM Plex Mono', monospace; font-size: 26px; color: rgba(255,255,255,0.55); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="scrim"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 34px;">
+    <img class="mark anim" id="mark" src="../canvas/phoenix-mark.svg" alt="Phoenix">
+    <div class="eyebrow anim" id="eyebrow">Did you know</div>
+  </div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 44px;">
+    <h1><span class="anim" id="h1a" style="display: block;">Physiotherapy is not</span><span class="accent anim" id="h1b" style="display: block;">only for athletes.</span></h1>
+    <div class="chip anim" id="chip">Physiotherapy</div>
+    <p class="body-cp anim" id="body">Back pain, stroke recovery, movement after surgery, and long-term joint problems all sit in physiotherapy.</p>
+  </div>
+
+  <div class="foot">
+    <div class="rule anim" id="rule"></div>
+    <p class="tie anim" id="tie">Describe it on Phoenix and your assistant points you to the right one.</p>
+    <div class="url anim" id="url">phoenixmed.online</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var easeOut = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var easeBack = function (p) { var c = 2.0; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+  var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  function cue(t, a, b) { return clamp01((t - a) / (b - a)); }
+
+  var RISE = [
+    ['mark',    0.15, 0.65, 0],
+    ['eyebrow', 0.55, 1.05, 18],
+    ['h1a',     0.95, 1.65, 40],
+    ['h1b',     1.35, 2.05, 40],
+    ['body',    2.55, 3.15, 24],
+    ['rule',    5.60, 5.90, 0],
+    ['tie',     5.75, 6.30, 20],
+    ['url',     6.10, 6.55, 14]
+  ];
+
+  var el = {};
+  ['mark','eyebrow','h1a','h1b','chip','body','rule','tie','url']
+    .forEach(function (id) { el[id] = document.getElementById(id); });
+
+  window.renderFrame = function (t) {
+    RISE.forEach(function (r) {
+      var p = easeOut(cue(t, r[1], r[2]));
+      el[r[0]].style.opacity = p;
+      if (r[3]) el[r[0]].style.transform = 'translateY(' + (1 - p) * r[3] + 'px)';
+    });
+    var cp = cue(t, 2.05, 2.55);
+    el.chip.style.opacity = easeOut(cp);
+    el.chip.style.transform = 'scale(' + (cp > 0 ? easeBack(cp) : 0.7) + ')';
+  };
+  window.renderFrame(0);
+})();
+</script>
+</body>
+</html>

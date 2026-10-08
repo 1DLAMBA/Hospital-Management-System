@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #8fbaff; } a:hover { color: #b9d4ff; }
+  </style>
+</helmet>
+
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(160deg, #0a1233 0%, #16214a 55%, #0e3d85 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif; display: flex; flex-direction: column; justify-content: space-between; gap: 50px;">
+
+  <div style="font-size: 46px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em;">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff;">For health professionals</div>
+    <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 96px; line-height: 1.06; color: #ffffff; letter-spacing: -0.01em;">You opened<br>three hours.<br><span style="color: #8fbaff;">We filled them.</span></h1>
+  </div>
+
+  <!-- Week strip: two opened slots read as claimed, the rest stay yours -->
+  <div style="padding: 38px 34px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 30px; display: flex; flex-direction: column; gap: 26px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="font-size: 27px; font-weight: 600; color: #ffffff;">Your week</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; color: rgba(255, 255, 255, 0.6);">You choose the hours</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px;">
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">M</div>
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">T</div>
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">W</div>
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">T</div>
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">F</div>
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">S</div>
+      <div style="text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 21px; color: rgba(255, 255, 255, 0.55);">S</div>
+
+      <div style="height: 120px; border-radius: 14px; background: rgba(255, 255, 255, 0.06);"></div>
+      <div style="height: 120px; border-radius: 14px; background: #8fbaff;"></div>
+      <div style="height: 120px; border-radius: 14px; background: rgba(255, 255, 255, 0.06);"></div>
+      <div style="height: 120px; border-radius: 14px; background: rgba(255, 255, 255, 0.06);"></div>
+      <div style="height: 120px; border-radius: 14px; background: #8fbaff;"></div>
+      <div style="height: 120px; border-radius: 14px; background: rgba(255, 255, 255, 0.06);"></div>
+      <div style="height: 120px; border-radius: 14px; background: rgba(255, 255, 255, 0.06);"></div>
+    </div>
+    <div style="display: flex; gap: 34px; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 22px; height: 22px; border-radius: 6px; background: #8fbaff;"></div>
+        <div style="font-size: 23px; color: rgba(255, 255, 255, 0.8);">Booked by a patient</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 22px; height: 22px; border-radius: 6px; background: rgba(255, 255, 255, 0.12);"></div>
+        <div style="font-size: 23px; color: rgba(255, 255, 255, 0.8);">Still yours</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 28px; align-items: flex-start;">
+    <div style="padding: 32px 64px; background: #ffffff; color: #14204a; border-radius: 999px; font-size: 38px; font-weight: 700; box-shadow: 0 10px 30px rgba(3, 10, 32, 0.45);">Join as a professional</div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255, 255, 255, 0.72);">phoenixmed.online</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

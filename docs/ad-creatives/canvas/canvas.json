@@ -1,0 +1,249 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Launch set"
+    },
+    {
+      "id": "page-2",
+      "name": "Nigeria - patients"
+    },
+    {
+      "id": "page-3",
+      "name": "Value content"
+    },
+    {
+      "id": "page-4",
+      "name": "Did you know series"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-1",
+      "title": "Your assistant - patients"
+    },
+    {
+      "file": "Comparison.dc.html",
+      "x": 1200,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-1",
+      "title": "Old way vs Phoenix - patients"
+    },
+    {
+      "file": "Testimonial.dc.html",
+      "x": 2400,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-1",
+      "title": "Quote card - patients"
+    },
+    {
+      "file": "Steps.dc.html",
+      "x": 0,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-1",
+      "title": "Three steps - patients"
+    },
+    {
+      "file": "Schedule.dc.html",
+      "x": 1200,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-1",
+      "title": "Your week - professionals"
+    },
+    {
+      "file": "Question.dc.html",
+      "x": 2400,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-1",
+      "title": "Typographic hook - professionals"
+    },
+    {
+      "file": "Tomorrow.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-2",
+      "title": "You won't hear these"
+    },
+    {
+      "file": "Traffic.dc.html",
+      "x": 1200,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-2",
+      "title": "Skip the traffic"
+    },
+    {
+      "file": "Fee.dc.html",
+      "x": 2400,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-2",
+      "title": "See the fee first"
+    },
+    {
+      "file": "Verified.dc.html",
+      "x": 0,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-2",
+      "title": "Had to prove it"
+    },
+    {
+      "file": "Assistant.dc.html",
+      "x": 1200,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-2",
+      "title": "Which doctor do you need"
+    },
+    {
+      "file": "DidYouKnow.dc.html",
+      "x": 0,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-3",
+      "title": "Did you know - template (first pass)"
+    },
+    {
+      "file": "HealthTip.dc.html",
+      "x": 1200,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-3",
+      "title": "Before your consultation - template (first pass)"
+    },
+    {
+      "file": "ValueFour.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-3",
+      "title": "Four documents"
+    },
+    {
+      "file": "ValueQuestions.dc.html",
+      "x": 1200,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-3",
+      "title": "Three questions"
+    },
+    {
+      "file": "ValueEmergency.dc.html",
+      "x": 2400,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-3",
+      "title": "Know the difference"
+    },
+    {
+      "file": "ValueScope.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-4",
+      "title": "Hair loss is dermatology"
+    },
+    {
+      "file": "FactOT.dc.html",
+      "x": 1200,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-4",
+      "title": "Occupational therapy"
+    },
+    {
+      "file": "FactSocial.dc.html",
+      "x": 2400,
+      "y": 0,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-4",
+      "title": "Medical social work"
+    },
+    {
+      "file": "FactPharmacist.dc.html",
+      "x": 0,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-4",
+      "title": "Pharmacy"
+    },
+    {
+      "file": "FactPhysio.dc.html",
+      "x": 1200,
+      "y": 2100,
+      "w": 1080,
+      "h": 1920,
+      "page": "page-4",
+      "title": "Physiotherapy"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "brief",
+      "x": 0,
+      "y": -200,
+      "w": 520,
+      "page": "page-1",
+      "text": "Story ads, 1080x1920.\nTop row: patients. Bottom row: health professionals.\nEach is a different creative device, not a restyle - run them against each other."
+    },
+    {
+      "id": "brief-ng",
+      "x": 0,
+      "y": -240,
+      "w": 620,
+      "page": "page-2",
+      "text": "Patient ads written for a Nigerian audience.\nEvery frame is built to animate: elements are separate, ordered, and id'd - strikes wipe, the route draws, receipt rows stagger, ticks pop, chips settle.\n\"Your assistant\" throughout - never \"AI assistant\".\nFee frames carry a [YOUR FEE] placeholder to fill in."
+    },
+    {
+      "id": "brief-value",
+      "x": 0,
+      "y": -300,
+      "w": 660,
+      "page": "page-3",
+      "text": "Value content: gives something instead of asking.\n\nTOP ROW is the current direction - deep navy, the wave motif from src/assets/waves.svg, the real Phoenix wordmark, big editorial type. Each carries one device that animates: the connector line drops, the numeral scales, the question cards deal in, the two panels meet.\n\nBOTTOM ROW is the first pass, kept for comparison - delete when you are done with it.\n\nAny clinical claim needs sign-off from one of your doctors. 'Three questions' and 'Know the difference' carry none.\n[DOCTOR NAME] / [SPECIALTY] are placeholders to fill."
+    },
+    {
+      "id": "brief-facts",
+      "x": 0,
+      "y": -300,
+      "w": 660,
+      "page": "page-4",
+      "text": "Did you know - a repeatable series. One specialty per post.\n\nEvery one is SCOPE OF PRACTICE: what a specialty covers. That is definitional, not diagnostic, so none of it tells a reader what is wrong with them - which is the line Meta enforces on health ads.\n\nEach maps to a professional type Phoenix actually registers, so the series doubles as an explanation of how broad your marketplace is.\n\nThe well is deep: radiology, nutrition, respiratory therapy, laboratory science and public health are all still unwritten."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-4"
+  }
+}

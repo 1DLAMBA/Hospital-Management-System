@@ -13,9 +13,12 @@ import {
 import { ClientsService } from '../endpoints/clients.service';
 import { NursesService } from '../endpoints/nurses.service';
 import { OtherProfessionalsService } from '../endpoints/other-professionals.service';
+import { HospitalsService } from '../endpoints/hospitals.service';
 import { MessageService } from 'primeng/api';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from '../auth.service';
+import { AnalyticsService } from '../services/analytics.service';
+import { AttributionService } from '../services/attribution.service';
 
 interface UploadEvent {
   originalEvent: Event;
@@ -57,6 +60,8 @@ export class RegisterComponent implements OnInit {
   registerResponse: any = null;
   termsAccepted = false;
   termsError = false;
+  consentAccepted = false;
+  consentError = false;
 
   // Professional types for other_professional user type
   professionalTypes = [
@@ -73,6 +78,9 @@ export class RegisterComponent implements OnInit {
     { label: 'Other', value: 'Other' }
   ];
 
+  // Hospitals available for health professionals to pick from during registration
+  hospitals: { label: string, value: number }[] = [];
+
   constructor(
     private _http: HttpClient,
     private readonly userEndpoint: UserService,
@@ -80,10 +88,14 @@ export class RegisterComponent implements OnInit {
     private readonly nurseEndpoint: NursesService,
     private readonly otherProfessionalEndpoint: OtherProfessionalsService,
     private readonly clientEndpoint: ClientsService,
+    private readonly hospitalsEndpoint: HospitalsService,
     private readonly router: Router,
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
     private authService: AuthService,
+    private route: ActivatedRoute,
+    private analytics: AnalyticsService,
+    private attribution: AttributionService,
   ) {
     this.RegisterForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -93,6 +105,7 @@ export class RegisterComponent implements OnInit {
       user_type: new FormControl('', Validators.required),
       professional_type: new FormControl(''), // Required conditionally for other_professional
       license_number: new FormControl(''), // Required conditionally for doctor and nurse only
+      hospital_id: new FormControl(''), // Required conditionally for doctor, nurse, other_professional
       med_school: new FormControl('', Validators.required),
       specialization: new FormControl('', Validators.required),
       grad_year: new FormControl('', Validators.required),
@@ -105,7 +118,30 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Campaign landing pages link here with ?type=client / ?type=doctor so the
+    // visitor does not have to re-answer a question the ad already established.
+    const requestedType = this.route.snapshot.queryParamMap.get('type');
+    const allowedTypes = ['client', 'doctor', 'nurse', 'other_professional'];
+    if (requestedType && allowedTypes.includes(requestedType)) {
+      this.RegisterForm.patchValue({ user_type: requestedType });
+      this.analytics.signUpRoleSelected(requestedType);
+    }
+    this.analytics.track('sign_up_form_view', {
+      prefilled_type: requestedType ?? 'none',
+      traffic_source: this.attribution.sourceLabel(),
+    });
 
+    this.hospitalsEndpoint.getAll().subscribe({
+      next: (response: any) => {
+        this.hospitals = (response?.hospital || []).map((hospital: any) => ({
+          label: hospital.name,
+          value: hospital.id,
+        }));
+      },
+      error: () => {
+        // Hospital list is optional context; registration can proceed without it.
+      },
+    });
   }
   degreeSuccess(message: any) {
 
@@ -235,6 +271,7 @@ export class RegisterComponent implements OnInit {
         this.userId = response.user.id;
         this.registerResponse = response;
         this.submitLoader = false;
+        this.analytics.signUpCompleted(this.RegisterForm.value.user_type);
         if (response.requires_verification) {
           this.registeredUserEmail = this.RegisterForm.value.email;
           this.registeredUserType = this.RegisterForm.value.user_type;
@@ -262,6 +299,16 @@ export class RegisterComponent implements OnInit {
         window.alert('Passwords dont match');
         return;
       }
+
+      // The user must read and accept the Terms/Privacy and the Data Protection consent before continuing.
+      if (!this.termsAccepted || !this.consentAccepted) {
+        this.termsError = !this.termsAccepted;
+        this.consentError = !this.consentAccepted;
+        this.degreeError('Please read and accept the Terms, Privacy Policy and Data Protection consent to continue.');
+        return;
+      }
+      this.termsError = false;
+      this.consentError = false;
 
       if (this.RegisterForm.value.user_type == 'client') {
         this.firststep = false;
@@ -367,6 +414,7 @@ export class RegisterComponent implements OnInit {
     // License number is required only for doctors and nurses
     const licenseValid = isOtherProfessional || this.RegisterForm.value.license_number;
 
+    // Hospital is optional — professionals may register without belonging to one.
     if (licenseValid &&
       this.RegisterForm.value.med_school &&
       this.degreeFile &&
@@ -416,6 +464,7 @@ export class RegisterComponent implements OnInit {
         const user = {
           user_id: userId,
           license_number: this.RegisterForm.value.license_number,
+          hospital_id: this.RegisterForm.value.hospital_id,
           med_school: this.RegisterForm.value.med_school,
           specialization: this.RegisterForm.value.specialization,
           grad_year: this.RegisterForm.value.grad_year,
@@ -444,6 +493,7 @@ export class RegisterComponent implements OnInit {
         const nurse = {
           user_id: userId,
           license_number: this.RegisterForm.value.license_number,
+          hospital_id: this.RegisterForm.value.hospital_id,
           med_school: this.RegisterForm.value.med_school,
           specialization: this.RegisterForm.value.specialization,
           grad_year: this.RegisterForm.value.grad_year,
@@ -472,6 +522,7 @@ export class RegisterComponent implements OnInit {
           user_id: userId,
           professional_type: this.RegisterForm.value.professional_type,
           license_number: this.RegisterForm.value.license_number,
+          hospital_id: this.RegisterForm.value.hospital_id,
           med_school: this.RegisterForm.value.med_school,
           specialization: this.RegisterForm.value.specialization,
           grad_year: this.RegisterForm.value.grad_year,
@@ -504,6 +555,7 @@ export class RegisterComponent implements OnInit {
           next: (response) => {
             console.log(response);
             this.submitLoader = false;
+            this.analytics.signUpCompleted('client');
             // Set up localStorage like login (client does not use OTP)
             if (this.registerResponse?.user) {
               this.authService.login(this.registerResponse);

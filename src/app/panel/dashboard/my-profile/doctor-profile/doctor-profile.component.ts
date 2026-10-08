@@ -4,7 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
 import { OtherProfessionalsService } from '../../../../endpoints/other-professionals.service';
+import { HospitalsService } from '../../../../endpoints/hospitals.service';
 import { BankAccountService } from '../../../../endpoints/bank-account.service';
+import { PaymentService } from '../../../../endpoints/payment.service';
 import { DoctorResource } from '../../../../../resources/doctor.model';
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -81,6 +83,14 @@ export class DoctorProfileComponent implements OnInit {
     { label: 'Other', value: 'Other' },
   ];
 
+  // Hospitals for the (optional) hospital selection on the completion form.
+  hospitals: { label: string, value: number }[] = [];
+
+  // Consultation transactions (owner-only).
+  transactions: any[] = [];
+  totalEarned = 0;
+  loadingTransactions = false;
+
   constructor(
     private route: ActivatedRoute,
     private userEndpoint: UserService,
@@ -88,6 +98,8 @@ export class DoctorProfileComponent implements OnInit {
     private messageService: MessageService,
     private doctorEndpoint: DoctorsService,
     private otherProfessionalEndpoint: OtherProfessionalsService,
+    private hospitalsEndpoint: HospitalsService,
+    private paymentEndpoint: PaymentService,
     private medicalEndpoint: MedicalService,
     private authService: AuthService,
     private bankAccountService: BankAccountService,
@@ -102,12 +114,14 @@ export class DoctorProfileComponent implements OnInit {
       specialization: new FormControl('', Validators.required),
       grad_year: new FormControl('', Validators.required),
       professional_type: new FormControl(''),
+      hospital_id: new FormControl(''), // Optional — the professional may be independent
     });
   }
 
   ngOnInit(): void {
     this.user_id = localStorage.getItem('id');
     this.id = this.route.snapshot.params['id'] || this.user_id || '';
+    this.loadHospitals();
     this.getUser();
     this.route.params.subscribe((p) => {
       this.id = p['id'] || this.user_id || '';
@@ -118,6 +132,38 @@ export class DoctorProfileComponent implements OnInit {
       if (this.user?.registration_complete && this.singleDoctor?.id && this.professionalType === 'doctor') {
         this.toggleAvailability(checked);
       }
+    });
+  }
+
+  loadHospitals(): void {
+    this.hospitalsEndpoint.getAll().subscribe({
+      next: (response: any) => {
+        this.hospitals = (response?.hospital || []).map((h: any) => ({
+          label: h.name,
+          value: h.id,
+        }));
+      },
+      // Hospital is optional context; ignore load failures silently.
+      error: () => {},
+    });
+  }
+
+  loadTransactions(): void {
+    if (!this.user?.id) {
+      return;
+    }
+    this.loadingTransactions = true;
+    this.paymentEndpoint.transactions(this.user.id).subscribe({
+      next: (res: any) => {
+        this.loadingTransactions = false;
+        this.transactions = res?.data?.transactions || [];
+        this.totalEarned = res?.data?.total_earned || 0;
+      },
+      error: () => {
+        this.loadingTransactions = false;
+        this.transactions = [];
+        this.totalEarned = 0;
+      },
     });
   }
 
@@ -135,6 +181,7 @@ export class DoctorProfileComponent implements OnInit {
       next: (response: any) => {
         this.user = response.user;
         this.avatar_file = environment.apiUrl + '/file/get/';
+        this.loadTransactions();
 
         if (this.user.user_type === 'doctor' && this.user.doctors?.id) {
           this.professionalType = 'doctor';
@@ -244,6 +291,7 @@ export class DoctorProfileComponent implements OnInit {
       specialization: row.specialization || '',
       grad_year: row.grad_year != null ? String(row.grad_year) : '',
       professional_type: o?.professional_type || '',
+      hospital_id: row.hospital_id ?? '',
     }, { emitEvent: false });
     if (this.user.user_type === 'other_professional') {
       this.completionForm.get('professional_type')?.setValidators([Validators.required]);
@@ -361,6 +409,7 @@ export class DoctorProfileComponent implements OnInit {
       med_school: this.completionForm.value.med_school,
       specialization: this.completionForm.value.specialization,
       grad_year: parseInt(String(this.completionForm.value.grad_year), 10),
+      hospital_id: this.completionForm.value.hospital_id || null,
       degree_file: degree,
       signature,
       id_card: idCard,
