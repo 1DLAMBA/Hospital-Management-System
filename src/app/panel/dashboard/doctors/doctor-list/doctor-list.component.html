@@ -167,13 +167,7 @@
             </div>
 
             <div class="staff-card__actions">
-                <span
-                    class="availability-pill"
-                    [class.availability-pill--available]="isAvailable(professional)"
-                    [class.availability-pill--unavailable]="!isAvailable(professional)">
-                    <span class="availability-pill__dot"></span>
-                    {{ getAvailabilityText(professional) }}
-                </span>
+                <app-status-pill [status]="isAvailable(professional) ? 'available' : 'unavailable'"></app-status-pill>
                 <button
                     type="button"
                     class="staff-card__button"

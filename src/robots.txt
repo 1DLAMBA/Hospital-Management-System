@@ -4,4 +4,9 @@ Disallow: /panel/
 Disallow: /login
 Disallow: /register
 
+# Google Ads landing page crawler. AdsBot does not follow the wildcard group
+# above, so state its access explicitly for ad quality checks.
+User-agent: AdsBot-Google
+Allow: /
+
 Sitemap: https://phoenixmed.online/sitemap.xml

@@ -4,6 +4,8 @@ import { UserService } from '../../endpoints/user.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { AdminService } from '../../endpoints/admin.service';
+import { HospitalsService } from '../../endpoints/hospitals.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -19,14 +21,29 @@ export class SideNavComponent implements OnInit, OnDestroy {
   client_nav!: any[];
   nurse_nav!: any[];
   admin_nav!: any[];
+  hospital_nav!: any[];
   private routerSubscription?: Subscription;
   private isComponentActive: boolean = true;
 
   constructor(
     private userEndpoint: UserService,
+    private adminEndpoint: AdminService,
+    private hospitalEndpoint: HospitalsService,
     private router: Router
   ){
-    
+
+  }
+
+  private actorType(): 'admin' | 'hospital' | 'user' {
+    const userData = localStorage.getItem('userData');
+    if (!userData) return 'user';
+    try {
+      const userType = JSON.parse(userData)?.user?.user_type;
+      if (userType === 'admin' || userType === 'hospital') return userType;
+      return 'user';
+    } catch {
+      return 'user';
+    }
   }
   
   ngOnInit(): void {
@@ -111,14 +128,16 @@ export class SideNavComponent implements OnInit, OnDestroy {
   }
 
   getUser (){
-    this.userEndpoint.get(this.id).subscribe({
+    const actor = this.actorType();
+    const endpoint = actor === 'admin' ? this.adminEndpoint : actor === 'hospital' ? this.hospitalEndpoint : this.userEndpoint;
+    endpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user
         this.initializeNav();
-        
+
       }
     })
-   
+
   }
 
   initializeNav(){
@@ -237,6 +256,32 @@ export class SideNavComponent implements OnInit, OnDestroy {
       routerLink: `my-profile/nurse/${this.id}`
     },
   ]
+    this.admin_nav = [{
+      navClassName: 'side-btn bi bi-columns-gap my-2 py-3',
+      title: 'Dashboard',
+      routerLink: 'admin-panel',
+    },
+    {
+      navClassName: 'side-btn bi bi-people-fill my-2 py-3',
+      title: 'Users',
+      routerLink: 'admin-panel/users',
+    },
+    {
+      navClassName: 'side-btn bi bi-hospital my-2 py-3',
+      title: 'Hospitals',
+      routerLink: 'admin-panel/hospitals',
+    },
+  ]
+    this.hospital_nav = [{
+      navClassName: 'side-btn bi bi-columns-gap my-2 py-3',
+      title: 'Dashboard',
+      routerLink: 'hospital-panel',
+    },
+    {
+      navClassName: 'side-btn bi bi-person-badge my-2 py-3',
+      title: 'Health professionals',
+      routerLink: 'hospital-professionals',
+    }]
     switch (this.user.user_type) {
       case 'doctor':
         this.nav_type = this.doctor_nav
@@ -252,6 +297,9 @@ export class SideNavComponent implements OnInit, OnDestroy {
         break;
       case 'admin':
         this.nav_type = this.admin_nav
+        break;
+      case 'hospital':
+        this.nav_type = this.hospital_nav
         break;
       default:
         this.nav_type = this.client_nav;

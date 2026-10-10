@@ -1,0 +1,4 @@
+/* Layout rules for pinning the footer to the bottom live in the global
+   stylesheet (src/styles.css) — routed components are inserted by the
+   Router, not by this component's template, so Angular's emulated view
+   encapsulation would otherwise scope this rule away from them. */

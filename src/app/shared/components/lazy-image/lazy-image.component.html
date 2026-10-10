@@ -5,19 +5,19 @@
   </div>
   
   <!-- Image -->
-  <img 
-    *ngIf="imageLoaded || imageError"
-    [src]="imageSrc" 
+  <img
+    *ngIf="imageLoaded"
+    [src]="imageSrc"
     [alt]="alt"
     [ngClass]="class"
     [style.width]="width || '100%'"
     [style.height]="height || '100%'"
     [style.border-radius]="borderRadius"
     class="lazy-loaded-image"
-    (error)="imageError = true; showSpinner = false"
+    (error)="imageError = true; imageLoaded = false; showSpinner = false"
   />
-  
-  <!-- Error placeholder -->
+
+  <!-- Error / no-image placeholder -->
   <div *ngIf="imageError && !imageLoaded" class="image-placeholder">
     <i class="bi bi-person-circle"></i>
   </div>

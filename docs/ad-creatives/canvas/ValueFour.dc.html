@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #92ccff; } a:hover { color: #cce4ff; }
+  </style>
+</helmet>
+
+<!-- Animation: the numeral scales up from 0.8 as the waves draw behind it,
+     then the four items stagger in beneath. The numeral is the whole ad. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(165deg, #060d26 0%, #0a1a3a 42%, #0d3080 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif;">
+
+  <svg id="waves" width="1240" height="340" viewBox="0 0 1240 340" fill="none" style="position: absolute; top: 460px; left: -80px; opacity: 0.55;" aria-hidden="true">
+    <defs>
+      <linearGradient id="wg2" x1="0" y1="0" x2="1240" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#6ab0ff" stop-opacity="0.12"></stop>
+        <stop offset="42%" stop-color="#92ccff" stop-opacity="0.9"></stop>
+        <stop offset="80%" stop-color="#dff0ff" stop-opacity="0.4"></stop>
+        <stop offset="100%" stop-color="#eef8ff" stop-opacity="0.08"></stop>
+      </linearGradient>
+    </defs>
+    <path d="M0 170 C 210 50, 410 290, 620 170 C 830 50, 1030 290, 1240 170" stroke="url(#wg2)" stroke-width="1.5" stroke-linecap="round"></path>
+    <path d="M0 170 C 210 290, 410 50, 620 170 C 830 290, 1030 50, 1240 170" stroke="url(#wg2)" stroke-width="1.5" stroke-linecap="round"></path>
+  </svg>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+      <img src="phoenix-mark.svg" alt="Phoenix" style="width: 96px; height: 96px; display: block; border-radius: 22px;" id="logo">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 23px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6ab0ff;" id="eyebrow">Before they see anyone</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 340px; line-height: 0.82; color: #ffffff; letter-spacing: -0.04em;" id="numeral">4</div>
+      <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 78px; line-height: 1.08; color: #92ccff; letter-spacing: -0.015em;" id="claim">documents, checked<br>by hand.</h1>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 18px;" id="list">
+      <div style="display: flex; gap: 22px; align-items: baseline;" id="i1"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; color: #6ab0ff;">01</span><span style="font-size: 33px; color: rgba(255,255,255,0.88);">Practising licence number</span></div>
+      <div style="display: flex; gap: 22px; align-items: baseline;" id="i2"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; color: #6ab0ff;">02</span><span style="font-size: 33px; color: rgba(255,255,255,0.88);">Qualification certificate</span></div>
+      <div style="display: flex; gap: 22px; align-items: baseline;" id="i3"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; color: #6ab0ff;">03</span><span style="font-size: 33px; color: rgba(255,255,255,0.88);">Signature</span></div>
+      <div style="display: flex; gap: 22px; align-items: baseline;" id="i4"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; color: #6ab0ff;">04</span><span style="font-size: 33px; color: rgba(255,255,255,0.88);">Government-issued ID</span></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 22px;" id="foot">
+      <div style="height: 1px; background: rgba(255,255,255,0.14);"></div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; color: rgba(255,255,255,0.5);">phoenixmed.online</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

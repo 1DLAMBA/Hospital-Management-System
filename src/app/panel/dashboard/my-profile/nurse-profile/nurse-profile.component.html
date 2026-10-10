@@ -49,6 +49,17 @@
                                 <label class="reg-field__label" for="nurse-reg-grad">Graduation year</label>
                                 <input id="nurse-reg-grad" pInputText formControlName="grad_year" class="w-full" inputmode="numeric" />
                             </div>
+                            <div class="reg-field reg-field--full">
+                                <label class="reg-field__label" for="nurse-reg-hospital">Hospital
+                                    <span class="reg-field__hint">(optional)</span>
+                                </label>
+                                <p-dropdown inputId="nurse-reg-hospital" formControlName="hospital_id" [options]="hospitals"
+                                    optionLabel="label" optionValue="value" placeholder="Select your hospital"
+                                    [showClear]="true" [filter]="true" filterBy="label" styleClass="w-full"></p-dropdown>
+                                <span *ngIf="hospitals.length === 0" class="reg-field__hint">
+                                    No hospitals available yet.
+                                </span>
+                            </div>
                         </div>
 
                         <div class="reg-uploads-block">
@@ -128,7 +139,42 @@
                     {{singleNurse?.grad_year}}</p>
                 </div>
                 <hr>
-                
+
+                <!-- Consultation Transactions (owner-only) -->
+                <div class="txn-section col-12">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <b>Consultation Transactions</b>
+                        <span class="txn-total" *ngIf="!loadingTransactions">Total earned: <strong>&#8358;{{ totalEarned | number }}</strong></span>
+                    </div>
+                    <p *ngIf="loadingTransactions" class="text-muted mt-2">Loading transactions…</p>
+                    <p *ngIf="!loadingTransactions && transactions.length === 0" class="text-muted mt-2">
+                        No paid consultations yet. Your earnings from consultations will appear here.
+                    </p>
+                    <div class="txn-table-wrap mt-2" *ngIf="!loadingTransactions && transactions.length > 0">
+                        <table class="txn-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Patient</th>
+                                    <th>Fee</th>
+                                    <th>Your earnings</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let t of transactions">
+                                    <td>{{ t.paid_at | date:'MMM d, y' }}</td>
+                                    <td>{{ t.patient }}</td>
+                                    <td>&#8358;{{ t.amount | number }}</td>
+                                    <td class="txn-earn">&#8358;{{ t.earnings | number }}</td>
+                                    <td><span class="txn-badge">Paid</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+
                 <!-- Bank Account Section -->
                 <div id="profile-bank-account-section" class="d-flex justify-content-between flex-wrap col-12">
                     <div class="col-12 col-md-3 d-flex align-items-center justify-content-between">

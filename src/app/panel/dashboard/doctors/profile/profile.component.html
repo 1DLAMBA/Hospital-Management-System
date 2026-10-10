@@ -60,75 +60,85 @@
     </p-dialog>
 </div>
 
-<main class="d-flex flex-column flex-wrap">
+<main class="ph-page">
+    <section class="profile-grid">
+        <aside class="identity">
+            <app-lazy-image
+                *ngIf="avatar_file && (professional?.user?.passport || SingleDoctor?.user?.passport)"
+                [src]="avatar_file + (professional?.user?.passport || SingleDoctor?.user?.passport)"
+                [alt]="(professional?.user?.name || SingleDoctor?.user?.name) || 'Profile'"
+                width="128px"
+                height="128px"
+                borderRadius="50%">
+            </app-lazy-image>
+            <p-skeleton *ngIf="!avatar_file || (!professional && !SingleDoctor)" shape="circle" size="128px"></p-skeleton>
 
-    <section class="hero p-3">
+            <h1>{{professional?.user?.name || SingleDoctor?.user?.name}}</h1>
+            <p class="speciality">
+                {{professional?.specialization || SingleDoctor?.specialization}}
+                <ng-container *ngIf="professionalType === 'other_professional'">{{professional?.professional_type}}</ng-container>
+            </p>
 
-        <!-- <p>{{SingleDoctor.user.name}}</p> -->
-    </section>
+            <app-status-pill
+                *ngIf="professionalType === 'doctor'"
+                [status]="(professional?.availability === '0' || SingleDoctor?.availability === '0') ? 'unavailable' : 'available'">
+            </app-status-pill>
+            <app-status-pill *ngIf="professionalType === 'other_professional'" status="available"></app-status-pill>
 
-    <section class="main mx-auto d-flex flex-wrap justify-content-between">
-        <div class="left-profile ">
-            <div class="inner-profile d-flex flex-column pb-2">
-                <app-lazy-image 
-                    *ngIf="avatar_file && (professional?.user?.passport || SingleDoctor?.user?.passport)"
-                    class="m-auto"
-                    [src]="avatar_file + (professional?.user?.passport || SingleDoctor?.user?.passport)"
-                    [alt]="(professional?.user?.name || SingleDoctor?.user?.name) || 'Profile'"
-                    width="150px"
-                    height="150px"
-                    borderRadius="50%">
-                </app-lazy-image>
-                <p-skeleton *ngIf="!avatar_file || (!professional && !SingleDoctor)" shape="circle" size="150px" styleClass="m-auto"></p-skeleton>
-                <h1 class="m-2">{{professional?.user?.name || SingleDoctor?.user?.name}}</h1>
-                <p class="m-2">{{professional?.specialization || SingleDoctor?.specialization}}</p>
-                <p class="m-2" *ngIf="professionalType === 'other_professional'">{{professional?.professional_type}}</p>
-                <p-tag *ngIf="professionalType === 'doctor' && (professional?.availability === '0' || SingleDoctor?.availability === '0')" value="Unavailable" severity="danger"></p-tag>
-                <p-tag *ngIf="professionalType === 'doctor' && (professional?.availability === '1' || SingleDoctor?.availability === '1')" value="Available" severity="success"></p-tag>
-                <p-tag *ngIf="professionalType === 'other_professional'" value="Available" severity="info"></p-tag>
+            <p class="consult-fee">
+                <ng-container *ngIf="(professional?.consultation_fee || SingleDoctor?.consultation_fee) > 0; else freeConsult">
+                    Consultation fee
+                    <strong>&#8358;{{ (professional?.consultation_fee || SingleDoctor?.consultation_fee) | number }}</strong>
+                </ng-container>
+                <ng-template #freeConsult><strong>Free consultation</strong></ng-template>
+            </p>
+
+            <p class="first-free-badge" *ngIf="isFirstConsultationFree()">
+                🎉 Your first consultation is <strong>free</strong>
+            </p>
+
+            <button type="button" class="book" [disabled]="user?.clients?.appointments && appointment" (click)="showDialog()">
+                Book appointment
+            </button>
+        </aside>
+
+        <div class="details">
+            <div *ngIf="user?.appointments && user.appointments.status == 'pending'" class="pending-note">
+                <i class="pi pi-clock" aria-hidden="true"></i>
+                <span>You already have an appointment waiting on a response.</span>
             </div>
-        </div>
-        <div class="right-profile p-2">
-            <span *ngIf="user.appointments">
-                <div *ngIf="user.appointments.status=='pending'" class="alert alert-warning">
-                    <p>You have a pending appointment</p>
-                </div>
-            </span>
-            <div class="m-2">
-                <h1 class="primary-color">Profile</h1>
-                <div class="d-flex flex-wrap">
 
-                    <h3 class="col-6">{{professional?.user?.name || SingleDoctor?.user?.name}}</h3>
-                    <small class="col-6">{{professional?.license_number || SingleDoctor?.license_number}}</small>
-                    <p class="col-12">{{professional?.specialization || SingleDoctor?.specialization}}</p>
-                    <p class="col-12" *ngIf="professionalType === 'other_professional'"><strong>Type:</strong> {{professional?.professional_type}}</p>
-                </div>
-            </div>
-            <div class="m-2">
-                <h1 class="primary-color">Experience</h1>
-                <span class="d-flex">
-                    <p class="col-6">{{professional?.med_school || SingleDoctor?.med_school}}</p>
-                    <p class="col-6">{{professional?.grad_year || SingleDoctor?.grad_year}}</p>
-                </span>
-            </div>
-            <!-- <div class="m-2">
-                <h1 class="primary-color">Contact</h1>
-                <span class="d-flex flex-wrap">
-                    <p class="col-12">{{professional?.user?.email || SingleDoctor?.user?.email}}</p>
-                    <p class="col-12">{{professional?.user?.phoneno || SingleDoctor?.user?.phoneno}}</p>
-                </span>
-            </div> -->
+            <section class="block">
+                <h2>Credentials</h2>
+                <dl>
+                    <div class="row">
+                        <dt>Licence number</dt>
+                        <dd class="ph-record">{{professional?.license_number || SingleDoctor?.license_number || '—'}}</dd>
+                    </div>
+                    <div class="row">
+                        <dt>Speciality</dt>
+                        <dd>{{professional?.specialization || SingleDoctor?.specialization || '—'}}</dd>
+                    </div>
+                    <div class="row" *ngIf="professionalType === 'other_professional'">
+                        <dt>Discipline</dt>
+                        <dd>{{professional?.professional_type || '—'}}</dd>
+                    </div>
+                </dl>
+            </section>
 
-            <span *ngIf="user?.clients?.appointments">
-                    <p-button [disabled]="appointment" label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
-                        [rounded]="true" />
-                </span>
-                <span *ngIf="!user?.clients?.appointments">
-                    <p-button label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true"
-                        [rounded]="true" />
-                </span>
-
-
+            <section class="block">
+                <h2>Training</h2>
+                <dl>
+                    <div class="row">
+                        <dt>Medical school</dt>
+                        <dd>{{professional?.med_school || SingleDoctor?.med_school || '—'}}</dd>
+                    </div>
+                    <div class="row">
+                        <dt>Graduated</dt>
+                        <dd class="ph-record">{{professional?.grad_year || SingleDoctor?.grad_year || '—'}}</dd>
+                    </div>
+                </dl>
+            </section>
         </div>
     </section>
 </main>

@@ -6,6 +6,7 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { HospitalRegisterComponent } from './hospital-register/hospital-register.component';
 import { DashboardComponent } from './panel/dashboard/dashboard.component';
 import { PanelComponent } from './panel/dashboard/panel/panel.component';
 import { AppointmentComponent } from './panel/dashboard/appointment/appointment.component';
@@ -32,6 +33,18 @@ import { AssignmentsComponent } from './panel/dashboard/assignments/assignments.
 import { ChatPageComponent } from './panel/dashboard/messages/chat-page/chat-page.component';
 import { LegalPageComponent } from './legal/legal-page.component';
 import { legalContentResolver } from './legal/legal-content.resolver';
+import { AdminPanelComponent } from './panel/dashboard/panel/admin-panel/admin-panel.component';
+import { AdminDashboardComponent } from './panel/dashboard/panel/admin-panel/admin-dashboard/admin-dashboard.component';
+import { AdminUsersListComponent } from './panel/dashboard/panel/admin-panel/admin-users-list/admin-users-list.component';
+import { AdminHospitalsListComponent } from './panel/dashboard/panel/admin-panel/admin-hospitals-list/admin-hospitals-list.component';
+import { adminGuard } from './guards/admin.guard';
+import { HospitalPanelComponent } from './panel/dashboard/panel/hospital-panel/hospital-panel.component';
+import { HospitalProfessionalsComponent } from './panel/dashboard/panel/hospital-panel/hospital-professionals/hospital-professionals.component';
+import { hospitalGuard } from './guards/hospital.guard';
+import { CampaignLandingComponent } from './campaign/campaign-landing.component';
+import { CAMPAIGN_CONTENT } from './campaign/campaign-content';
+import { PaymentCallbackComponent } from './payment-callback/payment-callback.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 export const routes: Routes = [
     {
@@ -56,6 +69,17 @@ export const routes: Routes = [
         path: 'contact',
         component: ContactComponent,
       },
+      // Paid-traffic landing pages. One audience, one promise, one action each.
+      {
+        path: 'consult',
+        component: CampaignLandingComponent,
+        data: { campaign: 'patients', seo: CAMPAIGN_CONTENT['patients'].seo },
+      },
+      {
+        path: 'practice',
+        component: CampaignLandingComponent,
+        data: { campaign: 'professionals', seo: CAMPAIGN_CONTENT['professionals'].seo },
+      },
       {
         path: 'login',
         component: LoginComponent,
@@ -63,6 +87,18 @@ export const routes: Routes = [
       {
         path: 'register',
         component: RegisterComponent,
+      },
+      {
+        path: 'hospital-register',
+        component: HospitalRegisterComponent,
+      },
+      {
+        path: 'payment/callback',
+        component: PaymentCallbackComponent,
+      },
+      {
+        path: 'verify-email',
+        component: VerifyEmailComponent,
       },
       {
         path: 'privacy-policy',
@@ -191,6 +227,35 @@ export const routes: Routes = [
               component:NurseProfileComponent
             },
           ]
+        },
+        {
+          path: 'admin-panel',
+          component: AdminPanelComponent,
+          canActivate: [adminGuard],
+          children: [
+            {
+              path: '',
+              component: AdminDashboardComponent,
+            },
+            {
+              path: 'users',
+              component: AdminUsersListComponent,
+            },
+            {
+              path: 'hospitals',
+              component: AdminHospitalsListComponent,
+            },
+          ]
+        },
+        {
+          path: 'hospital-panel',
+          component: HospitalPanelComponent,
+          canActivate: [hospitalGuard],
+        },
+        {
+          path: 'hospital-professionals',
+          component: HospitalProfessionalsComponent,
+          canActivate: [hospitalGuard],
         },
       ]
       },

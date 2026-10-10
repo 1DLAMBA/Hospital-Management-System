@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #8fbaff; } a:hover { color: #b9d4ff; }
+  </style>
+</helmet>
+
+<!-- Animation note: the specialty chips are built to light up one at a time
+     and settle on #chipPick - a scanning beat, then a decision. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(160deg, #0a1233 0%, #16214a 52%, #0e3d85 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif; display: flex; flex-direction: column; justify-content: space-between; gap: 44px;">
+
+  <div style="font-size: 46px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em;" id="logo">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff;" id="eyebrow">Your assistant</div>
+    <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 104px; line-height: 1.05; color: #ffffff; letter-spacing: -0.01em;"><span style="display: block;" id="h1a">Not sure which</span><span style="display: block; color: #8fbaff;" id="h1b">doctor you need?</span></h1>
+    <p style="margin: 8px 0 0; font-size: 33px; line-height: 1.5; color: rgba(255, 255, 255, 0.82); max-width: 800px;" id="sub">Describe what&#39;s going on. Your assistant points you to the right specialist, then you pick a time.</p>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 18px;" id="chips">
+    <div style="padding: 22px 34px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.06); font-size: 30px; color: rgba(255, 255, 255, 0.6);" id="chip1">Paediatrics</div>
+    <div style="padding: 22px 34px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.06); font-size: 30px; color: rgba(255, 255, 255, 0.6);" id="chip2">Dermatology</div>
+    <div style="padding: 22px 34px; border-radius: 999px; border: 1px solid #8fbaff; background: #8fbaff; font-size: 30px; font-weight: 600; color: #10193a;" id="chipPick">General Medicine</div>
+    <div style="padding: 22px 34px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.06); font-size: 30px; color: rgba(255, 255, 255, 0.6);" id="chip3">Cardiology</div>
+    <div style="padding: 22px 34px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.06); font-size: 30px; color: rgba(255, 255, 255, 0.6);" id="chip4">Physiotherapy</div>
+    <div style="padding: 22px 34px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.06); font-size: 30px; color: rgba(255, 255, 255, 0.6);" id="chip5">Nutrition</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div style="padding: 32px 64px; background: #ffffff; color: #14204a; border-radius: 999px; font-size: 38px; font-weight: 700; box-shadow: 0 10px 30px rgba(3, 10, 32, 0.45);" id="cta">Book a consultation</div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255, 255, 255, 0.72);" id="url">phoenixmed.online</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

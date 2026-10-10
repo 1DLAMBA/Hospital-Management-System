@@ -1,0 +1,99 @@
+/* Shared styling for Phoenix ad creatives.
+   Each .creative is rendered to PNG at its exact pixel size by render.js. */
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #222;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 40px;
+  font-family: "IBM Plex Sans", -apple-system, sans-serif;
+}
+
+.creative {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 22%, rgba(48, 120, 235, 0.55) 0%, rgba(48, 120, 235, 0) 58%),
+    linear-gradient(135deg, #0a1233 0%, #16214a 45%, #0e3d85 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* Brand mark */
+.logo {
+  position: absolute;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  z-index: 5;
+}
+
+/* Cut-out subject photography */
+.subject {
+  position: absolute;
+  object-fit: contain;
+  object-position: bottom center;
+  z-index: 2;
+  filter: drop-shadow(0 18px 50px rgba(0, 0, 0, 0.45));
+}
+
+/* Copy block sits above the photo */
+.copy { position: absolute; z-index: 4; }
+
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  text-transform: uppercase;
+  color: #93bdff;
+  font-weight: 500;
+}
+
+h1 {
+  font-family: "EB Garamond", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.accent { color: #8fbaff; }
+
+.sub { color: rgba(255, 255, 255, 0.86); font-weight: 400; }
+
+.ticks { list-style: none; }
+.ticks li { position: relative; color: rgba(255, 255, 255, 0.92); }
+.ticks li::before {
+  content: "✓";
+  position: absolute;
+  color: #8fbaff;
+  font-weight: 700;
+}
+
+.cta {
+  display: inline-block;
+  background: #fff;
+  color: #14204a;
+  font-weight: 700;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(3, 10, 32, 0.45);
+}
+
+.url {
+  position: absolute;
+  font-family: "IBM Plex Mono", monospace;
+  color: rgba(255, 255, 255, 0.72);
+  z-index: 5;
+}
+
+/* Soft vignette so copy stays readable over the photo */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}

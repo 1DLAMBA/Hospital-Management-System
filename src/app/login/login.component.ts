@@ -98,7 +98,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.submitLoading = false;
         console.log(response.user)
         this.spinner.hide();
-        this.authService.login(response)
+        this.authService.login(response, response.token)
         // Ensure ID is available to routed components during their ngOnInit
         localStorage.setItem('id', response.user.id)
         const u = response.user;
@@ -121,6 +121,12 @@ export class LoginComponent implements OnDestroy, OnInit {
             break;
           case 'nurse':
             this.router.navigate(['panel/nurse-panel']);
+            break;
+          case 'admin':
+            this.router.navigate(['panel/admin-panel']);
+            break;
+          case 'hospital':
+            this.router.navigate(['panel/hospital-panel']);
             break;
         
           default:

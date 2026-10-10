@@ -8,6 +8,8 @@ import { AppointmentResource } from '../../../../../resources/appointment.model'
 import { environment } from '../../../../../environments/environment';
 import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
+import { PaymentService } from '../../../../endpoints/payment.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-client-appointment',
@@ -31,12 +33,16 @@ export class ClientAppointmentComponent implements OnInit {
   today: Date = new Date();
 
   readonly chatDisabledTooltip = 'Chat is available after the appointment is accepted.';
+  readonly payToConsultTooltip = 'Pay the consultation fee to start consulting.';
+  payingId: number | null = null;
 
   constructor(
     private userEndpoint: UserService,
     private doctorEndpoint: DoctorsService,
     private appointmentEndpoint: AppointmentsService,
     private router: Router,
+    private paymentEndpoint: PaymentService,
+    private messageService: MessageService,
   ) {
 
   }
@@ -169,8 +175,61 @@ export class ClientAppointmentComponent implements OnInit {
     return Number.isFinite(n) ? n : null;
   }
 
+  /**
+   * True when the professional has accepted and a fee is due but not yet paid.
+   */
+  needsPayment(appointment: any): boolean {
+    return appointment?.status === 'Accepted'
+      && ['unpaid', 'pending', 'failed'].includes(appointment?.payment_status);
+  }
+
+  /**
+   * True when the consultation is unlocked: accepted and either paid or free.
+   */
+  canConsult(appointment: any): boolean {
+    return appointment?.status === 'Accepted'
+      && (appointment?.payment_status === 'paid' || appointment?.payment_status === 'not_required');
+  }
+
+  isPaid(appointment: any): boolean {
+    return appointment?.payment_status === 'paid';
+  }
+
+  /**
+   * Start the consultation payment: initialize with Paystack and redirect to checkout.
+   * On return the /payment/callback route verifies the transaction.
+   */
+  payToConsult(appointment: any): void {
+    if (!appointment?.id || this.payingId) {
+      return;
+    }
+    this.payingId = appointment.id;
+    const callbackUrl = `${window.location.origin}/payment/callback`;
+
+    this.paymentEndpoint.initialize(appointment.id, callbackUrl).subscribe({
+      next: (res) => {
+        const url = res?.data?.authorization_url;
+        if (url) {
+          window.location.href = url;
+        } else {
+          this.payingId = null;
+          this.messageService.add({ severity: 'error', detail: 'Could not start payment. Please try again.' });
+        }
+      },
+      error: (err) => {
+        this.payingId = null;
+        const detail = err?.error?.error || 'Could not start payment. Please try again.';
+        this.messageService.add({ severity: 'error', detail });
+      }
+    });
+  }
+
   openChatWithProfessional(appointment: any): void {
-    if (appointment?.status !== 'Accepted') {
+    if (!this.canConsult(appointment)) {
+      // Accepted but unpaid consultations must be paid for before chatting.
+      if (this.needsPayment(appointment)) {
+        this.messageService.add({ severity: 'info', detail: 'Please pay the consultation fee to start consulting.' });
+      }
       return;
     }
     const uid = this.getProfessionalUserIdForChat(appointment);

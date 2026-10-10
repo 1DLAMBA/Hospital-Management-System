@@ -1,68 +1,37 @@
 <p-toast></p-toast>
 
-<div class="otp-container">
-  <div class="otp-card">
-    <div class="otp-header">
-      <h3>Email Verification</h3>
-      <p>Please check your email for the verification code</p>
+<div class="verify-wrap">
+  <div class="verify-card">
+    <div class="verify-icon">
+      <i class="pi pi-envelope"></i>
     </div>
 
-    <div class="otp-content">
-      <div class="email-info">
-        <p>We've sent a 4-digit verification code to:</p>
-        <p class="email-address">{{ userEmail }}</p>
-      </div>
+    <h2 class="verify-title">Check your email</h2>
 
-      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
-        <div class="otp-input-group">
-          <label>Enter Verification Code</label>
-          <div class="otp-inputs-container">
-            <input
-              *ngFor="let digit of otpDigits; let i = index; trackBy: trackByIndex"
-              [id]="'otp-digit-' + i"
-              type="text"
-              [formControlName]="'digit' + i"
-              class="otp-digit-input"
-              [class.error]="otpForm.get('digit' + i)?.invalid && otpForm.get('digit' + i)?.touched"
-              maxlength="1"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              (input)="onDigitInput($event, i)"
-              (keydown)="onKeyDown($event, i)"
-              (focus)="onInputFocus($event, i)"
-              (click)="onInputClick($event, i)"
-              autocomplete="off"
-            />
-          </div>
-          <small class="error-message" *ngIf="otpForm.invalid && (otpForm.get('digit0')?.touched || otpForm.get('digit1')?.touched || otpForm.get('digit2')?.touched || otpForm.get('digit3')?.touched)">
-            Please enter all 4 digits
-          </small>
-        </div>
+    <p class="verify-text">
+      We've sent a verification link to
+      <strong>{{ userEmail || 'your email address' }}</strong>.
+      Open it and tap <strong>“Verify my email”</strong> to activate your account.
+    </p>
 
-        <div class="otp-actions">
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="otpForm.invalid || isLoading"
-          >
-            <span *ngIf="!isLoading">Verify</span>
-            <span *ngIf="isLoading">Verifying...</span>
-          </button>
-        </div>
-      </form>
+    <p class="verify-subtext">
+      The link expires in 60 minutes. Don't forget to check your spam folder.
+    </p>
 
-      <div class="regenerate-section">
-        <p>Didn't receive the code?</p>
-        <button
-          type="button"
-          class="btn btn-link"
-          (click)="regenerateOtp()"
-          [disabled]="isRegenerating"
-        >
-          <span *ngIf="!isRegenerating">Resend Code</span>
-          <span *ngIf="isRegenerating">Sending...</span>
-        </button>
-      </div>
-    </div>
+    <button
+      type="button"
+      pButton
+      class="resend-btn"
+      icon="pi pi-refresh"
+      [label]="isResending ? 'Sending…' : (resent ? 'Resend link again' : 'Resend link')"
+      [loading]="isResending"
+      [disabled]="isResending"
+      (click)="resendLink()">
+    </button>
+
+    <p class="verify-help">
+      Wrong address? <a routerLink="/register">Sign up again</a> ·
+      Already verified? <a routerLink="/login">Log in</a>
+    </p>
   </div>
 </div>

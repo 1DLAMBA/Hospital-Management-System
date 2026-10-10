@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix ad creatives - patients</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* ---------- 1080x1080 feed ---------- */
+.feed { width: 1080px; height: 1080px; }
+.feed .logo { top: 64px; left: 72px; font-size: 46px; }
+.feed .copy { top: 190px; left: 72px; width: 640px; }
+.feed .eyebrow { font-size: 21px; letter-spacing: 0.16em; margin-bottom: 26px; }
+.feed h1 { font-size: 92px; }
+.feed .sub { font-size: 31px; line-height: 1.45; margin-top: 30px; width: 560px; }
+.feed .cta { font-size: 33px; padding: 26px 52px; margin-top: 46px; }
+.feed .subject { right: -80px; bottom: 0; height: 780px; }
+.feed .url { bottom: 56px; left: 72px; font-size: 24px; }
+.feed .scrim {
+  background: linear-gradient(100deg, rgba(10,18,51,0.94) 0%, rgba(10,18,51,0.82) 42%, rgba(10,18,51,0) 68%);
+}
+
+/* Variant B leads with the product, so copy sits lower and the scrim lifts */
+.feed-b .copy { top: 170px; width: 600px; }
+.feed-b h1 { font-size: 84px; }
+/* Pushed right and down so it clears the tick list and the CTA pill. */
+.feed-b .subject { right: -150px; bottom: 24px; height: 590px; }
+.feed-b .ticks { margin-top: 38px; }
+.feed-b .ticks li { font-size: 28px; padding-left: 42px; margin-bottom: 18px; }
+.feed-b .ticks li::before { left: 0; font-size: 28px; }
+/* Horizontal scrim keeps the copy side dark and lets the product stay bright. */
+.feed-b .scrim {
+  background: linear-gradient(100deg, rgba(10,18,51,0.94) 0%, rgba(10,18,51,0.86) 40%, rgba(10,18,51,0.2) 62%, rgba(10,18,51,0) 78%);
+}
+
+/* ---------- 1080x1920 story / reel ---------- */
+.story { width: 1080px; height: 1920px; }
+.story .logo { top: 150px; left: 80px; font-size: 52px; }
+.story .copy { top: 380px; left: 80px; width: 920px; }
+.story .eyebrow { font-size: 24px; letter-spacing: 0.16em; margin-bottom: 30px; }
+.story h1 { font-size: 112px; }
+.story .sub { font-size: 36px; line-height: 1.45; margin-top: 36px; width: 780px; }
+.story .cta { font-size: 38px; padding: 32px 64px; margin-top: 56px; }
+.story .subject { left: 50%; transform: translateX(-50%); bottom: 0; height: 1010px; }
+/* Sits directly under the CTA rather than on top of the photo. */
+.story .url { top: 1180px; left: 80px; font-size: 28px; }
+/* Dark where the copy is, then clears quickly so the subject is not muddied. */
+.story .scrim {
+  background: linear-gradient(180deg,
+    rgba(10,18,51,0.96) 0%,
+    rgba(10,18,51,0.9) 40%,
+    rgba(10,18,51,0.45) 56%,
+    rgba(10,18,51,0.05) 70%,
+    rgba(10,18,51,0.35) 100%);
+}
+
+/* ---------- 1200x628 link / display ---------- */
+.link { width: 1200px; height: 628px; }
+.link .logo { top: 44px; left: 56px; font-size: 34px; }
+.link .copy { top: 140px; left: 56px; width: 640px; }
+.link .eyebrow { font-size: 16px; letter-spacing: 0.16em; margin-bottom: 18px; }
+.link h1 { font-size: 62px; }
+.link .sub { font-size: 23px; line-height: 1.45; margin-top: 22px; width: 560px; }
+.link .cta { font-size: 24px; padding: 19px 40px; margin-top: 32px; }
+.link .subject { right: -30px; bottom: 0; height: 600px; }
+.link .url { bottom: 38px; left: 56px; font-size: 18px; }
+.link .scrim {
+  background: linear-gradient(100deg, rgba(10,18,51,0.94) 0%, rgba(10,18,51,0.8) 46%, rgba(10,18,51,0) 72%);
+}
+</style>
+</head>
+<body>
+
+<!-- A. Feed 1:1 - primary hook, doctor-led -->
+<div class="creative feed" id="patients-feed-a">
+  <img class="subject" src="../../src/assets/heroimg.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">Online consultations</div>
+    <h1>See a licensed doctor <span class="accent">without leaving home</span></h1>
+    <p class="sub">Get matched to the right specialist and consult by secure chat.</p>
+    <div class="cta">Book a consultation</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+<!-- B. Feed 1:1 - speed hook, product-led (A/B partner for A) -->
+<div class="creative feed feed-b" id="patients-feed-b">
+  <img class="subject" src="../../src/assets/mockup.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">Online consultations</div>
+    <h1>Booked in minutes. <span class="accent">Not mornings.</span></h1>
+    <ul class="ticks">
+      <li>Licensed, verified doctors</li>
+      <li>Secure chat consultations</li>
+      <li>Free to join</li>
+    </ul>
+    <div class="cta">Book a consultation</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+<!-- C. Story / Reel 9:16 -->
+<div class="creative story" id="patients-story">
+  <img class="subject" src="../../src/assets/heroimg.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">Online consultations</div>
+    <h1>See a licensed doctor <span class="accent">without leaving home</span></h1>
+    <p class="sub">Describe your symptoms, pick a doctor, and consult by secure chat.</p>
+    <div class="cta">Book a consultation</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+<!-- D. Link / display 1.91:1 -->
+<div class="creative link" id="patients-link">
+  <img class="subject" src="../../src/assets/heroimg.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">Online consultations</div>
+    <h1>See a licensed doctor <span class="accent">without leaving home</span></h1>
+    <p class="sub">Matched to the right specialist. Secure chat. Free to join.</p>
+    <div class="cta">Book a consultation</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+</body>
+</html>

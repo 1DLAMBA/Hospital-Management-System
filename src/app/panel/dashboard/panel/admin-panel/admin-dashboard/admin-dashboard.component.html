@@ -1,0 +1,65 @@
+<section class="ph-page">
+    <app-panel-skeleton *ngIf="loading" panelType="client"></app-panel-skeleton>
+
+    <ng-container *ngIf="!loading">
+        <div class="ph-page-head">
+            <div>
+                <h1>Platform overview</h1>
+                <p>Registrations, approvals and everyone using Phoenix.</p>
+            </div>
+        </div>
+
+        <!-- Awaiting you: the only ember on the page, and the only thing here
+             that asks the admin to do something. -->
+        <a class="awaiting-strip" routerLink="/panel/admin-panel/hospitals"
+           [class.settled]="pendingHospitals === 0">
+            <span class="awaiting-count">{{ pendingHospitals }}</span>
+            <span class="awaiting-copy">
+                <strong>{{ pendingHospitals === 1 ? 'Hospital is' : 'Hospitals are' }} waiting on you</strong>
+                <small>{{ pendingHospitals === 0 ? 'Nothing needs a decision right now.' : 'Review the registration and approve or reject it.' }}</small>
+            </span>
+            <span class="awaiting-go" aria-hidden="true">Review<i class="pi pi-arrow-right"></i></span>
+        </a>
+
+        <div class="metrics">
+            <div class="ph-card metric">
+                <span class="metric-label">People on Phoenix</span>
+                <span class="metric-value">{{ totalUsers }}</span>
+                <span class="metric-note">Patients and health professionals</span>
+            </div>
+            <div class="ph-card metric">
+                <span class="metric-label">Hospitals registered</span>
+                <span class="metric-value">{{ totalHospitals }}</span>
+                <span class="metric-note">{{ approvedHospitals }} approved &middot; {{ rejectedHospitals }} rejected</span>
+            </div>
+        </div>
+
+        <div class="charts">
+            <div class="ph-card chart-card">
+                <div class="chart-head">
+                    <h2>Who uses Phoenix</h2>
+                    <p>Accounts by role</p>
+                </div>
+                <p-chart type="bar" [data]="roleChartData" [options]="roleChartOptions" height="240px"></p-chart>
+            </div>
+            <div class="ph-card chart-card">
+                <div class="chart-head">
+                    <h2>Hospital approvals</h2>
+                    <p>Every registration by state</p>
+                </div>
+                <p-chart type="doughnut" [data]="statusChartData" [options]="statusChartOptions" height="240px"></p-chart>
+            </div>
+        </div>
+
+        <div class="jump">
+            <a routerLink="/panel/admin-panel/users" class="jump-link">
+                <i class="pi pi-users"></i>
+                <span><strong>Users</strong><small>Everyone with an account</small></span>
+            </a>
+            <a routerLink="/panel/admin-panel/hospitals" class="jump-link">
+                <i class="pi pi-building"></i>
+                <span><strong>Hospitals</strong><small>Registrations and approvals</small></span>
+            </a>
+        </div>
+    </ng-container>
+</section>

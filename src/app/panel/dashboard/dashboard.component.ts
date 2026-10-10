@@ -13,6 +13,8 @@ import { AuthService } from '../../auth.service';
 import { NotificationsService, Notification } from '../../endpoints/notifications.service';
 import { MedicalAiUiService } from '../../services/medical-ai-ui.service';
 import { Subscription } from 'rxjs';
+import { AdminService } from '../../endpoints/admin.service';
+import { HospitalsService } from '../../endpoints/hospitals.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -57,16 +59,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private notificationsService: NotificationsService,
-    private medicalAiUi: MedicalAiUiService
+    private medicalAiUi: MedicalAiUiService,
+    private adminEndpoint: AdminService,
+    private hospitalEndpoint: HospitalsService,
   ){}
   ngOnInit(): void {
     this.id = localStorage.getItem('id');
     this.getUser();
-    this.loadNotifications();
-    this.initializePusher();
+    if (this.actorType() === 'user') {
+      this.loadNotifications();
+      this.initializePusher();
+    }
     this.medicalAiSub = this.medicalAiUi.isOpen$.subscribe((open) => {
       this.medicalAiOpen = open;
     });
+  }
+
+  private actorType(): 'admin' | 'hospital' | 'user' {
+    const userData = localStorage.getItem('userData');
+    if (!userData) return 'user';
+    try {
+      const userType = JSON.parse(userData)?.user?.user_type;
+      if (userType === 'admin' || userType === 'hospital') return userType;
+      return 'user';
+    } catch {
+      return 'user';
+    }
   }
 
   ngOnDestroy(): void {
@@ -316,10 +334,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   getUser (){
-    this.userEndpoint.get(this.id).subscribe({
+    const actor = this.actorType();
+    const endpoint = actor === 'admin' ? this.adminEndpoint : actor === 'hospital' ? this.hospitalEndpoint : this.userEndpoint;
+    endpoint.get(this.id).subscribe({
       next: (response: any) => {
         this.user = response.user
-        console.log(response.user.name.split(" "))
         const splitNames= this.user.name.split(" ");
         this.firstName = splitNames[0];
         this.show(this.firstName);

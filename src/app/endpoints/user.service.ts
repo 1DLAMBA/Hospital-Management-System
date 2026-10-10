@@ -15,8 +15,9 @@ export class UserService{
 
     
   }
+  // Shared sign-in for users, admins and hospitals; the response's user_type says which.
   login(data: UserRequest){
-    return this.httpClient.post(`${this.baseUrl}/login`, data);
+    return this.httpClient.post(`${environment.apiUrl}/auth/login`, data);
   }
 
   get(id: number){
@@ -30,6 +31,16 @@ export class UserService{
 
   regenerateOtp(data: { user_id: number }){
     return this.httpClient.post(`${this.baseUrl}/regenerate-otp`, data);
+  }
+
+  // Verify email from the link the user clicked in their inbox.
+  verifyEmail(token: string){
+    return this.httpClient.post(`${this.baseUrl}/verify-email`, { token });
+  }
+
+  // Resend the email verification link.
+  resendVerification(data: { user_id: number }){
+    return this.httpClient.post(`${this.baseUrl}/resend-verification`, data);
   }
 
   patchProfile(userId: number | string, body: { passport?: string }) {

@@ -3,6 +3,279 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+/* ==========================================================================
+   Phoenix design tokens
+   Ember is reserved for state that is waiting on a human decision — pending
+   approvals, unverified accounts. Nothing decorative may use it.
+   ========================================================================== */
+:root {
+    --ph-ink: #10193A;
+    --ph-ink-70: #46507a;
+    --ph-ink-45: #737c9e;
+    --ph-surface: #F7F9FC;
+    --ph-brand: #17224D;
+    --ph-signal: #0055AA;
+    --ph-signal-tint: #e7f0fa;
+    --ph-ember: #B45309;
+    --ph-ember-tint: #fdf0e3;
+    --ph-vital: #0F766E;
+    --ph-vital-tint: #e4f2f1;
+    --ph-critical: #9F1239;
+    --ph-critical-tint: #fbe9ee;
+    --ph-line: #e3e8f0;
+
+    --ph-font: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --ph-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+    --ph-radius: 10px;
+    --ph-radius-sm: 6px;
+    --ph-shadow: 0 1px 2px rgba(16, 25, 58, 0.06), 0 4px 16px rgba(16, 25, 58, 0.06);
+}
+
+/* Record identifiers — licence numbers, staff IDs, timestamps, phone numbers.
+   Mono marks them as records rather than prose. */
+.ph-record {
+    font-family: var(--ph-font-mono);
+    font-size: 0.9em;
+    letter-spacing: -0.01em;
+    color: var(--ph-ink-70);
+}
+
+/* Page shell shared by every panel page */
+.ph-page {
+    display: block;
+    padding: 1.75rem 2rem 3rem;
+    background: var(--ph-surface);
+    min-height: calc(100vh - 84px);
+}
+
+.ph-page-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.ph-page-head h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ph-ink);
+    margin: 0;
+}
+
+.ph-page-head p {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--ph-ink-45);
+}
+
+/* One card language across every dashboard */
+.ph-card {
+    background: #fff;
+    border: 1px solid var(--ph-line);
+    border-radius: var(--ph-radius);
+    box-shadow: var(--ph-shadow);
+}
+
+/* --- Appointment rail ---------------------------------------------------
+   The navy column on the client/doctor/nurse dashboards. Bootstrap's
+   .text-secondary is a light grey that disappears against it, so the rail
+   sets its own muted tone. */
+.appt-sect h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #fff;
+    margin: 0 0 0.5rem;
+}
+
+.appt-sect hr {
+    border-color: rgba(255, 255, 255, 0.16);
+    opacity: 1;
+}
+
+.appt-sect .text-secondary {
+    color: rgba(255, 255, 255, 0.78) !important;
+    font-size: 0.85rem;
+}
+
+.appt-sect .p-timeline .p-timeline-event-opposite {
+    color: rgba(255, 255, 255, 0.62);
+    font-family: var(--ph-font-mono);
+    font-size: 0.78rem;
+}
+
+.appt-sect .p-timeline .p-timeline-event-marker {
+    background: var(--ph-signal);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.appt-sect .p-timeline .p-timeline-event-connector {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Inline calendar ----------------------------------------------------
+   Sits inside the navy appointment rail, so it is a white card that stays
+   within its container. Never give the panel a fixed position: it escapes
+   the rail and covers the page. */
+/* The wrapper carries Bootstrap's mx-auto, which inside the rail's column
+   flexbox collapses it to shrink-to-fit. Give it a real width so the
+   calendar fills the rail. */
+.appt-sect .calendar {
+    width: 100%;
+}
+
+.appt-sect p-calendar,
+.ph-calendar {
+    display: block;
+    width: 100%;
+}
+
+.ph-calendar .p-datepicker {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    position: static;
+    background: #fff;
+    color: var(--ph-ink);
+    border: 1px solid var(--ph-line);
+    border-radius: var(--ph-radius);
+    padding: 0.75rem;
+    box-shadow: 0 2px 10px rgba(16, 25, 58, 0.10);
+    font-family: var(--ph-font);
+    font-size: 0.85rem;
+}
+
+.ph-calendar .p-datepicker .p-datepicker-header {
+    background: transparent;
+    border-bottom: 1px solid var(--ph-line);
+    padding: 0.25rem 0 0.6rem;
+    color: var(--ph-ink);
+}
+
+.ph-calendar .p-datepicker .p-datepicker-title {
+    font-weight: 600;
+    color: var(--ph-ink);
+}
+
+.ph-calendar .p-datepicker .p-datepicker-prev,
+.ph-calendar .p-datepicker .p-datepicker-next {
+    color: var(--ph-ink-45);
+    width: 2rem;
+    height: 2rem;
+}
+
+.ph-calendar .p-datepicker .p-datepicker-prev:hover,
+.ph-calendar .p-datepicker .p-datepicker-next:hover {
+    color: var(--ph-signal);
+    background: var(--ph-signal-tint);
+}
+
+.ph-calendar .p-datepicker table {
+    font-size: 0.85rem;
+    margin: 0.4rem 0 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.ph-calendar .p-datepicker table th {
+    color: var(--ph-ink-45);
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.35rem 0;
+}
+
+.ph-calendar .p-datepicker table td {
+    padding: 0.15rem;
+    text-align: center;
+}
+
+/* Cells stretch with the table; the day marker stays a fixed circle in
+   the middle of each one. */
+.ph-calendar .p-datepicker table td > span {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    color: var(--ph-ink-70);
+    margin: 0 auto;
+}
+
+.ph-calendar .p-datepicker table td > span:hover {
+    background: var(--ph-signal-tint);
+}
+
+.ph-calendar .p-datepicker table td.p-datepicker-today > span {
+    background: transparent;
+    color: var(--ph-signal);
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px var(--ph-signal);
+}
+
+.ph-calendar .p-datepicker table td > span.p-highlight,
+.ph-calendar .p-datepicker table td.p-datepicker-today > span.p-highlight {
+    background: var(--ph-signal);
+    color: #fff;
+    box-shadow: none;
+}
+
+.ph-calendar .p-datepicker .p-datepicker-other-month > span {
+    color: #c3cad8;
+}
+
+.ph-calendar .p-datepicker .p-timepicker {
+    border-top: 1px solid var(--ph-line);
+    padding-top: 0.5rem;
+    color: var(--ph-ink);
+}
+
+/* One table language. Quiet chrome so the row content and status carry it. */
+.ph-table .p-datatable-thead > tr > th {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ph-line);
+    color: var(--ph-ink-45);
+    font-family: var(--ph-font);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.85rem 1rem;
+}
+
+.ph-table .p-datatable-tbody > tr > td {
+    border: none;
+    border-bottom: 1px solid var(--ph-line);
+    padding: 0.85rem 1rem;
+    font-size: 0.875rem;
+    color: var(--ph-ink-70);
+    vertical-align: middle;
+}
+
+.ph-table .p-datatable-tbody > tr:last-child > td {
+    border-bottom: none;
+}
+
+.ph-table .p-datatable-tbody > tr:hover {
+    background: var(--ph-surface);
+}
+
+.ph-table .p-paginator {
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+}
+
+.ph-table .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: var(--ph-brand);
+    color: #fff;
+}
+
 .appt-sect{
     margin-top: 10px;
     height: 100vh;
@@ -13,6 +286,8 @@
 }
 
 
+/* Legacy two-column dashboards (client/doctor) pair .main-sect with .appt-sect.
+   New pages use .ph-page instead — see the design tokens above. */
 .panel-hold{
     display: flex;
 
@@ -226,9 +501,6 @@ color: white;
 .cardimg img{
     width: 100%;
 }
-body{
-    font-family: "Roboto", sans-serif;
-}
 
 .featureset1 img{
     width: 40%;
@@ -335,7 +607,24 @@ background-color: #0055AA !important;
 }
 
 html, body { height: 100%; }
-body{ margin: 0;   font-family: "Nunito Sans", sans-serif; }
+body{ margin: 0; font-family: var(--ph-font); color: var(--ph-ink); -webkit-font-smoothing: antialiased; }
+
+/* Pin the footer to the bottom of the viewport on short public pages.
+   The routed page component is inserted by the Router immediately after
+   <router-outlet>, so this targets it without needing to know its tag. */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.app-shell > app-nav-bar,
+.app-shell > app-footer {
+  flex-shrink: 0;
+}
+.app-shell > router-outlet + * {
+  flex: 1 0 auto;
+  display: block;
+}
 @keyframes pulse {
     0% {
         transform: scale(1);

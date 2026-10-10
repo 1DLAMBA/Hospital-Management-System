@@ -1,86 +1,138 @@
-/* --- Profile Page Enhancements --- */
-.hero {
-    width: 100%;
-    min-height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(90deg, #17224d 60%, #fff 100%);
-    color: white;
-    z-index: 0;
-    box-shadow: 0 2px 8px rgba(23,34,77,0.08);
+/* --- Profile page ------------------------------------------------------- */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 1.25rem;
+    align-items: start;
 }
 
-.main {
-    margin-top: -4%;
-    width: 95%;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.left-profile {
-    width: 22%;
-    min-width: 250px;
-    border-radius: 24px;
-    background: #17224d;
-    color: white;
-    box-shadow: 0 4px 16px rgba(23,34,77,0.10);
+/* Identity card: the one navy surface on the page, so the person you are
+   looking at is unmistakably the subject. */
+.identity {
+    background: var(--ph-brand);
+    color: #fff;
+    border-radius: var(--ph-radius);
+    padding: 1.75rem 1.25rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 1rem;
-    margin-bottom: 1.5rem;
+    text-align: center;
+    gap: 0.6rem;
+    box-shadow: var(--ph-shadow);
 }
 
-.left-profile img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    border: 4px solid #fff;
-    box-shadow: 0 2px 8px rgba(23,34,77,0.10);
-}
-
-.inner-profile h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.inner-profile p {
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
-}
-
-.right-profile {
-    width: 70%;
-    min-width: 300px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 4px 16px rgba(23,34,77,0.07);
-    padding: 2rem 1.5rem;
-    z-index: 2;
-}
-
-.right-profile h1.primary-color {
-    color: #17224d;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    border-left: 4px solid #17224d;
-    padding-left: 0.5rem;
-}
-
-.right-profile h3 {
-    font-size: 1.2rem;
+.identity h1 {
+    font-size: 1.25rem;
     font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0.4rem 0 0;
 }
 
-.right-profile p, .right-profile small {
-    font-size: 1rem;
-    color: #333;
+.identity .speciality {
+    margin: 0;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.book {
+    margin-top: 0.6rem;
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--ph-signal);
+    border: 1px solid var(--ph-signal);
+    border-radius: var(--ph-radius-sm);
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.book:hover:not(:disabled) { background: #00417f; border-color: #00417f; }
+
+.book:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.book:disabled {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.55);
+    cursor: not-allowed;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.pending-note {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--ph-radius);
+    background: var(--ph-ember-tint);
+    border: 1px solid rgba(180, 83, 9, 0.22);
+    color: #7c3a06;
+    font-size: 0.85rem;
+}
+
+.pending-note i { color: var(--ph-ember); }
+
+.block {
+    background: #fff;
+    border: 1px solid var(--ph-line);
+    border-radius: var(--ph-radius);
+    box-shadow: var(--ph-shadow);
+    padding: 1.25rem 1.4rem;
+}
+
+.block h2 {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ph-ink-45);
+    margin: 0 0 0.85rem;
+}
+
+.block dl {
+    margin: 0;
+    display: grid;
+    gap: 0.1rem;
+}
+
+.block .row {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--ph-line);
+    margin: 0;
+}
+
+.block .row:last-child { border-bottom: none; }
+
+.block dt {
+    font-size: 0.85rem;
+    color: var(--ph-ink-45);
+    font-weight: 400;
+}
+
+.block dd {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ph-ink);
+    font-weight: 500;
+}
+
+@media (max-width: 860px) {
+    .profile-grid { grid-template-columns: minmax(0, 1fr); }
+    .block .row { grid-template-columns: minmax(0, 1fr); gap: 0.15rem; }
 }
 
 /* --- Appointment Modal Enhancements --- */
@@ -149,37 +201,7 @@
     font-weight: 600;
 }
 
-@media (max-width: 900px) {
-    .main {
-        flex-direction: column;
-        align-items: center;
-    }
-    .left-profile, .right-profile {
-        width: 100% !important;
-        min-width: unset;
-        margin-bottom: 1.5rem;
-    }
-    .hero {
-        height: 5vh;
-        font-size: 1.2rem;
-    }
-}
-
 @media (max-width: 600px) {
-    .main {
-        width: 100%;
-        padding: 0 0.5rem;
-    }
-    .right-profile, .left-profile {
-        padding: 1rem 0.5rem;
-    }
-    .hero {
-        display: none;
-        font-size: 1rem;
-        padding: 1rem 0.5rem;
-        height: 5vh;
-        max-height: 120px;
-    }
     .appt-dialog form {
         flex-direction: column !important;
         gap: 1rem;
@@ -204,4 +226,31 @@
     ::ng-deep .p-dialog{
         flex-direction: column;
     }
+}
+/* Consultation fee shown to visitors on the professional's profile */
+.consult-fee {
+  margin: 12px 0 4px;
+  font-size: 0.95rem;
+  color: #46507a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.consult-fee strong {
+  font-size: 1.35rem;
+  color: #0055aa;
+  font-weight: 700;
+}
+
+/* First-consultation-free badge */
+.first-free-badge {
+  margin: 4px 0 10px;
+  font-size: 0.95rem;
+  color: #0b6b5f;
+  background: #e4f6ee;
+  border: 1px solid #0F766E;
+  border-radius: 999px;
+  padding: 6px 16px;
+  display: inline-block;
 }

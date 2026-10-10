@@ -7,6 +7,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from 'primeng/api';
 import { NursesService } from '../../../../endpoints/nurses.service';
+import { HospitalsService } from '../../../../endpoints/hospitals.service';
+import { PaymentService } from '../../../../endpoints/payment.service';
 import { NurseResource } from '../../../../../resources/nurse.model';
 import { AuthService } from '../../../../auth.service';
 import { BankAccount } from '../../../../models/bank-account.model';
@@ -33,6 +35,10 @@ export class NurseProfileComponent implements OnInit {
 
   completionForm!: FormGroup;
   completionSubmitting = false;
+  hospitals: { label: string, value: number }[] = [];
+  transactions: any[] = [];
+  totalEarned = 0;
+  loadingTransactions = false;
   degreeLoader = false;
   passportLoader = false;
   signatureLoader = false;
@@ -48,6 +54,8 @@ export class NurseProfileComponent implements OnInit {
     private readonly router: Router,
     private messageService: MessageService,
     private nurseEndpoint: NursesService,
+    private hospitalsEndpoint: HospitalsService,
+    private paymentEndpoint: PaymentService,
     private authService: AuthService,
     private bankAccountService: BankAccountService,
     private http: HttpClient,
@@ -60,11 +68,13 @@ export class NurseProfileComponent implements OnInit {
       med_school: new FormControl('', Validators.required),
       specialization: new FormControl('', Validators.required),
       grad_year: new FormControl('', Validators.required),
+      hospital_id: new FormControl(''), // Optional — the nurse may be independent
     });
   }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'] || localStorage.getItem('id') || '';
+    this.loadHospitals();
     this.loadProfile();
     this.route.params.subscribe((p) => {
       this.id = p['id'] || localStorage.getItem('id') || '';
@@ -142,6 +152,7 @@ export class NurseProfileComponent implements OnInit {
       next: (response: any) => {
         this.user = response.user;
         this.avatar_file = environment.apiUrl + '/file/get/';
+        this.loadTransactions();
         const professionalId = this.user.nurses?.id;
         if (!professionalId) {
           return;
@@ -170,7 +181,39 @@ export class NurseProfileComponent implements OnInit {
       med_school: n.med_school || '',
       specialization: n.specialization || '',
       grad_year: n.grad_year != null ? String(n.grad_year) : '',
+      hospital_id: n.hospital_id ?? '',
     }, { emitEvent: false });
+  }
+
+  loadHospitals(): void {
+    this.hospitalsEndpoint.getAll().subscribe({
+      next: (response: any) => {
+        this.hospitals = (response?.hospital || []).map((h: any) => ({
+          label: h.name,
+          value: h.id,
+        }));
+      },
+      error: () => {},
+    });
+  }
+
+  loadTransactions(): void {
+    if (!this.user?.id) {
+      return;
+    }
+    this.loadingTransactions = true;
+    this.paymentEndpoint.transactions(this.user.id).subscribe({
+      next: (res: any) => {
+        this.loadingTransactions = false;
+        this.transactions = res?.data?.transactions || [];
+        this.totalEarned = res?.data?.total_earned || 0;
+      },
+      error: () => {
+        this.loadingTransactions = false;
+        this.transactions = [];
+        this.totalEarned = 0;
+      },
+    });
   }
 
   successAlert(message: any): void {
@@ -284,6 +327,7 @@ export class NurseProfileComponent implements OnInit {
       med_school: this.completionForm.value.med_school,
       specialization: this.completionForm.value.specialization,
       grad_year: String(this.completionForm.value.grad_year),
+      hospital_id: this.completionForm.value.hospital_id || null,
       degree_file: degree,
       signature,
       id_card: idCard,

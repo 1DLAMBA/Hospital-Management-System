@@ -20,7 +20,8 @@ header="Edit Profile"
     <!-- MAIN PANEL -->
     <div class="header">
         <div class="d-flex   d-ovr justify-content-between p-3">
-            <h4>Dashboard Overview</h4>
+            <!-- Each page owns its own title; this bar identifies the account. -->
+            <span class="account-bar-spacer"></span>
             <div class="d-flex">
                 <div class="passport">
                     <img  src="{{ avatar_file + (user?.passport || '') }}" *ngIf="user">

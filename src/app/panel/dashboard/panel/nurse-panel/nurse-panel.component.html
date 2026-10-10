@@ -133,14 +133,11 @@
 
     <section class="appt-sect">
         <div class="mx-auto calendar justify-content-center">
-            <p-calendar 
-                class="" 
-                [(ngModel)]="date" 
-                [inline]="true" 
+            <p-calendar
+                [(ngModel)]="date"
+                [inline]="true"
                 [showWeek]="false"
-                panelStyle="background-color:blue"
-                
-               />
+                styleClass="ph-calendar" />
                 
                 
         </div>

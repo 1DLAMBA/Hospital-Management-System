@@ -13,18 +13,25 @@ export class AuthService{
     user: any;
     isLoggedIn = false;
 
-    login(user: any){
+    login(user: any, token?: string){
         this.isLoggedIn=true;
         this.user = user;
         // Save user data to localStorage
         localStorage.setItem('userData', JSON.stringify(user));
+        // User sign-ins have no token; drop any left from an admin or hospital session.
+        if (token) {
+            localStorage.setItem('token', token);
+        } else {
+            localStorage.removeItem('token');
+        }
     }
-    
+
     logout(){
         this.isLoggedIn=false;
         this.user = null;
         // Clear user data from localStorage
         localStorage.removeItem('userData');
+        localStorage.removeItem('token');
     }
 
     getUserDataFromLocalStorage(){

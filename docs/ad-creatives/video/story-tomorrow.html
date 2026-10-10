@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix - You won't hear these (story, transparent)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Transparent stage: this layer is composited over the Veo waiting-room
+     plate in ffmpeg, so no background is painted here at all. */
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+  .frame {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    padding: 190px 80px 250px;
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 46px;
+  }
+  /* Scrim: the footage needs to stay readable under white/red type without
+     hiding the room entirely - darkest behind the text block, lighter at
+     the very top and bottom so the room reads as a real place. */
+  .scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(6,10,28,0.55) 0%,
+      rgba(6,10,28,0.30) 18%,
+      rgba(6,10,28,0.62) 40%,
+      rgba(6,10,28,0.72) 75%,
+      rgba(6,10,28,0.82) 100%);
+  }
+  .anim { opacity: 0; will-change: opacity, transform; }
+  .logo { font-size: 46px; font-weight: 700; color: #fff; letter-spacing: -0.02em; position: relative; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500;
+             letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff; }
+  h1 { font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 98px;
+       line-height: 1.06; color: #fff; letter-spacing: -0.01em; margin: 0; }
+  .accent { color: #8fbaff; }
+  .row { position: relative; align-self: flex-start; }
+  .row span { font-size: 40px; color: rgba(255,255,255,0.72); font-weight: 500; }
+  .strike { position: absolute; left: 0; top: 50%; width: 100%; height: 3px;
+            background: #ff8a8a; border-radius: 2px; transform: scaleX(0); transform-origin: left; }
+  .confirm { display: flex; align-items: center; gap: 20px; margin-top: 14px; padding: 30px 34px;
+             background: rgba(143,186,255,0.18); border: 1px solid rgba(143,186,255,0.45);
+             border-radius: 22px; align-self: flex-start; backdrop-filter: blur(2px); }
+  .confirm b { font-size: 38px; font-weight: 600; color: #fff; }
+  .cta { align-self: flex-start; padding: 32px 64px; background: #fff; color: #14204a;
+         border-radius: 999px; font-size: 38px; font-weight: 700;
+         box-shadow: 0 10px 30px rgba(3,10,32,0.55); }
+  .url { font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255,255,255,0.78); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="scrim"></div>
+  <div class="logo" id="logo">Phoenix.</div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 26px;">
+    <div class="eyebrow anim" id="eyebrow">Online consultations</div>
+    <h1><span class="anim" id="h1a" style="display: block;">You won't hear</span><span class="accent anim" id="h1b" style="display: block;">these on Phoenix.</span></h1>
+  </div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 26px;">
+    <div class="row anim" id="row1"><span>&ldquo;Come back tomorrow.&rdquo;</span><div class="strike" id="strike1"></div></div>
+    <div class="row anim" id="row2"><span>&ldquo;The doctor is not on seat.&rdquo;</span><div class="strike" id="strike2"></div></div>
+    <div class="row anim" id="row3"><span>&ldquo;Nothing until next week.&rdquo;</span><div class="strike" id="strike3"></div></div>
+    <div class="confirm anim" id="confirm">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"></path></svg>
+      <b>A time you picked yourself.</b>
+    </div>
+  </div>
+
+  <div style="position: relative; display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div class="cta anim" id="cta">Book a consultation</div>
+    <div class="url anim" id="url">phoenixmed.online</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var easeOut = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var clamp01 = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  function cue(t, a, b) { return clamp01((t - a) / (b - a)); }
+
+  var RISE = [
+    ['eyebrow', 0.20, 0.70, 20],
+    ['h1a',     0.40, 1.10, 44],
+    ['h1b',     0.80, 1.50, 44],
+    ['row1',    1.80, 2.20, 24],
+    ['row2',    2.55, 2.95, 24],
+    ['row3',    3.30, 3.70, 24],
+    ['confirm', 5.55, 6.05, 22],
+    ['cta',     6.35, 6.85, 28],
+    ['url',     6.75, 7.15, 16]
+  ];
+  var STRIKE = [
+    ['strike1', 2.10, 2.55],
+    ['strike2', 2.85, 3.30],
+    ['strike3', 3.60, 4.05]
+  ];
+
+  var el = {};
+  ['eyebrow','h1a','h1b','row1','row2','row3','confirm','cta','url','strike1','strike2','strike3']
+    .forEach(function (id) { el[id] = document.getElementById(id); });
+
+  window.renderFrame = function (t) {
+    RISE.forEach(function (r) {
+      var p = easeOut(cue(t, r[1], r[2]));
+      el[r[0]].style.opacity = p;
+      el[r[0]].style.transform = 'translateY(' + (1 - p) * r[3] + 'px)';
+    });
+    STRIKE.forEach(function (s) {
+      var p = easeOut(cue(t, s[1], s[2]));
+      el[s[0]].style.transform = 'scaleX(' + p + ')';
+    });
+  };
+  window.renderFrame(0);
+})();
+</script>
+</body>
+</html>

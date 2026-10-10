@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix ad creatives - health professionals</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* ---------- 1080x1080 feed ---------- */
+.feed { width: 1080px; height: 1080px; }
+.feed .logo { top: 64px; left: 72px; font-size: 46px; }
+.feed .copy { top: 190px; left: 72px; width: 620px; }
+.feed .eyebrow { font-size: 21px; letter-spacing: 0.16em; margin-bottom: 26px; }
+.feed h1 { font-size: 88px; }
+.feed .sub { font-size: 30px; line-height: 1.45; margin-top: 30px; width: 545px; }
+.feed .cta { font-size: 33px; padding: 26px 52px; margin-top: 46px; }
+.feed .subject { right: -170px; bottom: 0; height: 840px; }
+.feed .url { bottom: 56px; left: 72px; font-size: 24px; }
+.feed .scrim {
+  background: linear-gradient(100deg, rgba(10,18,51,0.95) 0%, rgba(10,18,51,0.84) 44%, rgba(10,18,51,0.1) 66%, rgba(10,18,51,0) 78%);
+}
+
+/* Variant B is product-led, so the copy column narrows and the shot sits low-right */
+.feed-b .copy { top: 175px; width: 600px; }
+.feed-b h1 { font-size: 84px; }
+.feed-b .subject { right: -150px; bottom: 24px; height: 590px; }
+.feed-b .ticks { margin-top: 38px; }
+.feed-b .ticks li { font-size: 28px; padding-left: 42px; margin-bottom: 18px; }
+.feed-b .ticks li::before { left: 0; font-size: 28px; }
+.feed-b .scrim {
+  background: linear-gradient(100deg, rgba(10,18,51,0.94) 0%, rgba(10,18,51,0.86) 40%, rgba(10,18,51,0.2) 62%, rgba(10,18,51,0) 78%);
+}
+
+/* ---------- 1080x1920 story / reel ---------- */
+.story { width: 1080px; height: 1920px; }
+.story .logo { top: 150px; left: 80px; font-size: 52px; }
+.story .copy { top: 380px; left: 80px; width: 920px; }
+.story .eyebrow { font-size: 24px; letter-spacing: 0.16em; margin-bottom: 30px; }
+.story h1 { font-size: 106px; }
+.story .sub { font-size: 36px; line-height: 1.45; margin-top: 36px; width: 800px; }
+.story .cta { font-size: 38px; padding: 32px 64px; margin-top: 56px; }
+.story .subject { left: 54%; transform: translateX(-50%); bottom: 0; height: 960px; }
+.story .url { top: 1140px; left: 80px; font-size: 28px; }
+.story .scrim {
+  background: linear-gradient(180deg,
+    rgba(10,18,51,0.96) 0%,
+    rgba(10,18,51,0.9) 42%,
+    rgba(10,18,51,0.45) 58%,
+    rgba(10,18,51,0.05) 72%,
+    rgba(10,18,51,0.35) 100%);
+}
+
+/* ---------- 1200x628 link / display ---------- */
+.link { width: 1200px; height: 628px; }
+.link .logo { top: 44px; left: 56px; font-size: 34px; }
+.link .copy { top: 140px; left: 56px; width: 630px; }
+.link .eyebrow { font-size: 16px; letter-spacing: 0.16em; margin-bottom: 18px; }
+.link h1 { font-size: 60px; }
+.link .sub { font-size: 23px; line-height: 1.45; margin-top: 22px; width: 560px; }
+.link .cta { font-size: 24px; padding: 19px 40px; margin-top: 32px; }
+.link .subject { right: -110px; bottom: 0; height: 640px; }
+.link .url { bottom: 38px; left: 56px; font-size: 18px; }
+.link .scrim {
+  background: linear-gradient(100deg, rgba(10,18,51,0.95) 0%, rgba(10,18,51,0.84) 48%, rgba(10,18,51,0.1) 70%, rgba(10,18,51,0) 82%);
+}
+</style>
+</head>
+<body>
+
+<!-- A. Feed 1:1 - the earnings hook, clinician-led -->
+<div class="creative feed" id="pros-feed-a">
+  <img class="subject" src="../../src/assets/logdoctor.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">For health professionals</div>
+    <h1>Earn from your practice <span class="accent">on your own schedule</span></h1>
+    <p class="sub">Consult patients online. You choose the hours and the rates.</p>
+    <div class="cta">Join as a professional</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+<!-- B. Feed 1:1 - the control hook, product-led (A/B partner for A) -->
+<div class="creative feed feed-b" id="pros-feed-b">
+  <img class="subject" src="../../src/assets/mockup.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">For health professionals</div>
+    <h1>Your open hours are <span class="accent">worth something.</span></h1>
+    <ul class="ticks">
+      <li>Set your own hours and rates</li>
+      <li>Patients come to you</li>
+      <li>No listing fee</li>
+    </ul>
+    <div class="cta">Join as a professional</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+<!-- C. Story / Reel 9:16 -->
+<div class="creative story" id="pros-story">
+  <img class="subject" src="../../src/assets/logdoctor.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">For health professionals</div>
+    <h1>Earn on <span class="accent">your own schedule</span></h1>
+    <p class="sub">Doctors, nurses and allied professionals consult online through Phoenix. You set the hours.</p>
+    <div class="cta">Join as a professional</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+<!-- D. Link / display 1.91:1 -->
+<div class="creative link" id="pros-link">
+  <img class="subject" src="../../src/assets/logdoctor.png" alt="">
+  <div class="scrim"></div>
+  <div class="logo">Phoenix.</div>
+  <div class="copy">
+    <div class="eyebrow">For health professionals</div>
+    <h1>Earn from your practice <span class="accent">on your own schedule</span></h1>
+    <p class="sub">Set your availability, consult online, get paid. No listing fee.</p>
+    <div class="cta">Join as a professional</div>
+  </div>
+  <div class="url">phoenixmed.online</div>
+</div>
+
+</body>
+</html>

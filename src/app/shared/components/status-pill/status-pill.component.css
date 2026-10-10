@@ -1,0 +1,46 @@
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: capitalize;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+/* Ember: a person still has to decide something here. */
+.awaiting {
+    color: var(--ph-ember);
+    background: var(--ph-ember-tint);
+    border-color: rgba(180, 83, 9, 0.18);
+}
+
+.active {
+    color: var(--ph-vital);
+    background: var(--ph-vital-tint);
+    border-color: rgba(15, 118, 110, 0.18);
+}
+
+.blocked {
+    color: var(--ph-critical);
+    background: var(--ph-critical-tint);
+    border-color: rgba(159, 18, 57, 0.18);
+}
+
+.idle {
+    color: var(--ph-ink-45);
+    background: #eef1f6;
+    border-color: var(--ph-line);
+}

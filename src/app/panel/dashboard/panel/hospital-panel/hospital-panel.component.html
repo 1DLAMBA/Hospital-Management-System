@@ -1,0 +1,84 @@
+<section class="ph-page">
+    <app-panel-skeleton *ngIf="loading" panelType="client"></app-panel-skeleton>
+
+    <ng-container *ngIf="!loading">
+        <div class="ph-page-head">
+            <div>
+                <h1>{{ hospital?.name }}</h1>
+                <p>{{ hospital?.address }}</p>
+            </div>
+            <app-status-pill [status]="hospital?.status"></app-status-pill>
+        </div>
+
+        <div *ngIf="hospital?.status === 'pending'" class="notice awaiting">
+            <i class="pi pi-clock" aria-hidden="true"></i>
+            <span>
+                <strong>Your registration is with our team</strong>
+                <small>Once approved, your hospital appears in the picker when doctors and nurses create their Phoenix accounts.</small>
+            </span>
+        </div>
+        <div *ngIf="hospital?.status === 'rejected'" class="notice blocked">
+            <i class="pi pi-times-circle" aria-hidden="true"></i>
+            <span>
+                <strong>This registration was not approved</strong>
+                <small>Contact support at thephoenixhospital&#64;gmail.com to find out what to change.</small>
+            </span>
+        </div>
+
+        <div class="metrics">
+            <div class="ph-card metric">
+                <span class="metric-label">Doctors</span>
+                <span class="metric-value">{{ doctors.length }}</span>
+            </div>
+            <div class="ph-card metric">
+                <span class="metric-label">Nurses</span>
+                <span class="metric-value">{{ nurses.length }}</span>
+            </div>
+            <div class="ph-card metric">
+                <span class="metric-label">Other professionals</span>
+                <span class="metric-value">{{ otherProfessionals.length }}</span>
+            </div>
+            <div class="ph-card metric total">
+                <span class="metric-label">Total staff</span>
+                <span class="metric-value">{{ totalStaff }}</span>
+            </div>
+        </div>
+
+        <div class="ph-card table-card">
+            <div class="table-head d-flex justify-content-between align-items-start gap-3">
+                <div>
+                    <h2>Staff registered under your hospital</h2>
+                    <p>Everyone who selected {{ hospital?.name }} when creating their account.</p>
+                </div>
+                <a routerLink="/panel/hospital-professionals" class="small fw-semibold text-decoration-none text-nowrap">View all</a>
+            </div>
+            <p-table [value]="allStaff" dataKey="id" [paginator]="allStaff.length > 10" [rows]="10"
+                [rowsPerPageOptions]="[10,25,50]" styleClass="ph-table">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-member>
+                    <tr>
+                        <td class="strong-cell">{{ member.user?.name }}</td>
+                        <td>{{ member.role }}</td>
+                        <td class="ph-record">{{ member.user?.email }}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty">
+                                <strong>No staff yet</strong>
+                                <span>Health professionals appear here once they pick your hospital during registration.</span>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </ng-container>
+</section>

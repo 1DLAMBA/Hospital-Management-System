@@ -1,0 +1,91 @@
+<section class="ph-page">
+    <p-toast></p-toast>
+
+    <div class="ph-page-head">
+        <div>
+            <h1>Hospitals</h1>
+            <p>Every registration on Phoenix, and what still needs a decision.</p>
+        </div>
+        <div class="filters">
+            <button
+                *ngFor="let option of statusOptions"
+                type="button"
+                class="filter"
+                [class.on]="statusFilter === option.value"
+                (click)="setStatusFilter(option.value)">
+                {{ option.label }}
+            </button>
+        </div>
+    </div>
+
+    <div class="ph-card table-card">
+        <p-table
+            #dt1
+            [value]="hospitals"
+            dataKey="id"
+            [rows]="rowsPerPage"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            [lazy]="true"
+            [totalRecords]="totalRecords"
+            [loading]="loading"
+            (onLazyLoad)="onPageChange($event)"
+            [first]="(currentPage - 1) * rowsPerPage"
+            styleClass="ph-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Hospital</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th class="actions-col">Decision</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-hospital>
+                <tr [class.needs-decision]="hospital.status === 'pending'">
+                    <td>
+                        <span class="name">{{ hospital.name }}</span>
+                        <span class="sub">{{ hospital.address }}</span>
+                    </td>
+                    <td>
+                        <span class="ph-record">{{ hospital.email }}</span>
+                        <span class="ph-record sub">{{ hospital.phoneno }}</span>
+                    </td>
+                    <td>
+                        <app-status-pill [status]="hospital.status"></app-status-pill>
+                    </td>
+                    <td class="actions-col">
+                        <div class="actions" *ngIf="hospital.status === 'pending'; else noAction">
+                            <button
+                                type="button"
+                                class="btn-approve"
+                                [disabled]="actionLoadingId === hospital.id"
+                                (click)="approve(hospital)">
+                                Approve
+                            </button>
+                            <button
+                                type="button"
+                                class="btn-reject"
+                                [disabled]="actionLoadingId === hospital.id"
+                                (click)="reject(hospital)">
+                                Reject
+                            </button>
+                        </div>
+                        <ng-template #noAction>
+                            <span class="settled">Reviewed</span>
+                        </ng-template>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4">
+                        <div class="empty">
+                            <strong>Nothing here</strong>
+                            <span>{{ statusFilter ? 'No hospitals with this status yet.' : 'Hospitals appear here as soon as they register.' }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</section>

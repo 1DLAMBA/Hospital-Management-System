@@ -65,6 +65,13 @@ import { SharedModule } from '../shared.module';
 import { MedicalRecordViewComponent } from '../shared/components/medical-record-view/medical-record-view.component';
 import { BankAccountFormComponent } from '../shared/bank-account-form/bank-account-form.component';
 import { MedicalAIComponent } from './dashboard/medical-ai/medical-ai.component';
+import { StatusPillComponent } from '../shared/components/status-pill/status-pill.component';
+import { AdminPanelComponent } from './dashboard/panel/admin-panel/admin-panel.component';
+import { AdminDashboardComponent } from './dashboard/panel/admin-panel/admin-dashboard/admin-dashboard.component';
+import { AdminUsersListComponent } from './dashboard/panel/admin-panel/admin-users-list/admin-users-list.component';
+import { AdminHospitalsListComponent } from './dashboard/panel/admin-panel/admin-hospitals-list/admin-hospitals-list.component';
+import { HospitalPanelComponent } from './dashboard/panel/hospital-panel/hospital-panel.component';
+import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel/hospital-professionals/hospital-professionals.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +105,13 @@ import { MedicalAIComponent } from './dashboard/medical-ai/medical-ai.component'
     LoaderComponent,
     PanelLoaderComponent,
     PanelSkeletonComponent,
-    BankAccountFormComponent
+    BankAccountFormComponent,
+    AdminPanelComponent,
+    AdminDashboardComponent,
+    AdminUsersListComponent,
+    AdminHospitalsListComponent,
+    HospitalPanelComponent,
+    HospitalProfessionalsComponent
   ],
   imports: [
     CommonModule,
@@ -135,6 +148,7 @@ import { MedicalAIComponent } from './dashboard/medical-ai/medical-ai.component'
     DropdownModule,
     TooltipModule,
     MedicalAIComponent,
+    StatusPillComponent,
   ],
   exports: [PanelLoaderComponent],
   bootstrap: [DashboardComponent],

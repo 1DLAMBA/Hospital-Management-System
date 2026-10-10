@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #8fbaff; } a:hover { color: #b9d4ff; }
+  </style>
+</helmet>
+
+<!-- Animation note: four check rows tick in sequence - the strongest motion
+     beat in the set. Each tick is its own <svg> so it can scale-pop. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 190px 80px 250px; background: linear-gradient(160deg, #0a1233 0%, #16214a 52%, #0e3d85 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif; display: flex; flex-direction: column; justify-content: space-between; gap: 44px;">
+
+  <div style="font-size: 46px; font-weight: 700; color: #ffffff; letter-spacing: -0.02em;" id="logo">Phoenix.</div>
+
+  <div style="display: flex; flex-direction: column; gap: 26px;">
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #93bdff;" id="eyebrow">Verified professionals</div>
+    <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 104px; line-height: 1.05; color: #ffffff; letter-spacing: -0.01em;"><span style="display: block;" id="h1a">Every doctor here</span><span style="display: block; color: #8fbaff;" id="h1b">had to prove it.</span></h1>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 20px;" id="checklist">
+    <div style="display: flex; align-items: center; gap: 22px; padding: 28px 32px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 20px;" id="chk1">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"></path></svg>
+      <div style="font-size: 34px; color: #ffffff;">Practising licence number</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; padding: 28px 32px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 20px;" id="chk2">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"></path></svg>
+      <div style="font-size: 34px; color: #ffffff;">Medical school and year</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; padding: 28px 32px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 20px;" id="chk3">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"></path></svg>
+      <div style="font-size: 34px; color: #ffffff;">Certificate upload</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; padding: 28px 32px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 20px;" id="chk4">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8fbaff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"></path></svg>
+      <div style="font-size: 34px; color: #ffffff;">Government-issued ID</div>
+    </div>
+    <div style="font-size: 29px; line-height: 1.45; color: rgba(255, 255, 255, 0.72); margin-top: 8px;" id="checkNote">Checked before they can accept a single patient.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 30px; align-items: flex-start;">
+    <div style="padding: 32px 64px; background: #ffffff; color: #14204a; border-radius: 999px; font-size: 38px; font-weight: 700; box-shadow: 0 10px 30px rgba(3, 10, 32, 0.45);" id="cta">Book a consultation</div>
+    <div style="font-family: 'IBM Plex Mono', monospace; font-size: 27px; color: rgba(255, 255, 255, 0.72);" id="url">phoenixmed.online</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

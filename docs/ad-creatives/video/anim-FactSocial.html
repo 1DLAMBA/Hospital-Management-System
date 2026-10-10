@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phoenix - FactSocial</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #92ccff; } a:hover { color: #cce4ff; }
+  </style>
+
+<style>
+  html, body { width: 1080px; height: 1920px; overflow: hidden; margin: 0; background: #060d26; }
+</style>
+</head>
+<body>
+<!-- Animation: waves draw, mark fades, eyebrow, then the claim lands line by
+     line, the chip pops, body and footer last. -->
+<div style="width: 1080px; height: 1920px; overflow: hidden; position: relative; box-sizing: border-box; padding: 180px 80px 240px; background: linear-gradient(165deg, #060d26 0%, #0a1a3a 42%, #0d3080 100%); font-family: 'IBM Plex Sans', system-ui, sans-serif;">
+
+  <svg id="waves" width="1240" height="300" viewBox="0 0 1240 300" fill="none" style="position: absolute; top: 1180px; left: -80px; opacity: 0.5;" aria-hidden="true">
+    <defs>
+      <linearGradient id="wg" x1="0" y1="0" x2="1240" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#6ab0ff" stop-opacity="0.12"></stop>
+        <stop offset="44%" stop-color="#92ccff" stop-opacity="0.85"></stop>
+        <stop offset="80%" stop-color="#dff0ff" stop-opacity="0.38"></stop>
+        <stop offset="100%" stop-color="#eef8ff" stop-opacity="0.08"></stop>
+      </linearGradient>
+    </defs>
+    <path d="M0 150 C 210 40, 410 260, 620 150 C 830 40, 1030 260, 1240 150" stroke="url(#wg)" stroke-width="1.5" stroke-linecap="round"></path>
+    <path d="M0 150 C 210 260, 410 40, 620 150 C 830 260, 1030 40, 1240 150" stroke="url(#wg)" stroke-width="1.5" stroke-linecap="round"></path>
+  </svg>
+
+  <div style="position: relative; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+
+    <div style="display: flex; flex-direction: column; gap: 34px;">
+      <img src="../canvas/phoenix-mark.svg" alt="Phoenix" style="width: 96px; height: 96px; display: block; border-radius: 22px;" id="mark">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 23px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: #6ab0ff;" id="eyebrow">Did you know</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 44px;">
+      <h1 style="margin: 0; font-family: 'EB Garamond', Georgia, serif; font-weight: 600; font-size: 96px; line-height: 1.04; color: #ffffff; letter-spacing: -0.015em; text-wrap: pretty;" id="claim">Not every part of<br>being ill is <span style="color: #92ccff;">medical.</span></h1>
+      <div style="align-self: flex-start; padding: 20px 36px; border-radius: 999px; border: 1px solid rgba(146,204,255,0.45); background: rgba(146,204,255,0.12); font-family: 'IBM Plex Mono', monospace; font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; color: #92ccff;" id="chip">Medical social work</div>
+      <p style="margin: 0; font-size: 35px; line-height: 1.5; color: rgba(255,255,255,0.8); max-width: 880px;" id="body">Cost, care at home, time off work, the strain on family. A medical social worker handles the parts no prescription covers.</p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;" id="foot">
+      <div style="height: 1px; background: rgba(255,255,255,0.14);"></div>
+      <div style="font-size: 30px; line-height: 1.5; color: rgba(255,255,255,0.68);">Medical social workers practise on Phoenix.</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; color: rgba(255,255,255,0.5);">phoenixmed.online</div>
+    </div>
+
+  </div>
+</div>
+<script>
+function initTimeline(spec) {
+  var easeOut  = function (p) { return 1 - Math.pow(1 - p, 3); };
+  var easeBack = function (p) { var c = 2.2; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+  var clamp    = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+  function cue(t, a, b) { return clamp((t - a) / (b - a)); }
+
+  // Styles that must differ from the static artboard (e.g. a chip that starts
+  // un-selected so it can lock in later).
+  (spec.init || []).forEach(function (i) {
+    var e = document.getElementById(i.id);
+    if (e) { for (var k in i.style) e.style[k] = i.style[k]; }
+  });
+
+  // Prepare any wave group for a draw-on.
+  var waveSets = {};
+  (spec.cues || []).filter(function (c) { return c.type === 'waves'; }).forEach(function (c) {
+    var g = document.getElementById(c.id);
+    if (!g) return;
+    var paths = Array.prototype.slice.call(g.querySelectorAll('path'));
+    paths.forEach(function (p) {
+      var L = p.getTotalLength();
+      p.setAttribute('stroke-dasharray', L);
+      p.setAttribute('stroke-dashoffset', L);
+      p.__len = L;
+    });
+    waveSets[c.id] = paths;
+    g.style.opacity = 0;
+  });
+
+  var el = {};
+  (spec.cues || []).forEach(function (c) { el[c.id] = el[c.id] || document.getElementById(c.id); });
+  (spec.cues || []).forEach(function (c) {
+    var e = el[c.id];
+    if (e && c.type !== 'waves') { e.style.opacity = 0; e.style.willChange = 'opacity, transform'; }
+  });
+
+  window.renderFrame = function (t) {
+    (spec.cues || []).forEach(function (c) {
+      var e = el[c.id];
+      if (!e) return;
+      var p = easeOut(cue(t, c.a, c.b));
+
+      if (c.type === 'rise') {
+        e.style.opacity = p;
+        e.style.transform = 'translateY(' + (1 - p) * (c.d || 28) + 'px)';
+
+      } else if (c.type === 'slide') {
+        e.style.opacity = p;
+        e.style.transform = 'translateX(' + (1 - p) * (c.d || -30) + 'px)';
+
+      } else if (c.type === 'fade') {
+        e.style.opacity = p;
+
+      } else if (c.type === 'pop') {
+        var raw = cue(t, c.a, c.b);
+        e.style.opacity = p;
+        e.style.transform = 'scale(' + (raw > 0 ? easeBack(raw) : 0.6) + ')';
+
+      } else if (c.type === 'waves') {
+        e.style.opacity = p * (c.max || 0.5);
+        var draw = easeOut(cue(t, c.a, c.b));
+        (waveSets[c.id] || []).forEach(function (path) {
+          path.setAttribute('stroke-dashoffset', String(path.__len * (1 - draw)));
+        });
+
+      } else if (c.type === 'lock') {
+        // Enters dim with its siblings, then locks in with a bounce at c.a.
+        var ip = easeOut(cue(t, c.ia, c.ib));
+        var lp = cue(t, c.a, c.b);
+        e.style.opacity = ip;
+        var bounce = lp > 0 ? 1 + 0.10 * Math.sin(easeOut(lp) * Math.PI) : 1;
+        e.style.transform = 'translateY(' + (1 - ip) * 20 + 'px) scale(' + bounce + ')';
+        if (lp > 0.28) { for (var k in c.to) e.style[k] = c.to[k]; }
+        else { for (var k2 in c.from) e.style[k2] = c.from[k2]; }
+      }
+    });
+  };
+  window.renderFrame(0);
+}
+</script>
+<script>initTimeline({"cues": [{"id": "eyebrow", "type": "rise", "a": 0.55, "b": 1.05, "d": 18}, {"id": "claim", "type": "rise", "a": 0.9, "b": 1.8, "d": 44}, {"id": "waves", "type": "waves", "a": 1.2, "b": 3.5, "max": 0.5}, {"id": "chip", "type": "pop", "a": 2.0, "b": 2.5}, {"id": "body", "type": "rise", "a": 2.55, "b": 3.25, "d": 26}, {"id": "foot", "type": "rise", "a": 3.8, "b": 4.45, "d": 20}]});</script>
+</body>
+</html>

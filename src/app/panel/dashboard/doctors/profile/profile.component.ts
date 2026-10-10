@@ -198,7 +198,16 @@ export class ProfileComponent implements OnInit {
   submit() {
 
 
-    
+
+  }
+
+  /**
+   * True when this logged-in client still has their one-time free consultation
+   * and the professional would otherwise charge (fee > 0).
+   */
+  isFirstConsultationFree(): boolean {
+    const fee = Number(this.professional?.consultation_fee ?? this.SingleDoctor?.consultation_fee ?? 0);
+    return fee > 0 && this.user?.clients?.free_consultation_used === false;
   }
 
 
