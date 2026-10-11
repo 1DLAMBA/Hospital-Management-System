@@ -151,7 +151,7 @@
 
  </p-dialog>
 
-<main class="d-flex flex-column">
+<main class="d-flex flex-column" *ngIf="singleNurse && user">
 
 
     <section class="main mx-auto d-flex justify-content-between">
@@ -186,7 +186,7 @@
                     {{singleNurse.specialization}}</p>
                
 
-                    <p class="col-12 col-md-4"><span class="text-secondary">License Number:</span><br>
+                    <p class="col-12 col-md-4" *ngIf="!isGuest"><span class="text-secondary">License Number:</span><br>
                     {{singleNurse.license_number}}</p>
 
                     <p class="col-12 col-md-4"><span class="text-secondary">Consultation Fee:</span><br>
@@ -288,7 +288,7 @@
             </div>
 
             <div class="mt-3">
-                <p-button label="Book Appointment" (click)="showDialog()" severity="info" [raised]="true" [rounded]="true" />
+                <p-button [label]="isGuest ? 'Log in to book' : 'Book Appointment'" (click)="showDialog()" severity="info" [raised]="true" [rounded]="true" />
             </div>
 
            

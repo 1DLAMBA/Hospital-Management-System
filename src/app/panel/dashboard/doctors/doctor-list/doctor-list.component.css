@@ -339,13 +339,6 @@
     font-size: 1rem;
 }
 
-::ng-deep .p-button {
-    background-color: #17224d !important;
-    color: white !important;
-    border: 0;
-    border-radius: 5px;
-}
-
 @media (max-width: 992px) {
     .kpi-grid {
         grid-template-columns: repeat(3, 1fr);

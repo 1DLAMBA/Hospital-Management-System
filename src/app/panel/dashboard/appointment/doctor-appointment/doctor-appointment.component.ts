@@ -9,6 +9,7 @@ import { AppointmentResource } from '../../../../../resources/appointment.model'
 import { environment } from '../../../../../environments/environment';
 import { Table } from 'primeng/table';
 import { MessageService } from 'primeng/api';
+import { ConfirmService } from '../../../../services/confirm.service';
 
 @Component({
   selector: 'app-doctor-appointment',
@@ -44,6 +45,7 @@ export class DoctorAppointmentComponent implements OnInit {
     private appointmentEndpoint: AppointmentsService,
     private messageService: MessageService,
     private router: Router,
+    private confirm: ConfirmService,
   ) {
 
   }
@@ -148,6 +150,32 @@ export class DoctorAppointmentComponent implements OnInit {
   clear(table: Table) {
     table.clear();
     this.searchValue = ''
+  }
+
+  async respond(id: any, decision: 'Accepted' | 'Declined') {
+    const accepting = decision === 'Accepted';
+    const ok = await this.confirm.ask(accepting
+      ? {
+          title: 'Accept this consultation?',
+          message: 'The patient will be asked to pay your fee. Your earnings are released once the consultation is paid.',
+          confirmLabel: 'Accept consultation',
+          cancelLabel: 'Not yet',
+          tone: 'attention',
+        }
+      : {
+          title: 'Decline this request?',
+          message: 'The patient will be told you can\'t take this consultation. This can\'t be undone from your side.',
+          confirmLabel: 'Decline request',
+          cancelLabel: 'Keep open',
+          tone: 'critical',
+        });
+    if (!ok) return;
+    this.status(id, decision);
+    this.messageService.add({
+      severity: 'success',
+      summary: accepting ? 'Consultation accepted' : 'Request declined',
+      detail: accepting ? 'The patient can now pay for the consultation.' : 'The patient has been notified.',
+    });
   }
 
   status(id: any, status: any) {

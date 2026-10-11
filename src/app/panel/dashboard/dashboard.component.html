@@ -1,4 +1,17 @@
 <p-toast  [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+<p-confirmDialog #cd key="ph" [closable]="false" [style]="{ width: '26rem', maxWidth: '92vw' }" styleClass="ph-confirm" appendTo="body">
+    <ng-template pTemplate="headless" let-confirmation>
+        <div class="ph-confirm-slip" [attr.data-tone]="confirmation.icon?.split('|')[0]">
+            <span class="ph-confirm-chip" aria-hidden="true"><i [class]="confirmation.icon?.split('|')[1]"></i></span>
+            <h3 class="ph-confirm-title">{{ confirmation.header }}</h3>
+            <p class="ph-confirm-message">{{ confirmation.message }}</p>
+            <div class="ph-confirm-actions">
+                <button type="button" class="ph-btn ph-btn--secondary" (click)="cd.reject()">{{ confirmation.rejectLabel }}</button>
+                <button type="button" class="ph-btn" [class.ph-btn--danger]="confirmation.icon?.startsWith('critical')" (click)="cd.accept()" autofocus>{{ confirmation.acceptLabel }}</button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>
 <p-dialog 
 header="Edit Profile" 
 [modal]="true"
@@ -34,14 +47,14 @@ header="Edit Profile"
                         <small *ngIf="user?.user_type == 'other_professional'">{{user?.other_professionals?.professional_type}}</small>
                         <div class="d-flex ">
                             <!-- Bell button toggles the notification tray -->
-                            <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                            <button *ngIf="hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
                                 <i class="bi bi-bell text-3xl"></i>
                             </button>
-                            <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: white;" (click)="toggleNotifications($event, notifPanel)">
+                            <button *ngIf="!hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)">
                                 <i class="bi bi-bell text-3xl"></i>
                             </button>
                             <!-- Logout button -->
-                            <button style="border: 0; background-color: white; margin-left: 10px;" (click)="logout()" title="Logout">
+                            <button class="ph-icon-btn" (click)="logout()" title="Log out" aria-label="Log out">
                                 <i class="bi bi-box-arrow-right text-3xl"></i>
                             </button>
                         </div>
@@ -50,7 +63,7 @@ header="Edit Profile"
             </div>
         </div>
         <!-- Notification Tray - Shared between desktop and mobile views -->
-        <p-overlayPanel #notifPanel [showCloseIcon]="false" [dismissable]="true" [style]="{width: '360px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'}">
+        <p-overlayPanel #notifPanel [showCloseIcon]="false" [dismissable]="true" [style]="{width: '360px'}">
             <div class="notification-panel">
                 <div class="notification-header">
                     <div class="d-flex align-items-center justify-content-between">
@@ -107,10 +120,10 @@ header="Edit Profile"
             </a>
             <div class="d-flex align-items-center gap-2">
                 <!-- Bell button for mobile view -->
-                <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                <button *ngIf="hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
                     <i class="bi bi-bell text-2xl"></i>
                 </button>
-                <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)">
+                <button *ngIf="!hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)">
                     <i class="bi bi-bell text-2xl"></i>
                 </button>
                 <div class="passport">
@@ -130,10 +143,10 @@ header="Edit Profile"
             </a>
             <div class="d-flex align-items-center gap-2">
                 <!-- Bell button for mobile view -->
-                <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                <button *ngIf="hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
                     <i class="bi bi-bell text-2xl"></i>
                 </button>
-                <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)">
+                <button *ngIf="!hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)">
                     <i class="bi bi-bell text-2xl"></i>
                 </button>
                 <div class="passport">
@@ -153,10 +166,10 @@ header="Edit Profile"
             </a>
             <div class="d-flex align-items-center gap-2">
                 <!-- Bell button for mobile view -->
-                <button *ngIf="hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
+                <button *ngIf="hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)" pBadge value="1">
                     <i class="bi bi-bell text-2xl"></i>
                 </button>
-                <button *ngIf="!hasUnreadNotifications" style="border: 0; background-color: transparent;" (click)="toggleNotifications($event, notifPanel)">
+                <button *ngIf="!hasUnreadNotifications" class="ph-icon-btn" aria-label="Notifications" (click)="toggleNotifications($event, notifPanel)">
                     <i class="bi bi-bell text-2xl"></i>
                 </button>
                 <div class="passport">

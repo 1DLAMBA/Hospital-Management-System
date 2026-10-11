@@ -19,6 +19,18 @@
                         <!-- <p class="">{{singleNurse.availability}}</p> -->
                     </div>
                 </div>
+
+                <div class="share-link" *ngIf="user?.slug">
+                    <span class="share-link-label"><i class="pi pi-share-alt"></i> Your shareable profile</span>
+                    <code class="share-link-url" [title]="'phoenixmed.online/' + user.slug">phoenixmed.online/{{ user.slug }}</code>
+                    <div class="share-link-row">
+                        <button pButton type="button" size="small" class="share-copy-btn"
+                            [label]="linkCopied ? 'Copied' : 'Copy link'"
+                            [icon]="linkCopied ? 'pi pi-check' : 'pi pi-copy'"
+                            (click)="copyPublicLink()"></button>
+                        <a class="share-view-btn" [routerLink]="['/', user.slug]" target="_blank" rel="noopener">View</a>
+                    </div>
+                </div>
                 
             </div>
         </div>

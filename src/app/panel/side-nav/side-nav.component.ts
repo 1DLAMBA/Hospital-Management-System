@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AdminService } from '../../endpoints/admin.service';
 import { HospitalsService } from '../../endpoints/hospitals.service';
+import { SessionUserService } from '../../services/session-user.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -23,13 +24,15 @@ export class SideNavComponent implements OnInit, OnDestroy {
   admin_nav!: any[];
   hospital_nav!: any[];
   private routerSubscription?: Subscription;
+  private userSub?: Subscription;
   private isComponentActive: boolean = true;
 
   constructor(
     private userEndpoint: UserService,
     private adminEndpoint: AdminService,
     private hospitalEndpoint: HospitalsService,
-    private router: Router
+    private router: Router,
+    private session: SessionUserService
   ){
 
   }
@@ -51,30 +54,25 @@ export class SideNavComponent implements OnInit, OnDestroy {
     this.isComponentActive = true;
     this.loadData();
     
-    // Subscribe to router navigation events to reload data when navigating
+    // Account details only change when the profile page is edited, so refresh
+    // when the user leaves it instead of on every page change.
+    let lastUrl = this.router.url;
     this.routerSubscription = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event) => {
       if (!this.isComponentActive) return;
-      
-      const currentUrl = event.urlAfterRedirects || event.url;
-      
-      // Reload data when navigating to any panel route
-      if (currentUrl.startsWith('/panel')) {
-        setTimeout(() => {
-          if (this.isComponentActive && this.router.url === currentUrl) {
-            this.loadData();
-          }
-        }, 100);
+      const left = lastUrl;
+      lastUrl = event.urlAfterRedirects || event.url;
+      if (left.startsWith('/panel/my-profile') && !lastUrl.startsWith('/panel/my-profile')) {
+        this.session.load(true);
       }
     });
   }
 
   ngOnDestroy(): void {
     this.isComponentActive = false;
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
+    this.routerSubscription?.unsubscribe();
+    this.userSub?.unsubscribe();
   }
 
   loadData(): void {
@@ -128,16 +126,11 @@ export class SideNavComponent implements OnInit, OnDestroy {
   }
 
   getUser (){
-    const actor = this.actorType();
-    const endpoint = actor === 'admin' ? this.adminEndpoint : actor === 'hospital' ? this.hospitalEndpoint : this.userEndpoint;
-    endpoint.get(this.id).subscribe({
-      next: (response: any) => {
-        this.user = response.user
-        this.initializeNav();
-
-      }
-    })
-
+    this.userSub = this.session.load().subscribe((user) => {
+      if (!user) return;
+      this.user = user;
+      this.initializeNav();
+    });
   }
 
   initializeNav(){

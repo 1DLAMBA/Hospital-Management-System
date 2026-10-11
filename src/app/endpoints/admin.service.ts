@@ -42,4 +42,41 @@ export class AdminService {
   rejectHospital(id: any) {
     return this.httpClient.post(`${this.baseUrl}/hospitals/${id}/reject`, {});
   }
+
+  // Deactivate (soft-delete) a user — reversible.
+  deactivateUser(id: any) {
+    return this.httpClient.delete(`${this.baseUrl}/users/${id}`);
+  }
+
+  // Reactivate a previously deactivated user.
+  reactivateUser(id: any) {
+    return this.httpClient.post(`${this.baseUrl}/users/${id}/restore`, {});
+  }
+
+  // Email a newsletter-style broadcast to specific selected users.
+  broadcast(payload: BroadcastPayload) {
+    return this.httpClient.post<{ success: string; sent: number; failed: number }>(`${this.baseUrl}/broadcast`, payload);
+  }
+
+  // Render the newsletter exactly as recipients will see it.
+  broadcastPreview(payload: Omit<BroadcastPayload, 'user_ids'>) {
+    return this.httpClient.post<{ html: string }>(`${this.baseUrl}/broadcast/preview`, payload);
+  }
+
+  // Upload a banner image; returns the public URL to embed in the email.
+  uploadBanner(file: File) {
+    const form = new FormData();
+    form.append('file', file);
+    return this.httpClient.post<{ data: string }>(`${environment.apiUrl}/upload`, form);
+  }
+}
+
+export interface BroadcastPayload {
+  subject: string;
+  message: string;
+  user_ids: number[];
+  headline?: string | null;
+  banner_url?: string | null;
+  cta_label?: string | null;
+  cta_url?: string | null;
 }

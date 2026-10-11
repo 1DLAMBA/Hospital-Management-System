@@ -10,6 +10,7 @@ import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { PaymentService } from '../../../../endpoints/payment.service';
 import { MessageService } from 'primeng/api';
+import { ConfirmService } from '../../../../services/confirm.service';
 
 @Component({
   selector: 'app-client-appointment',
@@ -43,6 +44,7 @@ export class ClientAppointmentComponent implements OnInit {
     private router: Router,
     private paymentEndpoint: PaymentService,
     private messageService: MessageService,
+    private confirm: ConfirmService,
   ) {
 
   }
@@ -91,6 +93,19 @@ export class ClientAppointmentComponent implements OnInit {
 
       }
     })
+  }
+
+  async confirmCancel(appt_id: any) {
+    const ok = await this.confirm.ask({
+      title: 'Cancel this request?',
+      message: 'The professional will no longer see it. You can send a new request any time.',
+      confirmLabel: 'Cancel request',
+      cancelLabel: 'Keep request',
+      tone: 'critical',
+    });
+    if (!ok) return;
+    this.delete(appt_id);
+    this.messageService.add({ severity: 'success', summary: 'Request cancelled', detail: 'Your consultation request was cancelled.' });
   }
 
   delete(appt_id: any) {

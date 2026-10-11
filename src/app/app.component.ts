@@ -89,14 +89,16 @@ export class AppComponent implements OnInit, OnDestroy {
         return;
       }
       
-      // Also check route data as fallback
+      // Also check route data (merged, on the deepest matched route) as fallback.
       let route = this.activatedRoute.firstChild;
+      let leaf = route;
       while (route) {
-        if (route.snapshot.routeConfig?.data?.['hideNavbarAndFooter']) {
-          this.showNavbarAndFooter = false;
-          return;
-        }
+        leaf = route;
         route = route.firstChild;
+      }
+      if (leaf?.snapshot.data?.['hideNavbarAndFooter'] || leaf?.snapshot.routeConfig?.data?.['hideNavbarAndFooter']) {
+        this.showNavbarAndFooter = false;
+        return;
       }
       this.showNavbarAndFooter = true;
     }

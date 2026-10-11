@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
@@ -39,6 +39,10 @@ export class ProfileComponent implements OnInit {
   appointment!: boolean;
   loading: boolean = false;
 
+  /** Set when the page is embedded in the guest share view (no panel route). */
+  @Input() professionalId?: string | number;
+  @Input() forcedType?: 'doctor' | 'other_professional';
+
   constructor(
     private route: ActivatedRoute,
     private userEndpoint: UserService,
@@ -57,10 +61,12 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // Check if this is a doctor or other_professional based on route query params
     this.user_id = localStorage.getItem('id');
-    this.getUser(this.user_id);
+    if (this.professionalId) this.id = String(this.professionalId);
+    if (!this.isGuest) this.getUser(this.user_id);
+    this.avatar_file = environment.apiUrl + '/file/get/';
     
     // Get the type from query params, default to trying both if not provided
-    const type = this.route.snapshot.queryParams['type'];
+    const type = this.forcedType ?? this.route.snapshot.queryParams['type'];
     if (type === 'other_professional') {
       this.professionalType = 'other_professional';
       this.getSingleOtherProfessional(this.id);
@@ -79,7 +85,7 @@ export class ProfileComponent implements OnInit {
   }
   dangerAlert(message: any) {
 
-    this.messageService.add({ severity: 'success', detail: message });
+    this.messageService.add({ severity: 'error', detail: message });
   }
 
   getUser (id: any){
@@ -109,7 +115,16 @@ export class ProfileComponent implements OnInit {
  
 
 
+  get isGuest(): boolean {
+    return !localStorage.getItem('id');
+  }
+
   showDialog() {
+    if (this.isGuest) {
+      // Guests can look, not act: booking needs an account.
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url.split('?')[0] } });
+      return;
+    }
     this.visible = true;
   }
   getSingleDoctor(id: any) {
@@ -123,7 +138,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         // If not found as doctor and no type was specified, try as other_professional
-        if (!this.route.snapshot.queryParams['type']) {
+        if (!this.forcedType && !this.route.snapshot.queryParams['type']) {
           this.getSingleOtherProfessional(id);
         } else {
           console.error('Doctor not found:', err);

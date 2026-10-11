@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../../../../../endpoints/admin.service';
 import { MessageService } from 'primeng/api';
+import { ConfirmService } from '../../../../../services/confirm.service';
 
 @Component({
   selector: 'app-admin-hospitals-list',
@@ -28,6 +29,7 @@ export class AdminHospitalsListComponent implements OnInit {
   constructor(
     private adminService: AdminService,
     private messageService: MessageService,
+    private confirm: ConfirmService,
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +67,15 @@ export class AdminHospitalsListComponent implements OnInit {
     this.getHospitals(this.currentPage, this.rowsPerPage);
   }
 
-  approve(hospital: any): void {
+  async approve(hospital: any): Promise<void> {
+    const ok = await this.confirm.ask({
+      title: `Approve ${hospital.name}?`,
+      message: 'Health professionals will be able to select this hospital on their profile.',
+      confirmLabel: 'Approve hospital',
+      cancelLabel: 'Not now',
+      tone: 'attention',
+    });
+    if (!ok) return;
     this.actionLoadingId = hospital.id;
     this.adminService.approveHospital(hospital.id).subscribe({
       next: () => {
@@ -80,7 +90,15 @@ export class AdminHospitalsListComponent implements OnInit {
     });
   }
 
-  reject(hospital: any): void {
+  async reject(hospital: any): Promise<void> {
+    const ok = await this.confirm.ask({
+      title: `Reject ${hospital.name}?`,
+      message: 'It will not appear when professionals choose a hospital.',
+      confirmLabel: 'Reject hospital',
+      cancelLabel: 'Keep pending',
+      tone: 'critical',
+    });
+    if (!ok) return;
     this.actionLoadingId = hospital.id;
     this.adminService.rejectHospital(hospital.id).subscribe({
       next: () => {

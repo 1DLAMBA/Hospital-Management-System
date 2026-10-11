@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
@@ -71,6 +72,7 @@ import { AdminDashboardComponent } from './dashboard/panel/admin-panel/admin-das
 import { AdminUsersListComponent } from './dashboard/panel/admin-panel/admin-users-list/admin-users-list.component';
 import { AdminHospitalsListComponent } from './dashboard/panel/admin-panel/admin-hospitals-list/admin-hospitals-list.component';
 import { HospitalPanelComponent } from './dashboard/panel/hospital-panel/hospital-panel.component';
+import { GuestProfileComponent } from './guest-profile/guest-profile.component';
 import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel/hospital-professionals/hospital-professionals.component';
 
 @NgModule({
@@ -111,7 +113,8 @@ import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel
     AdminUsersListComponent,
     AdminHospitalsListComponent,
     HospitalPanelComponent,
-    HospitalProfessionalsComponent
+    HospitalProfessionalsComponent,
+    GuestProfileComponent
   ],
   imports: [
     CommonModule,
@@ -119,6 +122,7 @@ import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel
     NgbModule,
     HttpClientModule,
     ToastModule,
+    ConfirmDialogModule,
     ChartModule,
     TableModule,
     CalendarModule,
@@ -150,7 +154,7 @@ import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel
     MedicalAIComponent,
     StatusPillComponent,
   ],
-  exports: [PanelLoaderComponent],
+  exports: [PanelLoaderComponent, GuestProfileComponent],
   bootstrap: [DashboardComponent],
   providers:[ChatDialogService, DialogService,MessagesService,ConversationService]
 })

@@ -98,7 +98,7 @@
             </p>
 
             <button type="button" class="book" [disabled]="user?.clients?.appointments && appointment" (click)="showDialog()">
-                Book appointment
+                {{ isGuest ? 'Log in to book' : 'Book appointment' }}
             </button>
         </aside>
 
@@ -111,7 +111,7 @@
             <section class="block">
                 <h2>Credentials</h2>
                 <dl>
-                    <div class="row">
+                    <div class="row" *ngIf="!isGuest">
                         <dt>Licence number</dt>
                         <dd class="ph-record">{{professional?.license_number || SingleDoctor?.license_number || '—'}}</dd>
                     </div>

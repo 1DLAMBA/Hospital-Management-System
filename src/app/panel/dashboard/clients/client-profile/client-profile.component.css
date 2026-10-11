@@ -226,23 +226,6 @@
     justify-content: center;
   }
 
-/* Match Messages PrimeNG button styling */
-
-  ::ng-deep .p-button {
-    background-color: #17224d !important;
-    color: #ffffff !important;
-    border: 0;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-  }
-  ::ng-deep .p-button:hover {
-    background-color: #253681 !important;
-    transform: scale(1.05);
-  }
-
   
 /* New Medical Record Dialog Styling */
 ::ng-deep .modern-medical-record-dialog .p-dialog-content {
@@ -317,7 +300,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 10px;
   transition: background 0.2s;
   font-size: 1.1rem;
 }
@@ -341,12 +324,12 @@
 
 .med-record-body::-webkit-scrollbar-track {
   background: #f1f3f5;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .med-record-body::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .med-record-body::-webkit-scrollbar-thumb:hover {
@@ -659,7 +642,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   font-size: 1rem;
 }
@@ -683,12 +666,12 @@
 
 .med-record-view-body::-webkit-scrollbar-track {
   background: #f1f3f5;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .med-record-view-body::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .med-record-view-body::-webkit-scrollbar-thumb:hover {

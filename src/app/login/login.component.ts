@@ -43,6 +43,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
     private authService: AuthService,
+    private route: ActivatedRoute,
   ) {
     this.LoginForm = this.fb.group({
       email: this.fb.control('', [Validators.required]),
@@ -102,6 +103,12 @@ export class LoginComponent implements OnDestroy, OnInit {
         // Ensure ID is available to routed components during their ngOnInit
         localStorage.setItem('id', response.user.id)
         const u = response.user;
+        // Honour a same-site return path (e.g. the shared profile link that sent them here).
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        if (returnUrl && /^\/(?!\/)[A-Za-z0-9_\-\/?=&.%]*$/.test(returnUrl) && u.registration_complete !== false) {
+          this.router.navigateByUrl(returnUrl);
+          return;
+        }
         const profTypes = ['doctor', 'other_professional', 'nurse'];
         if (profTypes.includes(u.user_type) && u.registration_complete === false) {
           if (u.user_type === 'nurse') {

@@ -1,18 +1,30 @@
+<p-toast></p-toast>
+
 <section class="ph-page">
     <div class="ph-page-head">
         <div>
             <h1>Users</h1>
             <p>Everyone with a Phoenix account &mdash; patients and health professionals.</p>
         </div>
-        <span class="search">
-            <i class="pi pi-search" aria-hidden="true"></i>
-            <input
-                pInputText
-                type="text"
-                (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
-                placeholder="Search name, email, phone or role"
-                aria-label="Search users" />
-        </span>
+        <div class="head-actions">
+            <button
+                pButton
+                type="button"
+                icon="pi pi-envelope"
+                label="Email selected ({{ selectedUsers.length }})"
+                [disabled]="!selectedUsers.length"
+                (click)="openBroadcast()"
+                class="p-button-sm"></button>
+            <span class="search">
+                <i class="pi pi-search" aria-hidden="true"></i>
+                <input
+                    pInputText
+                    type="text"
+                    (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                    placeholder="Search name, email, phone or role"
+                    aria-label="Search users" />
+            </span>
+        </div>
     </div>
 
     <div class="ph-card table-card">
@@ -20,6 +32,7 @@
             #dt1
             [value]="users"
             dataKey="id"
+            [(selection)]="selectedUsers"
             [rows]="10"
             [rowsPerPageOptions]="[10, 25, 50]"
             [paginator]="true"
@@ -28,14 +41,18 @@
             styleClass="ph-table">
             <ng-template pTemplate="header">
                 <tr>
+                    <th style="width: 3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
                     <th>Name</th>
                     <th>Role</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-user>
-                <tr>
+                <tr [class.row-deactivated]="isDeactivated(user)">
+                    <td><p-tableCheckbox [value]="user"></p-tableCheckbox></td>
                     <td>
                         <div class="person">
                             <img class="avatar" *ngIf="user.passport" [src]="avatar_file + user.passport" alt="" />
@@ -48,11 +65,30 @@
                     <td><span class="role">{{ roleLabel(user) }}</span></td>
                     <td class="ph-record">{{ user.email }}</td>
                     <td class="ph-record">{{ user.phoneno }}</td>
+                    <td>
+                        <span class="status-badge" [class.active]="!isDeactivated(user)" [class.inactive]="isDeactivated(user)">
+                            {{ isDeactivated(user) ? 'Deactivated' : 'Active' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            *ngIf="!isDeactivated(user)"
+                            pButton type="button" severity="danger" size="small"
+                            icon="pi pi-ban" label="Deactivate"
+                            [loading]="busyId === user.id" [disabled]="busyId === user.id"
+                            (click)="deactivate(user)"></button>
+                        <button
+                            *ngIf="isDeactivated(user)"
+                            pButton type="button" severity="success" size="small"
+                            icon="pi pi-refresh" label="Reactivate"
+                            [loading]="busyId === user.id" [disabled]="busyId === user.id"
+                            (click)="reactivate(user)"></button>
+                    </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="4">
+                    <td colspan="7">
                         <div class="empty">
                             <strong>No matches</strong>
                             <span>Try a different name, email, phone number or role.</span>
@@ -63,3 +99,61 @@
         </p-table>
     </div>
 </section>
+
+<!-- Newsletter compose dialog -->
+<p-dialog header="Email selected users" [(visible)]="showBroadcast" [modal]="true" [style]="{ width: '720px', maxWidth: '94vw' }" [draggable]="false">
+    <div class="nl-tabs" role="tablist">
+        <button type="button" role="tab" class="nl-tab" [class.active]="broadcastTab === 'write'" [attr.aria-selected]="broadcastTab === 'write'" (click)="broadcastTab = 'write'">Write</button>
+        <button type="button" role="tab" class="nl-tab" [class.active]="broadcastTab === 'preview'" [attr.aria-selected]="broadcastTab === 'preview'" (click)="showPreview()">
+            <i *ngIf="previewing" class="pi pi-spin pi-spinner"></i> Preview
+        </button>
+        <span class="broadcast-count">To <strong>{{ selectedUsers.length }}</strong> selected {{ selectedUsers.length === 1 ? 'user' : 'users' }}</span>
+    </div>
+
+    <div *ngIf="broadcastTab === 'write'">
+        <div class="broadcast-field">
+            <label for="b-subject">Subject line</label>
+            <input id="b-subject" pInputText [(ngModel)]="broadcastSubject" class="w-full" placeholder="What the inbox shows" />
+        </div>
+        <div class="broadcast-field">
+            <label for="b-headline">Headline <span class="nl-hint">(optional, shown large inside the email)</span></label>
+            <input id="b-headline" pInputText [(ngModel)]="broadcastHeadline" class="w-full" placeholder="October at Phoenix" />
+        </div>
+        <div class="broadcast-field">
+            <label for="b-banner">Banner image <span class="nl-hint">(optional)</span></label>
+            <div class="nl-row">
+                <input id="b-banner" pInputText [(ngModel)]="broadcastBanner" class="w-full" placeholder="Paste an image link, or upload" />
+                <input type="file" hidden #bannerIn accept="image/png,image/jpeg" (change)="uploadBanner($event)" />
+                <button pButton type="button" class="p-button-outlined" icon="pi pi-upload" [label]="uploadingBanner ? 'Uploading…' : 'Upload'" [loading]="uploadingBanner" (click)="bannerIn.click()"></button>
+            </div>
+            <img *ngIf="broadcastBanner" class="nl-banner-thumb" [src]="broadcastBanner" alt="Banner preview" />
+        </div>
+        <div class="broadcast-field">
+            <label for="b-message">Message</label>
+            <textarea id="b-message" pInputTextarea [(ngModel)]="broadcastMessage" rows="10" class="w-full" placeholder="Write your newsletter…"></textarea>
+            <span class="nl-hint">Blank line starts a new paragraph. <code>## Heading</code> · <code>- bullet</code> · <code>**bold**</code> · <code>[link text](https://…)</code></span>
+        </div>
+        <div class="nl-row nl-cta">
+            <div class="broadcast-field">
+                <label for="b-cta-label">Button text <span class="nl-hint">(optional)</span></label>
+                <input id="b-cta-label" pInputText [(ngModel)]="broadcastCtaLabel" class="w-full" placeholder="Open Phoenix" maxlength="40" />
+            </div>
+            <div class="broadcast-field">
+                <label for="b-cta-url">Button link</label>
+                <input id="b-cta-url" pInputText [(ngModel)]="broadcastCtaUrl" class="w-full" placeholder="https://phoenixmed.online" />
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="broadcastTab === 'preview'" class="nl-preview">
+        <iframe title="Newsletter preview" sandbox [srcdoc]="previewHtml"></iframe>
+        <span class="nl-hint">Greeting shows your own name here; each recipient sees theirs.</span>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="showBroadcast = false" [disabled]="sending"></button>
+        <button *ngIf="broadcastTab === 'write'" pButton type="button" label="Preview" icon="pi pi-eye" class="p-button-outlined" [loading]="previewing" (click)="showPreview()"></button>
+        <button *ngIf="broadcastTab === 'preview'" pButton type="button" label="Back to editing" icon="pi pi-pencil" class="p-button-outlined" (click)="broadcastTab = 'write'"></button>
+        <button pButton type="button" label="Send email" icon="pi pi-send" [loading]="sending" [disabled]="sending" (click)="sendBroadcast()"></button>
+    </ng-template>
+</p-dialog>

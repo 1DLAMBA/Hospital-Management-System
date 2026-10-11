@@ -1,0 +1,27 @@
+<p-toast></p-toast>
+<header class="gp-bar">
+    <a class="gp-brand" routerLink="/">Phoenix.</a>
+    <nav class="gp-actions" aria-label="Account">
+        <a class="ph-btn ph-btn--secondary ph-btn--sm" routerLink="/login" [queryParams]="{ returnUrl: '/' + slug }">Log in</a>
+        <a class="ph-btn ph-btn--sm" routerLink="/register">Create account</a>
+    </nav>
+</header>
+
+<main *ngIf="state === 'loading'" class="gp-state" aria-live="polite">
+    <span class="gp-spinner" aria-hidden="true"></span>
+    <p>Loading profile…</p>
+</main>
+
+<main *ngIf="state === 'notfound'" class="gp-state">
+    <span class="gp-chip" aria-hidden="true"><i class="pi pi-search"></i></span>
+    <h1>Profile not found</h1>
+    <p>This link doesn’t match a health professional on Phoenix. Check the address, or browse the directory after you log in.</p>
+    <a class="ph-btn" routerLink="/">Go to Phoenix</a>
+</main>
+
+<ng-container *ngIf="state === 'ready'">
+    <app-profile-nurse *ngIf="isNurse; else proProfile" [nurseId]="profile.id"></app-profile-nurse>
+    <ng-template #proProfile>
+        <app-profile [professionalId]="profile.id" [forcedType]="professionalType"></app-profile>
+    </ng-template>
+</ng-container>

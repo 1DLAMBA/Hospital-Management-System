@@ -55,15 +55,8 @@ import { MessagesService } from "./endpoints/messages.service";
 import { ChatDialogComponent } from "./panel/chat-dialog/chat-dialog.component";
 import { ChatDialogService } from "./panel/chat-dialog.service";
 import { DialogService, DynamicDialogModule } from "primeng/dynamicdialog";
-
-// Custom route reuse strategy
-export class CustomRouteReuseStrategy implements RouteReuseStrategy {
-  shouldDetach() { return false; }
-  store() { }
-  shouldAttach() { return false; }
-  retrieve() { return null; }
-  shouldReuseRoute() { return false; }
-}
+import { PhoenixRouteReuseStrategy } from "./route-reuse";
+import { SessionUserService } from "./services/session-user.service";
 
 @NgModule({
     declarations: [
@@ -123,6 +116,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         UserService,
         HospitalsService,
         AdminService,
+        SessionUserService,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         DoctorsService,
         ClientsService,
@@ -137,7 +131,7 @@ export class CustomRouteReuseStrategy implements RouteReuseStrategy {
         ChatDialogService,
         DialogService,
         importProvidersFrom(TranslateModule.forRoot()),
-        { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy }
+        { provide: RouteReuseStrategy, useClass: PhoenixRouteReuseStrategy }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
