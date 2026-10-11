@@ -161,6 +161,9 @@ export class LoginComponent implements OnDestroy, OnInit {
           // Backend returns plain text 'invalid credentials' for 400 errors
           if (typeof res.error === 'string') {
             errorMessage = res.error;
+          } else if (typeof res.error?.text === 'string' && res.error?.error instanceof SyntaxError) {
+            // Plain-text body that Angular could not parse as JSON.
+            errorMessage = res.error.text;
           } else if (res.error?.error) {
             // Handle JSON error response with 'error' field
             errorMessage = res.error.error;
