@@ -204,6 +204,16 @@ export class DoctorProfileComponent implements OnInit {
     });
   }
 
+  linkCopied = false;
+  copyPublicLink(): void {
+    if (!this.user?.slug) { return; }
+    const url = `${window.location.origin}/${this.user.slug}`;
+    navigator.clipboard?.writeText(url).then(() => {
+      this.linkCopied = true;
+      setTimeout(() => (this.linkCopied = false), 2000);
+    }).catch(() => {});
+  }
+
   get showRegistrationCompletion(): boolean {
     return !!this.user && this.user.registration_complete === false;
   }

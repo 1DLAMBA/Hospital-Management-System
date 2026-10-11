@@ -43,7 +43,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 10px;
   transition: all 0.2s ease;
   font-size: 1rem;
 }
@@ -67,12 +67,12 @@
 
 .med-record-view-body::-webkit-scrollbar-track {
   background: #f1f3f5;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .med-record-view-body::-webkit-scrollbar-thumb {
   background: #cbd5e1;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .med-record-view-body::-webkit-scrollbar-thumb:hover {

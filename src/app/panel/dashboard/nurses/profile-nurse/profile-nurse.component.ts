@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { environment } from '../../../../../environments/environment';
@@ -47,6 +47,9 @@ export class ProfileNurseComponent implements OnInit {
   assignments!: any[];
   submitting: boolean = false;
 
+  /** Set when the page is embedded in the guest share view (no panel route). */
+  @Input() nurseId?: string | number;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -74,7 +77,12 @@ export class ProfileNurseComponent implements OnInit {
     })
   }
 
+  get isGuest(): boolean {
+    return !localStorage.getItem('id');
+  }
+
   ngOnInit(): void {
+    if (this.nurseId) this.id = String(this.nurseId);
     this.getsingleNurse(this.id);
     this.user_id = localStorage.getItem('id');
     // this.getUser();
@@ -97,6 +105,11 @@ export class ProfileNurseComponent implements OnInit {
 
 
   showDialog() {
+    if (this.isGuest) {
+      // Guests can look, not act: booking needs an account.
+      this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url.split('?')[0] } });
+      return;
+    }
     this.visible = true;
   }
 
@@ -200,8 +213,7 @@ export class ProfileNurseComponent implements OnInit {
     this.nurseEndpoint.getSingle(id).subscribe({
       next: (response: any) => {
         this.singleNurse = response.nurse;
-        this.getAssignment(this.singleNurse.id);
-        console.log('APPOINTEMENTS', this.singleNurse);
+        if (!this.isGuest) this.getAssignment(this.singleNurse.id);
         this.userEndpoint.get(this.singleNurse.user_id).subscribe({
           next: (response: any) => {
             this.user = response.user;

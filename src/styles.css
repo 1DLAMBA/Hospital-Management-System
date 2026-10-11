@@ -2,6 +2,7 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
+@import "./styles/phoenix-primeng.css";
 
 /* ==========================================================================
    Phoenix design tokens
@@ -27,8 +28,10 @@
     --ph-font: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;
     --ph-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 
-    --ph-radius: 10px;
-    --ph-radius-sm: 6px;
+    --ph-radius: 12px;
+    --ph-radius-sm: 8px;
+    --ph-radius-lg: 18px;
+    --ph-radius-pill: 999px;
     --ph-shadow: 0 1px 2px rgba(16, 25, 58, 0.06), 0 4px 16px rgba(16, 25, 58, 0.06);
 }
 
@@ -851,3 +854,14 @@ body{ margin: 0; font-family: var(--ph-font); color: var(--ph-ink); -webkit-font
         min-width: unset;
     }
 }
+
+/* Shareable profile link (sits on the navy identity card) */
+.share-link { width: 100%; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.14); text-align: left; }
+.share-link-label { display: flex; align-items: center; gap: 0.45rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.55rem; }
+.share-link-url { display: block; width: 100%; box-sizing: border-box; font-family: var(--ph-font-mono); font-size: 0.78rem; color: #fff; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: var(--ph-radius-sm); padding: 0.5rem 0.65rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 0.55rem; }
+.share-link-row { display: flex; gap: 0.5rem; align-items: center; }
+.share-link-row .share-copy-btn { flex: 1 1 auto; }
+body .share-link .p-button.share-copy-btn { background: #fff; border-color: #fff; color: var(--ph-brand); }
+body .share-link .p-button.share-copy-btn:not(:disabled):hover { background: var(--ph-signal-tint); border-color: var(--ph-signal-tint); color: var(--ph-signal); box-shadow: none; }
+.share-view-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 2.1rem; padding: 0 0.9rem; border-radius: var(--ph-radius); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: background 0.15s ease; }
+.share-view-btn:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }

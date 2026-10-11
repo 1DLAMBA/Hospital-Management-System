@@ -319,22 +319,6 @@
 }
 
 :host {
-    ::ng-deep .p-button {
-        background-color: #17224d !important;
-        color: white !important;
-        border: 0;
-        border-radius: 5px;
-    }
-
-    ::ng-deep .reg-completion-actions .p-button.p-button-outlined {
-        background-color: transparent !important;
-        color: #17224d !important;
-        border: 1px solid #17224d !important;
-    }
-
-    ::ng-deep .reg-completion-actions .p-button.p-button-outlined:hover:not(:disabled) {
-        background: rgba(23, 34, 77, 0.08) !important;
-    }
 
     ::ng-deep .p-dialog {
         flex-direction: column;

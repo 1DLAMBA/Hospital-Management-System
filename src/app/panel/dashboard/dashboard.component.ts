@@ -15,12 +15,15 @@ import { MedicalAiUiService } from '../../services/medical-ai-ui.service';
 import { Subscription } from 'rxjs';
 import { AdminService } from '../../endpoints/admin.service';
 import { HospitalsService } from '../../endpoints/hospitals.service';
+import { SessionUserService } from '../../services/session-user.service';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmService } from '../../services/confirm.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  providers: [MessageService]
+  providers: [MessageService, ConfirmationService, ConfirmService]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild(MedicalAIComponent) medicalAi?: MedicalAIComponent;
@@ -62,6 +65,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private medicalAiUi: MedicalAiUiService,
     private adminEndpoint: AdminService,
     private hospitalEndpoint: HospitalsService,
+    private session: SessionUserService,
+    private confirm: ConfirmService,
   ){}
   ngOnInit(): void {
     this.id = localStorage.getItem('id');
@@ -89,6 +94,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.medicalAiSub?.unsubscribe();
+    this.userSub?.unsubscribe();
   }
 
   openMedicalAi(): void {
@@ -333,18 +339,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
 
+  private userSub?: Subscription;
+
   getUser (){
-    const actor = this.actorType();
-    const endpoint = actor === 'admin' ? this.adminEndpoint : actor === 'hospital' ? this.hospitalEndpoint : this.userEndpoint;
-    endpoint.get(this.id).subscribe({
-      next: (response: any) => {
-        this.user = response.user
-        const splitNames= this.user.name.split(" ");
-        this.firstName = splitNames[0];
-        this.show(this.firstName);
-        // avatar_file already initialized
-      }
-    })
+    this.userSub = this.session.load().subscribe((user) => {
+      if (!user) return;
+      this.user = user;
+      this.firstName = String(user.name || '').split(' ')[0];
+    });
   }
   show(firstname: any) {
     // this.messageService.add({ icon: ' bi bi-person', severity: 'success', detail: `Hello, ${firstname}`  });
@@ -358,12 +360,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       || url.startsWith('/panel/nurses/nurse-profile');
   }
 
-  logout() {
-    // Call auth service logout (which clears localStorage)
+  async logout() {
+    const ok = await this.confirm.ask({
+      title: 'Log out of Phoenix?',
+      message: 'You will need to sign in again to see your appointments and messages.',
+      confirmLabel: 'Log out',
+      cancelLabel: 'Stay signed in',
+      tone: 'neutral',
+    });
+    if (!ok) return;
     this.authService.logout();
-    // Clear all localStorage (including id)
     localStorage.clear();
-    // Navigate to login page
+    this.session.clear();
     this.router.navigate(['/login']);
   }
 

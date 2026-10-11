@@ -1,0 +1,233 @@
+/* ==========================================================================
+   Phoenix control language, layered over PrimeNG (lara-light-blue).
+   One shape scale, one button family, one dialog. Component CSS should not
+   restyle .p-button; use the modifiers here instead.
+   ========================================================================== */
+
+/* --- Buttons ------------------------------------------------------------ */
+body .p-button,
+.ph-btn {
+    font-family: var(--ph-font);
+    font-size: 0.875rem;
+    font-weight: 600;
+    min-height: 2.5rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--ph-radius);
+    border: 1px solid var(--ph-brand);
+    background: var(--ph-brand);
+    color: #fff;
+    box-shadow: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+body .p-button:not(:disabled):hover,
+.ph-btn:not(:disabled):hover {
+    background: var(--ph-signal);
+    border-color: var(--ph-signal);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 85, 170, 0.22);
+}
+
+body .p-button:not(:disabled):active,
+.ph-btn:not(:disabled):active { transform: translateY(1px); }
+
+body .p-button:focus-visible,
+.ph-btn:focus-visible,
+.ph-icon-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 85, 170, 0.28);
+}
+
+body .p-button:disabled,
+.ph-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+body .p-button .p-button-label { font-weight: 600; }
+
+body .p-button.p-button-sm,
+.ph-btn--sm { min-height: 2.1rem; padding: 0.35rem 0.8rem; font-size: 0.8rem; }
+
+body .p-button.p-button-rounded { border-radius: var(--ph-radius-pill); }
+
+/* Secondary / outlined / text */
+body .p-button.p-button-secondary,
+body .p-button.p-button-outlined,
+.ph-btn--secondary {
+    background: #fff;
+    color: var(--ph-ink);
+    border-color: var(--ph-line);
+}
+body .p-button.p-button-outlined { color: var(--ph-brand); border-color: rgba(23, 34, 77, 0.3); }
+body .p-button.p-button-secondary:not(:disabled):hover,
+body .p-button.p-button-outlined:not(:disabled):hover,
+.ph-btn--secondary:not(:disabled):hover {
+    background: var(--ph-signal-tint);
+    border-color: rgba(0, 85, 170, 0.35);
+    color: var(--ph-signal);
+    box-shadow: none;
+}
+
+body .p-button.p-button-text {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ph-signal);
+}
+body .p-button.p-button-text:not(:disabled):hover {
+    background: var(--ph-signal-tint);
+    border-color: transparent;
+    color: var(--ph-signal);
+    box-shadow: none;
+}
+
+/* Status variants */
+body .p-button.p-button-danger,
+.ph-btn--danger { background: var(--ph-critical); border-color: var(--ph-critical); color: #fff; }
+body .p-button.p-button-danger:not(:disabled):hover,
+.ph-btn--danger:not(:disabled):hover { background: #7f0e2d; border-color: #7f0e2d; box-shadow: 0 6px 16px rgba(159, 18, 57, 0.25); }
+body .p-button.p-button-success { background: var(--ph-vital); border-color: var(--ph-vital); }
+body .p-button.p-button-success:not(:disabled):hover { background: #0b5e57; border-color: #0b5e57; box-shadow: 0 6px 16px rgba(15, 118, 110, 0.25); }
+body .p-button.p-button-warning { background: var(--ph-ember); border-color: var(--ph-ember); }
+body .p-button.p-button-warning:not(:disabled):hover { background: #8f4107; border-color: #8f4107; box-shadow: 0 6px 16px rgba(180, 83, 9, 0.25); }
+
+/* Icon-only buttons are circles, never squares */
+body .p-button.p-button-icon-only,
+.ph-icon-btn {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0;
+    border-radius: var(--ph-radius-pill);
+}
+.ph-icon-btn {
+    min-height: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ph-ink-70);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.ph-icon-btn:hover { background: var(--ph-signal-tint); color: var(--ph-signal); }
+
+/* Native buttons rendered by pButton keep PrimeNG's look through .p-button */
+
+/* --- Paginator / table chrome ------------------------------------------- */
+body .p-paginator .p-paginator-first,
+body .p-paginator .p-paginator-prev,
+body .p-paginator .p-paginator-next,
+body .p-paginator .p-paginator-last,
+body .p-paginator .p-paginator-pages .p-paginator-page {
+    border-radius: var(--ph-radius-pill);
+    min-width: 2.25rem;
+    height: 2.25rem;
+}
+body .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    background: var(--ph-brand);
+    color: #fff;
+}
+body .p-datatable .p-datatable-thead > tr > th { background: var(--ph-surface); color: var(--ph-ink-70); }
+
+/* --- Inputs -------------------------------------------------------------- */
+body .p-inputtext,
+body .p-dropdown,
+body .p-inputnumber-input,
+body .p-calendar .p-inputtext,
+body .p-multiselect {
+    font-family: var(--ph-font);
+    border-radius: var(--ph-radius-sm);
+    border: 1px solid #d5dce9;
+    box-shadow: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+body .p-inputtext:enabled:focus,
+body .p-dropdown:not(.p-disabled).p-focus,
+body .p-multiselect:not(.p-disabled).p-focus {
+    border-color: var(--ph-signal);
+    box-shadow: 0 0 0 3px rgba(0, 85, 170, 0.16);
+}
+body .p-inputtext:enabled:hover,
+body .p-dropdown:not(.p-disabled):hover { border-color: #aebbd2; }
+
+body .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider { background: var(--ph-vital); }
+
+/* --- Dialogs ------------------------------------------------------------- */
+body .p-dialog {
+    border-radius: var(--ph-radius-lg);
+    border: 1px solid var(--ph-line);
+    box-shadow: 0 24px 60px rgba(16, 25, 58, 0.22);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+body .p-dialog .p-dialog-content { flex: 1 1 auto; overflow-y: auto; }
+body .p-dialog .p-dialog-header {
+    padding: 1.25rem 1.5rem 0.75rem;
+    background: #fff;
+    color: var(--ph-ink);
+    border-bottom: 0;
+}
+body .p-dialog .p-dialog-title { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; }
+body .p-dialog .p-dialog-header .p-dialog-header-icon {
+    border-radius: var(--ph-radius-pill);
+    width: 2.25rem;
+    height: 2.25rem;
+}
+body .p-dialog .p-dialog-content { padding: 0.5rem 1.5rem 1.5rem; background: #fff; }
+body .p-dialog .p-dialog-footer { padding: 0 1.5rem 1.25rem; border-top: 0; background: #fff; }
+body .p-dialog-mask.p-component-overlay { background: rgba(16, 25, 58, 0.45); backdrop-filter: blur(2px); }
+
+/* --- Confirmation slip ---------------------------------------------------- */
+body .ph-confirm.p-confirm-dialog { border-radius: var(--ph-radius-lg); }
+
+.ph-confirm-slip {
+    padding: 1.75rem 1.6rem 1.4rem;
+    background: #fff;
+    text-align: left;
+    --tone: var(--ph-signal);
+    --tone-tint: var(--ph-signal-tint);
+}
+.ph-confirm-slip[data-tone="attention"] { --tone: var(--ph-ember); --tone-tint: var(--ph-ember-tint); }
+.ph-confirm-slip[data-tone="critical"] { --tone: var(--ph-critical); --tone-tint: var(--ph-critical-tint); }
+
+.ph-confirm-chip {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--ph-radius-pill);
+    background: var(--tone-tint);
+    color: var(--tone);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    margin-bottom: 0.9rem;
+}
+.ph-confirm-title { font-size: 1.15rem; font-weight: 600; letter-spacing: -0.015em; color: var(--ph-ink); margin: 0 0 0.35rem; }
+.ph-confirm-message { font-size: 0.92rem; line-height: 1.5; color: var(--ph-ink-70); margin: 0 0 1.4rem; }
+.ph-confirm-actions { display: flex; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap; }
+
+/* --- Toasts -------------------------------------------------------------- */
+body .p-toast .p-toast-message {
+    border-radius: var(--ph-radius);
+    border-width: 0 0 0 4px;
+    box-shadow: 0 10px 30px rgba(16, 25, 58, 0.16);
+    backdrop-filter: none;
+}
+
+/* --- Overlay panels, tags ------------------------------------------------- */
+body .p-overlaypanel { border-radius: var(--ph-radius); border: 1px solid var(--ph-line); box-shadow: 0 16px 40px rgba(16, 25, 58, 0.16); }
+body .p-tag { border-radius: var(--ph-radius-pill); font-weight: 600; }
+
+@media (max-width: 600px) {
+    .ph-confirm-actions .ph-btn { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body .p-button, .ph-btn, .ph-icon-btn { transition: none; }
+}

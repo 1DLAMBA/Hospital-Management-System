@@ -77,7 +77,7 @@
                     [disabled]="btnDisable || acceptLoading || !canRespondToConsultations" 
                     [loading]="acceptLoading"
                     styleClass="p-button-raised p-button-success" 
-                    (click)="status(singleAppt.id, 'Accepted')">
+                    (click)="respond(singleAppt.id, 'Accepted')">
                 </p-button>
                 
                 <p-button 
@@ -85,7 +85,7 @@
                     icon="pi pi-times" 
                     [disabled]="btnDisable || !canRespondToConsultations" 
                     styleClass="p-button-raised p-button-danger" 
-                    (click)="status(singleAppt.id, 'Declined')">
+                    (click)="respond(singleAppt.id, 'Declined')">
                 </p-button>
             </ng-container>
             

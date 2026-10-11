@@ -45,6 +45,8 @@ import { CampaignLandingComponent } from './campaign/campaign-landing.component'
 import { CAMPAIGN_CONTENT } from './campaign/campaign-content';
 import { PaymentCallbackComponent } from './payment-callback/payment-callback.component';
 import { VerifyEmailComponent } from './verify-email/verify-email.component';
+import { GuestProfileComponent } from './panel/guest-profile/guest-profile.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -121,7 +123,7 @@ export const routes: Routes = [
       {
         path: 'panel',
         component: DashboardComponent,
-        // resolve: {user: PanelResolver},
+        canActivate: [authGuard],
         data: { hideNavbarAndFooter: true },
         children: [
           
@@ -258,6 +260,13 @@ export const routes: Routes = [
           canActivate: [hospitalGuard],
         },
       ]
+      },
+      // Vanity public professional profile — MUST stay last so it only catches
+      // single-segment paths not matched by any route above (phoenix.com/<slug>).
+      {
+        path: ':slug',
+        component: GuestProfileComponent,
+        data: { hideNavbarAndFooter: true },
       },
 ];
 @NgModule({

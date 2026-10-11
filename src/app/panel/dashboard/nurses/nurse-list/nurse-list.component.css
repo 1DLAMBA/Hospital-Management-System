@@ -25,12 +25,3 @@ section{
     border-radius: 7px;
     width: 30%;
 }
-
-
-    ::ng-deep .p-button {
-        background-color: #17224d !important;
-        color: white !important;
-        border: 0;
-        border-radius: 5px;
-        
-    }
