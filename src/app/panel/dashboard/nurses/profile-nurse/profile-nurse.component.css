@@ -199,14 +199,50 @@
     width: 100%;
 }
 
+.appt-dialog .p-dialog {
+    max-width: 95vw;
+}
+
+.appt-dialog .p-dialog-content {
+    padding: 1.25rem !important;
+}
+
+.appt-dialog form {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
 .appt-dialog p {
     font-size: 1.5rem !important;
     font-weight: 400 !important;
     height: 100%;
 }
 
+.appt-dialog .calendar {
+    flex: 1 1 320px;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.appt-dialog textarea {
+    width: 100%;
+    min-height: 90px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.appt-dialog .p-button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
 .diag-text {
-    width: 45%;
+    flex: 1 1 280px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .diag-text span {
@@ -347,9 +383,24 @@
     .diag-text {
         width: 100%;
     }
-    
+
     .diag-text span {
         font-size: 2rem;
+    }
+
+    .appt-dialog form {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .appt-dialog .calendar,
+    .appt-dialog .diag-text {
+        width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .appt-dialog p {
+        font-size: 1.1rem !important;
     }
 }
 
