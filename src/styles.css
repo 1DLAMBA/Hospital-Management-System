@@ -859,9 +859,24 @@ body{ margin: 0; font-family: var(--ph-font); color: var(--ph-ink); -webkit-font
 .share-link { width: 100%; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.14); text-align: left; }
 .share-link-label { display: flex; align-items: center; gap: 0.45rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); margin-bottom: 0.55rem; }
 .share-link-url { display: block; width: 100%; box-sizing: border-box; font-family: var(--ph-font-mono); font-size: 0.78rem; color: #fff; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: var(--ph-radius-sm); padding: 0.5rem 0.65rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 0.55rem; }
+/* Share card + Copy link sit side by side as two equal columns. Smaller,
+   tighter type so each label stays on one line at the card's narrow width. */
 .share-link-row { display: flex; gap: 0.5rem; align-items: center; }
-.share-link-row .share-copy-btn { flex: 1 1 auto; }
+.share-link-row .share-card-btn,
+.share-link-row .share-copy-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 0.3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+.share-link-row .share-card-btn .p-button-label,
+.share-link-row .share-copy-btn .p-button-label { white-space: nowrap; overflow: hidden; }
 body .share-link .p-button.share-copy-btn { background: #fff; border-color: #fff; color: var(--ph-brand); }
 body .share-link .p-button.share-copy-btn:not(:disabled):hover { background: var(--ph-signal-tint); border-color: var(--ph-signal-tint); color: var(--ph-signal); box-shadow: none; }
-.share-view-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 2.1rem; padding: 0 0.9rem; border-radius: var(--ph-radius); border: 1px solid rgba(255, 255, 255, 0.3); color: #fff; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: background 0.15s ease; }
-.share-view-btn:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+
+/* Owner "Share card" button on the navy identity card */
+body .share-link .p-button.share-card-btn { background: #3B8BFF; border-color: #3B8BFF; color: #05122b; }
+body .share-link .p-button.share-card-btn:not(:disabled):hover { background: #2f7af0; border-color: #2f7af0; box-shadow: none; }

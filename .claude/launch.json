@@ -4,8 +4,10 @@
     {
       "name": "phoenix-frontend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
-      "port": 4200
+      "runtimeArgs": [
+        "start"
+      ],
+      "port": 4800
     }
   ]
 }

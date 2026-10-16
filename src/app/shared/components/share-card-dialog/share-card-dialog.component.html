@@ -1,0 +1,47 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="true"
+  [style]="{ width: '420px', maxWidth: '92vw' }"
+  (onHide)="onHide()"
+  header="Share profile card">
+
+  <div class="scd-body">
+    <div class="scd-state" *ngIf="state === 'loading'" aria-live="polite">
+      <span class="scd-spinner" aria-hidden="true"></span>
+      <p>Preparing the card…</p>
+    </div>
+
+    <div class="scd-state" *ngIf="state === 'error'">
+      <i class="pi pi-exclamation-triangle" aria-hidden="true"></i>
+      <p>Could not load the card.</p>
+      <button type="button" class="ph-btn ph-btn--secondary ph-btn--sm" (click)="retry()">Try again</button>
+    </div>
+
+    <ng-container *ngIf="state === 'ready'">
+      <img class="scd-image" [src]="imageUrl" alt="Shareable profile card" />
+
+      <div class="scd-actions">
+        <button *ngIf="canNativeShare" type="button" class="ph-btn" [disabled]="sharing" (click)="shareNow()">
+          <i class="pi" [ngClass]="sharing ? 'pi-spin pi-spinner' : 'pi-share-alt'" aria-hidden="true"></i>
+          Share
+        </button>
+        <button type="button" class="ph-btn ph-btn--secondary" (click)="downloadImage()">
+          <i class="pi pi-image" aria-hidden="true"></i>
+          Download image
+        </button>
+        <button type="button" class="ph-btn ph-btn--secondary" [disabled]="downloadingPdf" (click)="downloadPdf()">
+          <i class="pi" [ngClass]="downloadingPdf ? 'pi-spin pi-spinner' : 'pi-file-pdf'" aria-hidden="true"></i>
+          Download PDF
+        </button>
+        <button type="button" class="ph-btn ph-btn--secondary" (click)="copyLink()">
+          <i class="pi pi-copy" aria-hidden="true"></i>
+          Copy profile link
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</p-dialog>

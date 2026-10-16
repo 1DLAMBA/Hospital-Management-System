@@ -73,6 +73,7 @@ import { AdminUsersListComponent } from './dashboard/panel/admin-panel/admin-use
 import { AdminHospitalsListComponent } from './dashboard/panel/admin-panel/admin-hospitals-list/admin-hospitals-list.component';
 import { HospitalPanelComponent } from './dashboard/panel/hospital-panel/hospital-panel.component';
 import { GuestProfileComponent } from './guest-profile/guest-profile.component';
+import { ShareCardDialogComponent } from '../shared/components/share-card-dialog/share-card-dialog.component';
 import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel/hospital-professionals/hospital-professionals.component';
 
 @NgModule({
@@ -114,7 +115,8 @@ import { HospitalProfessionalsComponent } from './dashboard/panel/hospital-panel
     AdminHospitalsListComponent,
     HospitalPanelComponent,
     HospitalProfessionalsComponent,
-    GuestProfileComponent
+    GuestProfileComponent,
+    ShareCardDialogComponent
   ],
   imports: [
     CommonModule,
