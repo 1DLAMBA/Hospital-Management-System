@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { environment } from '../../../../../environments/environment';
@@ -7,6 +7,7 @@ import { AppointmentsService } from '../../../../endpoints/appointments.service'
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import moment from 'moment';
 import { MessageService } from 'primeng/api';
+import { ShareCardDialogComponent } from '../../../../shared/components/share-card-dialog/share-card-dialog.component';
 import { ClientsService } from '../../../../endpoints/clients.service';
 import { ClientResource } from '../../../../../resources/client.model';
 import { AppointmentResource } from '../../../../../resources/appointment.model';
@@ -24,6 +25,7 @@ import { AssignmentsService } from '../../../../endpoints/assignments.service';
   styleUrl: './profile-nurse.component.css'
 })
 export class ProfileNurseComponent implements OnInit {
+  @ViewChild('shareDialog') shareDialog!: ShareCardDialogComponent;
   today = inject(NgbCalendar).getToday();
   id: string = this.route.snapshot.params['id'];
   singleNurse!: NurseResource | any;
@@ -242,6 +244,16 @@ export class ProfileNurseComponent implements OnInit {
   back() {
     // this.visible = false;
     this.preview = false;
+  }
+
+  get shareSlug(): string | null {
+    return this.user?.slug || null;
+  }
+
+  openShareCard(): void {
+    const slug = this.shareSlug;
+    if (!slug) { return; }
+    this.shareDialog.open(slug, this.user?.name || 'this professional');
   }
 
   navigateToChat(): void {

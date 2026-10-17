@@ -287,9 +287,15 @@
                 </p-table> -->
             </div>
 
-            <div class="mt-3">
+            <div class="mt-3 nurse-actions">
                 <p-button [label]="isGuest ? 'Log in to book' : 'Book Appointment'" (click)="showDialog()" severity="info" [raised]="true" [rounded]="true" />
+                <button type="button" class="share-cta" *ngIf="shareSlug" (click)="openShareCard()">
+                    <i class="pi pi-share-alt"></i>
+                    Share card
+                </button>
             </div>
+
+            <app-share-card-dialog #shareDialog></app-share-card-dialog>
 
            
 

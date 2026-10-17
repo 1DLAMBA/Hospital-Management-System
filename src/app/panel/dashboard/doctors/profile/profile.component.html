@@ -100,7 +100,14 @@
             <button type="button" class="book" [disabled]="user?.clients?.appointments && appointment" (click)="showDialog()">
                 {{ isGuest ? 'Log in to book' : 'Book appointment' }}
             </button>
+
+            <button type="button" class="share-cta" *ngIf="shareSlug" (click)="openShareCard()">
+                <i class="pi pi-share-alt"></i>
+                Share card
+            </button>
         </aside>
+
+        <app-share-card-dialog #shareDialog></app-share-card-dialog>
 
         <div class="details">
             <div *ngIf="user?.appointments && user.appointments.status == 'pending'" class="pending-note">

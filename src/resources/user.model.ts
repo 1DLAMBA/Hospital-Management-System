@@ -9,6 +9,7 @@ export interface UserResource{
     gender: string;
     user_type: string;
     passport: string;
+    slug?: string | null;
     email_verified_at?: Date | string | null;
     created_at: Date;
     updated_at: Date;

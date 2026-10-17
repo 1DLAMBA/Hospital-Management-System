@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../../../../endpoints/user.service';
@@ -6,6 +6,7 @@ import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from 'primeng/api';
+import { ShareCardDialogComponent } from '../../../../shared/components/share-card-dialog/share-card-dialog.component';
 import { NursesService } from '../../../../endpoints/nurses.service';
 import { HospitalsService } from '../../../../endpoints/hospitals.service';
 import { PaymentService } from '../../../../endpoints/payment.service';
@@ -21,6 +22,7 @@ import { BankAccountService } from '../../../../endpoints/bank-account.service';
   providers: [MessageService],
 })
 export class NurseProfileComponent implements OnInit {
+  @ViewChild('shareDialog') shareDialog!: ShareCardDialogComponent;
   today = inject(NgbCalendar).getToday();
   id = '';
   singleNurse!: NurseResource | any;
@@ -83,6 +85,12 @@ export class NurseProfileComponent implements OnInit {
   }
 
   linkCopied = false;
+  openShareCard(): void {
+    const slug = this.user?.slug;
+    if (!slug) { return; }
+    this.shareDialog.open(slug, this.user?.name || 'your profile');
+  }
+
   copyPublicLink(): void {
     if (!this.user?.slug) { return; }
     const url = `${window.location.origin}/${this.user.slug}`;

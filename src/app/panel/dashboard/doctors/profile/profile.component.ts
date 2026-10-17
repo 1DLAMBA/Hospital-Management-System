@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../../../endpoints/user.service';
 import { DoctorsService } from '../../../../endpoints/doctors.service';
@@ -10,6 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AppointmentsService } from '../../../../endpoints/appointments.service';
 import moment from 'moment';
 import { MessageService } from 'primeng/api';
+import { ShareCardDialogComponent } from '../../../../shared/components/share-card-dialog/share-card-dialog.component';
 import { ClientsService } from '../../../../endpoints/clients.service';
 
 
@@ -24,6 +25,7 @@ import { ClientsService } from '../../../../endpoints/clients.service';
 
 })
 export class ProfileComponent implements OnInit {
+  @ViewChild('shareDialog') shareDialog!: ShareCardDialogComponent;
   id: string = this.route.snapshot.params['id'];
   professionalType: 'doctor' | 'other_professional' = 'doctor'; // Default to doctor
   SingleDoctor!: DoctorResource;
@@ -214,6 +216,17 @@ export class ProfileComponent implements OnInit {
 
 
 
+  }
+
+  get shareSlug(): string | null {
+    return this.professional?.user?.slug || this.SingleDoctor?.user?.slug || null;
+  }
+
+  openShareCard(): void {
+    const slug = this.shareSlug;
+    if (!slug) { return; }
+    const name = this.professional?.user?.name || this.SingleDoctor?.user?.name || 'this professional';
+    this.shareDialog.open(slug, name);
   }
 
   /**
