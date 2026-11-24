@@ -183,56 +183,69 @@ header="Edit Profile"
         </div>
     </div>
 
-    <!-- ADD NG IF HERE TO CHECK USER TYPE BEFORE RENDERING MOBILE NAV -->
+    <!-- Each item carries its own label under the icon; the active item grows wider via .mob-nav a.active. -->
     <div *ngIf="user?.user_type=='doctor'" class="mob-nav">
-        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel/{{this.id}}">
-            
+        <div class="mob-nav-indicator" aria-hidden="true"></div>
+        <a routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="doctor-panel/{{this.id}}">
+            <i class="bi bi-columns-gap"></i>
+            <span class="mob-nav-label">Dashboard</span>
         </a>
-        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="doctor-appointment">
-
+        <a routerLinkActive="active" routerLink="doctor-appointment">
+            <i class="bi bi-prescription2"></i>
+            <span class="mob-nav-label">Appointment</span>
         </a>
-        <a [class.active]="isHealthcareStaffRoute()" class=" bi bi-heart-pulse-fill" routerLink="doctors">
-
-        </a>
-        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
-
+        <a routerLinkActive="active" routerLink="messages">
+            <i class="bi bi-chat-right-text-fill"></i>
+            <span class="mob-nav-label">Messages</span>
         </a>
     </div>
     <div *ngIf="user?.user_type=='other_professional'" class="mob-nav">
-        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="doctor-panel/{{this.id}}">
-            
+        <div class="mob-nav-indicator" aria-hidden="true"></div>
+        <a routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="doctor-panel/{{this.id}}">
+            <i class="bi bi-columns-gap"></i>
+            <span class="mob-nav-label">Dashboard</span>
         </a>
-        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="doctor-appointment">
-
+        <a routerLinkActive="active" routerLink="doctor-appointment">
+            <i class="bi bi-prescription2"></i>
+            <span class="mob-nav-label">Appointment</span>
         </a>
-        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
-
+        <a routerLinkActive="active" routerLink="messages">
+            <i class="bi bi-chat-right-text-fill"></i>
+            <span class="mob-nav-label">Messages</span>
         </a>
     </div>
     <div *ngIf="user?.user_type=='nurse'" class="mob-nav">
-        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="nurse-panel">
-            
+        <div class="mob-nav-indicator" aria-hidden="true"></div>
+        <a routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="nurse-panel">
+            <i class="bi bi-columns-gap"></i>
+            <span class="mob-nav-label">Dashboard</span>
         </a>
-        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="assignment">
-
+        <a routerLinkActive="active" routerLink="assignment">
+            <i class="bi bi-prescription2"></i>
+            <span class="mob-nav-label">Assignment</span>
         </a>
-    
-        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
-
+        <a routerLinkActive="active" routerLink="messages">
+            <i class="bi bi-chat-right-text-fill"></i>
+            <span class="mob-nav-label">Messages</span>
         </a>
     </div>
     <div *ngIf="user?.user_type=='client'" class="mob-nav">
-        <a routerLinkActive="active"  [routerLinkActiveOptions]={exact:true}  class="bi bi-columns-gap" routerLink="client-panel">
-            
+        <div class="mob-nav-indicator" aria-hidden="true"></div>
+        <a routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="client-panel">
+            <i class="bi bi-columns-gap"></i>
+            <span class="mob-nav-label">Dashboard</span>
         </a>
-        <a routerLinkActive="active"  class="bi bi-prescription2" routerLink="client-appointment">
-
+        <a routerLinkActive="active" routerLink="client-appointment">
+            <i class="bi bi-prescription2"></i>
+            <span class="mob-nav-label">Appointment</span>
         </a>
-        <a [class.active]="isHealthcareStaffRoute()" class="bi bi-people-fill" routerLink="doctors">
-
+        <a [class.active]="isHealthcareStaffRoute()" routerLink="doctors">
+            <i class="bi bi-people-fill"></i>
+            <span class="mob-nav-label">Professionals</span>
         </a>
-        <a routerLinkActive="active"  class="bi bi-chat-right-text-fill" routerLink="messages">
-
+        <a routerLinkActive="active" routerLink="messages">
+            <i class="bi bi-chat-right-text-fill"></i>
+            <span class="mob-nav-label">Messages</span>
         </a>
     </div>
 </div>
