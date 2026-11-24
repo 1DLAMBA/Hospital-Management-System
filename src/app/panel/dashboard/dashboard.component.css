@@ -18,33 +18,74 @@
     width: 100%;
     background-color: #17224d;
     z-index: 6;
-    position: fixed; /* Fix the position at the bottom */
+    position: fixed; /* Fix the position at the bottom; also the indicator's containing block */
     bottom: 0; /* Stick to the bottom */
     display: flex; /* Use flexbox for button alignment */
     justify-content: space-around; /* Space buttons evenly */
-    padding: 10px 0; /* Add some padding */
+    align-items: center;
+    padding: 8px 6px; /* Add some padding */
+}
+
+/* The single white pill. It slides and resizes to sit behind whichever item
+   is active (sized/positioned from JS), rather than each item owning its own
+   background — that's what makes it glide between tabs on navigation. */
+.mob-nav-indicator {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 0;
+    width: 0;
+    border-radius: 12px;
+    background: white;
+    transform: translateX(0);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .mob-nav a {
-    background-color: transparent; /* Dark a background */
+    position: relative;
+    z-index: 1; /* sit above the sliding indicator */
+    display: flex;
+    flex-direction: column; /* icon above its label */
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 52px;
+    background-color: transparent;
     color: white;
+    text-decoration: none;
     border: none; /* Remove border */
     border-radius: 12px;
-    padding: 10px 15px; /* Add padding for a better hit area */
+    padding: 6px 8px; /* Add padding for a better hit area */
     cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s; /* Smooth background transition */
+    transition: color 0.2s ease;
 }
 
-.mob-nav a:hover {
+.mob-nav a i {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.mob-nav-label {
+    font-size: 0.6rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.mob-nav a:hover:not(.active) {
     background-color: #31469b5b; /* Darker background on hover */
     color: white;
-
 }
-.mob-nav .active{
-    background-color: white;
-    padding: 3%;
+/* The active item is highlighted; the indicator (same width as any item)
+   slides underneath it on navigation. */
+.mob-nav a.active {
     color: #17224d;
+}
 
+@media (prefers-reduced-motion: reduce) {
+    .mob-nav-indicator { transition: none; }
 }
 
 .mob-head .navi{

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MedicalAIComponent } from './medical-ai/medical-ai.component';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
@@ -7,7 +7,8 @@ import { UserService } from '../../endpoints/user.service';
 import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessagesService } from '../../endpoints/messages.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { PusherService } from '../../services/pusher.service';
 import { AuthService } from '../../auth.service';
 import { NotificationsService, Notification } from '../../endpoints/notifications.service';
@@ -67,6 +68,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private hospitalEndpoint: HospitalsService,
     private session: SessionUserService,
     private confirm: ConfirmService,
+    private el: ElementRef<HTMLElement>,
   ){}
   ngOnInit(): void {
     this.id = localStorage.getItem('id');
@@ -78,6 +80,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.medicalAiSub = this.medicalAiUi.isOpen$.subscribe((open) => {
       this.medicalAiOpen = open;
     });
+    // Keep the mobile bottom-nav's sliding indicator on the active item as routes change.
+    this.routerSub = this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe(() => this.scheduleMobNavIndicatorUpdate());
   }
 
   private actorType(): 'admin' | 'hospital' | 'user' {
@@ -95,6 +101,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.medicalAiSub?.unsubscribe();
     this.userSub?.unsubscribe();
+    this.routerSub?.unsubscribe();
+    if (this.mobNavIndicatorTimer) clearTimeout(this.mobNavIndicatorTimer);
   }
 
   openMedicalAi(): void {
@@ -340,12 +348,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   private userSub?: Subscription;
+  private routerSub?: Subscription;
+  private mobNavIndicatorTimer?: ReturnType<typeof setTimeout>;
 
   getUser (){
     this.userSub = this.session.load().subscribe((user) => {
       if (!user) return;
       this.user = user;
       this.firstName = String(user.name || '').split(' ')[0];
+      // The *ngIf-gated mob-nav only exists once `user` is set — wait for that render.
+      this.scheduleMobNavIndicatorUpdate();
     });
   }
   show(firstname: any) {
@@ -358,6 +370,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return url === '/panel/doctors'
       || url.startsWith('/panel/doctors/')
       || url.startsWith('/panel/nurses/nurse-profile');
+  }
+
+  /**
+   * Slides the mobile bottom-nav's white indicator under the active item.
+   * Deferred a tick so Angular has applied `active`/`*ngIf` classes first.
+   */
+  private scheduleMobNavIndicatorUpdate(): void {
+    if (this.mobNavIndicatorTimer) clearTimeout(this.mobNavIndicatorTimer);
+    this.mobNavIndicatorTimer = setTimeout(() => this.updateMobNavIndicator(), 60);
+  }
+
+  private updateMobNavIndicator(): void {
+    const root = this.el.nativeElement;
+    const nav = root.querySelector<HTMLElement>('.mob-nav');
+    const indicator = root.querySelector<HTMLElement>('.mob-nav-indicator');
+    if (!nav || !indicator) return;
+    const active = nav.querySelector<HTMLElement>('a.active');
+    if (!active) {
+      indicator.style.width = '0px';
+      return;
+    }
+    indicator.style.width = `${active.offsetWidth}px`;
+    indicator.style.transform = `translateX(${active.offsetLeft}px)`;
   }
 
   async logout() {
